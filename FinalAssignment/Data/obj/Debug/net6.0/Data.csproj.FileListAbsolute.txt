@@ -1,0 +1,15 @@
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\bin\Debug\net6.0\Data.deps.json
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\bin\Debug\net6.0\Data.dll
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\bin\Debug\net6.0\Data.pdb
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\bin\Debug\net6.0\Common.dll
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\bin\Debug\net6.0\Common.pdb
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\obj\Debug\net6.0\Data.csproj.AssemblyReference.cache
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\obj\Debug\net6.0\Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\obj\Debug\net6.0\Data.AssemblyInfoInputs.cache
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\obj\Debug\net6.0\Data.AssemblyInfo.cs
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\obj\Debug\net6.0\Data.csproj.CoreCompileInputs.cache
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\obj\Debug\net6.0\Data.csproj.CopyComplete
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\obj\Debug\net6.0\Data.dll
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\obj\Debug\net6.0\refint\Data.dll
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\obj\Debug\net6.0\Data.pdb
+D:\NashTechProject\FinalProject-BE\FinalAssignment\Data\obj\Debug\net6.0\ref\Data.dll
