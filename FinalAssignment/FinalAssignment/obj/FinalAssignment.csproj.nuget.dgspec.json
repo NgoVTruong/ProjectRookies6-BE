@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj": {}
+    "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj": {}
   },
   "projects": {
-    "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj": {
+    "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
+        "projectUniqueName": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
         "projectName": "Common",
-        "projectPath": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
-        "packagesPath": "C:\\Users\\nguyenvanthan\\.nuget\\packages\\",
-        "outputPath": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Common\\obj\\",
+        "projectPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
+        "packagesPath": "C:\\Users\\Legion\\.nuget\\packages\\",
+        "outputPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\nguyenvanthan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Legion\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -39,14 +39,19 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -55,21 +60,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj": {
+    "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj",
+        "projectUniqueName": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj",
         "projectName": "Data",
-        "projectPath": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj",
-        "packagesPath": "C:\\Users\\nguyenvanthan\\.nuget\\packages\\",
-        "outputPath": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Data\\obj\\",
+        "projectPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj",
+        "packagesPath": "C:\\Users\\Legion\\.nuget\\packages\\",
+        "outputPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\nguyenvanthan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Legion\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -83,8 +88,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj": {
-                "projectPath": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj"
+              "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj": {
+                "projectPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj"
               }
             }
           }
@@ -99,6 +104,14 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[6.0.10, )"
@@ -114,8 +127,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -124,21 +136,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj": {
+    "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
+        "projectUniqueName": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
         "projectName": "FinalAssignment",
-        "projectPath": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
-        "packagesPath": "C:\\Users\\nguyenvanthan\\.nuget\\packages\\",
-        "outputPath": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\obj\\",
+        "projectPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
+        "packagesPath": "C:\\Users\\Legion\\.nuget\\packages\\",
+        "outputPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\nguyenvanthan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Legion\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -152,8 +164,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj": {
-                "projectPath": "D:\\NashTechProject\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj"
+              "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj": {
+                "projectPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj"
               }
             }
           }
@@ -168,6 +180,18 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[6.0.11, )"
+            },
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.10, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[6.0.10, )"
@@ -193,8 +217,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -206,7 +229,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     }
