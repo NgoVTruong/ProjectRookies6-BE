@@ -29,14 +29,24 @@ namespace TestWebAPI.Repositories.Implements
             return true;
         }
 
-        public T? Get(Expression<Func<T, bool>>? predicate)
+        public T? GetOne(Expression<Func<T, bool>>? predicate = null,
+        Expression<Func<T, object>>? includePredicate = null)
         {
-            return predicate == null ? _dbSet.FirstOrDefault() : _dbSet.FirstOrDefault(predicate);
+            return predicate == null ?
+                includePredicate == null ?
+                _dbSet.FirstOrDefault()
+                : _dbSet.Include(includePredicate).FirstOrDefault()
+                : includePredicate == null ? _dbSet.FirstOrDefault(predicate)
+                : _dbSet.Include(includePredicate).FirstOrDefault(predicate);
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? predicate)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? predicate = null,
+            Expression<Func<T, bool>>? includePredicate = null)
         {
-            return predicate == null ? _dbSet : _dbSet.Where(predicate);
+            return predicate == null ?
+               includePredicate == null ? _dbSet : _dbSet.Include(includePredicate)
+               : includePredicate == null ? _dbSet.Where(predicate)
+               : _dbSet.Where(predicate).Include(includePredicate);
         }
 
         public int SaveChanges()
