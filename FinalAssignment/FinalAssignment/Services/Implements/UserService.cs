@@ -169,7 +169,8 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<Response> ResetPassword(ResetPasswordRequest model)
         {
-            var user = await _userManager.FindByNameAsync(model.UserName);
+
+             var user = await _userManager.FindByNameAsync(model.UserName);
 
             if (user == null)
                 return new Response
