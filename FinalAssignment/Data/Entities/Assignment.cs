@@ -12,11 +12,10 @@ namespace Data.Entities
         public string AcceptedBy { get; set; }
         public string ReturnDate { get; set; }
         public string Note { get; set; }
-        public AssignmentStateEnum AssignmentStateEnum { get; set; }
+        public AssignmentStateEnum AssignmentState { get; set; }
         public string RequestBy { get; set; }
         public string AssetCode { get; set; }
         public string AssetName {get; set;}
         public string Specification { get; set; }
-        public Boolean CanReturn { get; set; }
     }
 }

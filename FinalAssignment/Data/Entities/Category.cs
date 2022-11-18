@@ -11,6 +11,6 @@ namespace Data.Entities
         public string CategoryCode {get; set;}
         public string CategoryName {get; set;}
 
-        public virtual Asset? Asset {get; set;}
+        public virtual ICollection<Asset>? Assets {get; set;}
     }
 }

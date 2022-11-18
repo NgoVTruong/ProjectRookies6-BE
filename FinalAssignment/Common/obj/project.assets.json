@@ -1445,11 +1445,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
+      "projectUniqueName": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
       "projectName": "Common",
-      "projectPath": "d:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
+      "projectPath": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
       "packagesPath": "C:\\Users\\Legion\\.nuget\\packages\\",
-      "outputPath": "d:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Common\\obj\\",
+      "outputPath": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Legion\\AppData\\Roaming\\NuGet\\NuGet.Config",

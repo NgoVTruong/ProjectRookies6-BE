@@ -1,8 +1,5 @@
-using Data.Auth;
 using FinalAssignment.DTOs.User;
-using FinalAssignment.Services.Implements;
 using FinalAssignment.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
