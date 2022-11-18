@@ -2965,11 +2965,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
+      "projectUniqueName": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
       "projectName": "FinalAssignment",
-      "projectPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
+      "projectPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
       "packagesPath": "C:\\Users\\Legion\\.nuget\\packages\\",
-      "outputPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\obj\\",
+      "outputPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Legion\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2986,8 +2986,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj": {
-              "projectPath": "D:\\ROOKIES-6-FINAL-GITHUB\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj"
+            "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj": {
+              "projectPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj"
             }
           }
         }

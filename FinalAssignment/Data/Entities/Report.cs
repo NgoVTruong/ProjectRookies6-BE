@@ -7,6 +7,7 @@ namespace Data.Entities
 {
     public class Report
     {
+        public Guid ReportId {get; set;}
         public string CategoryName { get; set; }
         public int Total { get; set; }
         public int Assigned { get; set; }

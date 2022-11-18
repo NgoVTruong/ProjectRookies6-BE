@@ -10,14 +10,13 @@ namespace Data.Entities
 
         [Required(ErrorMessage = "Asset name is required")]
         public string AssetName { get; set; }
-
-        public string? CategoryId {get; set;}
-
-        public AssetStateEnum AssetStatusEnum { get; set; }
+        public Guid? CategoryForeignId { get; set; }
+        public string? CategoryName { get; set; }
+        public AssetStateEnum AssetStatus { get; set; }
         public string Specification { get; set; }
         public DateTime InstalledDate { get; set; }
         public string Location { get; set; }
 
-        public virtual ICollection<Category>? Categories {get; set;}
+        public virtual Category Category { get; set; }
     }
 }

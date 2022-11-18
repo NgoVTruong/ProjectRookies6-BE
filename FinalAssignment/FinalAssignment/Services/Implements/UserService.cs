@@ -65,7 +65,7 @@ namespace FinalAssignment.Services.Implements
                 DateOfBirth = model.DateOfBirth, // (2000, 1, 1),
                 Gender = model.Gender, // (0 or 1 or 2)
                 JoinedDate = model.JoinedDate, // >(2018, 1, 1),
-                staffCode = StaffCodeGen(userNumber), //SD0036
+                StaffCode = StaffCodeGen(userNumber), //SD0036
                 Location = model.Location,
                 LoginState = 0, // First time = 0
             };
@@ -171,6 +171,10 @@ namespace FinalAssignment.Services.Implements
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            
+            user.LoginState = 1;
+            await _userManager.UpdateAsync(user);
+
             if (user == null)
                 return new Response
                 {
