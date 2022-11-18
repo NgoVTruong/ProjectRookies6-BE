@@ -8,5 +8,6 @@ namespace Data.Entities
 {
     internal class Class1
     {
+            // public   string  RefreshTokenExpiryTime
     }
 }
