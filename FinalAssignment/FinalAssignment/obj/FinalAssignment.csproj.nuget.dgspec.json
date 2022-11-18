@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj": {}
+    "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj": {}
   },
   "projects": {
-    "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj": {
+    "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
+        "projectUniqueName": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
         "projectName": "Common",
-        "projectPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
+        "projectPath": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj",
         "packagesPath": "C:\\Users\\Legion\\.nuget\\packages\\",
-        "outputPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\obj\\",
+        "outputPath": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Legion\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -64,14 +64,14 @@
         }
       }
     },
-    "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj": {
+    "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj",
+        "projectUniqueName": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj",
         "projectName": "Data",
-        "projectPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj",
+        "projectPath": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj",
         "packagesPath": "C:\\Users\\Legion\\.nuget\\packages\\",
-        "outputPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\obj\\",
+        "outputPath": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Legion\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -88,8 +88,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj": {
-                "projectPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj"
+              "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj": {
+                "projectPath": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Common\\Common.csproj"
               }
             }
           }
@@ -140,14 +140,14 @@
         }
       }
     },
-    "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj": {
+    "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
+        "projectUniqueName": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
         "projectName": "FinalAssignment",
-        "projectPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
+        "projectPath": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\FinalAssignment.csproj",
         "packagesPath": "C:\\Users\\Legion\\.nuget\\packages\\",
-        "outputPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\obj\\",
+        "outputPath": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\FinalAssignment\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Legion\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -164,8 +164,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj": {
-                "projectPath": "D:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj"
+              "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj": {
+                "projectPath": "d:\\ROOKIES-6-FINAL\\FinalProject-BE\\FinalAssignment\\Data\\Data.csproj"
               }
             }
           }

@@ -170,10 +170,6 @@ namespace FinalAssignment.Services.Implements
         public async Task<Response> ResetPassword(ResetPasswordRequest model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            
-            user.LoginState = 1;
-            await _userManager.UpdateAsync(user);
 
             if (user == null)
                 return new Response
@@ -181,6 +177,23 @@ namespace FinalAssignment.Services.Implements
                     Status = "Error",
                     Message = "User not exists!"
                 };
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var userPassword = user.PasswordHash;
+            var passwordHash = _userManager.PasswordHasher.HashPassword(user, model.NewPassword);
+
+            if (passwordHash == userPassword)
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "The new password must not be the same as the old password"
+                };
+            }
+
+            user.LoginState = 1;
+            // user.PasswordHash = passwordHash;
+            await _userManager.UpdateAsync(user);
 
             var resetPassResult = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
 
