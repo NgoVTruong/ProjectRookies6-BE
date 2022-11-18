@@ -8,6 +8,8 @@ using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
+using FinalAssignment.Repositories.Interfaces;
+using FinalAssignment.Repositories.Implements;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,21 @@ builder.Services.AddControllers();
 
 var configuration = builder.Configuration;
 
+builder.Services.AddTransient<IUserService, UserService>();
+
+builder.Services.AddTransient<IAssetRepository, AssetRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
+
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
+
+builder.Services.AddTransient<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
+
+builder.Services.AddTransient<IRequestReturningRepository, RequestReturningRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
+
+builder.Services.AddTransient<IReportRepository, ReportRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddDbContext<FinalAssignmentContext>(opt =>
