@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Repositories.Implements;
+using BookStore.API.Extensions;
 
 static async Task InitializeDatabase(IApplicationBuilder app)
 {
@@ -35,8 +36,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IRequestReturningRepository, RequestReturningRepository>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 
-// builder.Services.AddScoped<ITestService, TestService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("MyCors",
@@ -86,7 +87,8 @@ builder.Services.AddAuthentication(options =>
 
 
 var app = builder.Build();
-
+var logger = app.Services.GetRequiredService<ILoggerManager>();
+app.ConfigureExceptionHandler(logger);
 // Update database automatically
 InitializeDatabase(app).Wait();
 
