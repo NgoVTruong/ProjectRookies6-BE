@@ -51,7 +51,7 @@ namespace FinalAssignment.Services.Implements
                     Message = "User already exists!"
                 };
 
-            var userNumber = _userManager.Users.Count();
+            var userNumber = _userManager.Users.Count(); // 3
 
             ApplicationUser user = new()
             {
@@ -61,13 +61,14 @@ namespace FinalAssignment.Services.Implements
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 FullName = model.FirstName + model.LastName,
-                TypeStaff = model.TypeStaff,
+                Type = model.UserRole,
                 DateOfBirth = model.DateOfBirth, // (2000, 1, 1),
                 Gender = model.Gender, // (0 or 1 or 2)
                 JoinedDate = model.JoinedDate, // >(2018, 1, 1),
                 StaffCode = StaffCodeGen(userNumber), //SD0036
                 Location = model.Location,
-                LoginState = 0, // First time = 0
+                IsFirstTime = true, // First time = 0
+                IsDeleted = false,
             };
 
             bool whiteSpace = model.Password.Contains(" ");
@@ -89,12 +90,12 @@ namespace FinalAssignment.Services.Implements
                 Message = "User creation failed! Please check user details and try again."
             };
 
-            if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "User" if user
+            if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
             {
                 await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
             }
 
-            if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "User" if user
+            if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
             {
                 await _userManager.AddToRoleAsync(user, model.UserRole);
             }
@@ -145,7 +146,7 @@ namespace FinalAssignment.Services.Implements
                     Roles = userRoles,
                     User = model.Username,
                     Location = user.Location,
-                    LoginState = user.LoginState
+                    IsFirstTime = user.IsFirstTime
                 };
             }
             return null;
@@ -169,8 +170,7 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<Response> ResetPassword(ResetPasswordRequest model)
         {
-
-             var user = await _userManager.FindByNameAsync(model.UserName);
+            var user = await _userManager.FindByNameAsync(model.UserName);
 
             if (user == null)
                 return new Response
@@ -192,7 +192,7 @@ namespace FinalAssignment.Services.Implements
                 };
             }
 
-            user.LoginState = 1;
+            user.IsFirstTime = false;
             // user.PasswordHash = passwordHash;
             await _userManager.UpdateAsync(user);
 
@@ -220,6 +220,20 @@ namespace FinalAssignment.Services.Implements
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
 
+            var deleteRole = await _userManager.RemoveFromRoleAsync(user, model.UserRole);
+            
+            // if (!result.Succeeded)
+            // {
+            //     foreach (var error in result.Errors)
+            //     {
+            //         return new Response
+            //         {
+            //             Status = "Error",
+            //             Message = error.ToString()
+            //         };
+            //     }
+            // }
+
             if (user == null)
                 return new Response
                 {
@@ -230,7 +244,19 @@ namespace FinalAssignment.Services.Implements
             user.DateOfBirth = model.DateOfBirth;
             user.Gender = model.Gender;
             user.JoinedDate = model.JoinedDate;
-            user.TypeStaff = model.TypeStaff;
+            user.Type = model.UserRole;
+
+
+
+            if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if user
+            {
+                await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
+            }
+
+            if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if user
+            {
+                await _userManager.AddToRoleAsync(user, model.UserRole);
+            }
 
             await _userManager.UpdateAsync(user);
 
@@ -240,6 +266,7 @@ namespace FinalAssignment.Services.Implements
                 Message = "User edit successfully!"
             };
         }
+
 
         public async Task<Response> DeleteUser(string userName)
         {
@@ -253,7 +280,8 @@ namespace FinalAssignment.Services.Implements
                     Message = "User not exists!"
                 };
 
-            await _userManager.DeleteAsync(user);
+            user.IsDeleted = true;
+            await _userManager.UpdateAsync(user);
 
             return new Response
             {
@@ -261,19 +289,21 @@ namespace FinalAssignment.Services.Implements
                 Message = "User delete successfully!"
             };
         }
-        public async Task<IEnumerable<ApplicationUser>> GetAllUserDependLocation(string userName)
+        public async Task<IEnumerable<UserResponse>> GetAllUserDependLocation(string userName)
         {
             // check xem co ton tai user trong Assignment khong, neu co thi bao loi
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return Enumerable.Empty<ApplicationUser>();
+                return Enumerable.Empty<UserResponse>();
             }
             var location = user.Location;
-            var users = _userManager.Users.Where(i => i.Location == location).ToList();
+            var users = _userManager.Users.Where(i => i.Location == location && i.IsDeleted == false).Select(user => new UserResponse()
+            {
+                FirstName = user.FirstName
+            }).ToList();
 
             return users;
         }
-
     }
 }

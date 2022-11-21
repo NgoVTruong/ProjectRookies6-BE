@@ -25,7 +25,8 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Auth.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(225)
+                        .HasColumnType("nvarchar(225)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -53,6 +54,12 @@ namespace Data.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFirstTime")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("JoinedDate")
                         .HasColumnType("datetime2");
 
@@ -67,9 +74,6 @@ namespace Data.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("LoginState")
-                        .HasColumnType("int");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -97,7 +101,7 @@ namespace Data.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("TypeStaff")
+                    b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -119,94 +123,76 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.Asset", b =>
                 {
-                    b.Property<Guid>("AssetId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("AssetId");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AssetCode")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("AssetCode");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AssetName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("AssetName");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("AssetStatus")
-                        .HasColumnType("int")
-                        .HasColumnName("AssetStatus");
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("CategoryForeignId")
-                        .HasMaxLength(50)
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CategoryForeignId");
+                    b.Property<Guid?>("CategoryId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CategoryName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("CategoryName");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("InstalledDate")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("InstalledDate");
+                    b.Property<DateTime>("InstalledDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("Location");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Specification")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Specification");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AssetId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CategoryForeignId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Asset", (string)null);
                 });
 
             modelBuilder.Entity("Data.Entities.Assignment", b =>
                 {
-                    b.Property<Guid>("AssignmentId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("AssignmentId");
+                        .HasColumnName("Id");
 
                     b.Property<string>("AcceptedBy")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("AcceptedBy");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AssetCode")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("ReturnDate");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("AssetId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AssetName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("AssetName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AssignedBy")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("AssignedBy");
+                        .HasColumnType("nvarchar(225)");
 
                     b.Property<string>("AssignedDate")
                         .IsRequired()
@@ -214,179 +200,86 @@ namespace Data.Migrations
 
                     b.Property<string>("AssignedTo")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("AssignedTo");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AssignmentState")
-                        .HasMaxLength(50)
-                        .HasColumnType("int")
-                        .HasColumnName("AssignmentState");
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Note")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Note");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RequestBy")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("RequestBy");
-
-                    b.Property<string>("ReturnDate")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("ReturnDate");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Specification")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("Specification");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AssignmentId");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssetId");
+
+                    b.HasIndex("AssignedBy");
 
                     b.ToTable("Assignment", (string)null);
                 });
 
             modelBuilder.Entity("Data.Entities.Category", b =>
                 {
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CategoryId");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CategoryCode")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("CategoryCode");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("CategoryName");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CategoryId");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Category", (string)null);
                 });
 
-            modelBuilder.Entity("Data.Entities.Report", b =>
-                {
-                    b.Property<Guid>("ReportId")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ReportId");
-
-                    b.Property<int>("Assigned")
-                        .HasMaxLength(50)
-                        .HasColumnType("int")
-                        .HasColumnName("Assigned");
-
-                    b.Property<int>("Available")
-                        .HasMaxLength(50)
-                        .HasColumnType("int")
-                        .HasColumnName("Available");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("CategoryName");
-
-                    b.Property<int>("NotAvailable")
-                        .HasMaxLength(50)
-                        .HasColumnType("int")
-                        .HasColumnName("NotAvailable");
-
-                    b.Property<int>("Recycled")
-                        .HasMaxLength(50)
-                        .HasColumnType("int")
-                        .HasColumnName("Recycled");
-
-                    b.Property<int>("Total")
-                        .HasMaxLength(50)
-                        .HasColumnType("int")
-                        .HasColumnName("Total");
-
-                    b.Property<int>("WaitingForRecycling")
-                        .HasMaxLength(50)
-                        .HasColumnType("int")
-                        .HasColumnName("WaitingForRecycling");
-
-                    b.HasKey("ReportId");
-
-                    b.ToTable("Report", (string)null);
-                });
-
             modelBuilder.Entity("Data.Entities.RequestReturning", b =>
                 {
-                    b.Property<Guid>("RequestReturningId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("RequestReturningId");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AcceptedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("AcceptedBy");
+                    b.Property<Guid?>("AssignmentId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AssetCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("AssetCode");
-
-                    b.Property<string>("AssignTo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AssignedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("AssignedBy");
-
-                    b.Property<string>("AssignedDate")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("AssignedDate");
-
-                    b.Property<int>("AssignmentState")
-                        .HasMaxLength(50)
-                        .HasColumnType("int")
-                        .HasColumnName("AssignmentState");
-
-                    b.Property<string>("Note")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Note");
-
-                    b.Property<string>("RequestedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("RequestedBy");
+                    b.Property<int>("RequestStatus")
+                        .HasColumnType("int");
 
                     b.Property<string>("ReturnDate")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("ReturnDate");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("RequestReturningId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(225)");
 
-                    b.ToTable("RequestReturning", (string)null);
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignmentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestReturnings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -457,7 +350,7 @@ namespace Data.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(225)");
 
                     b.HasKey("Id");
 
@@ -479,7 +372,7 @@ namespace Data.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(225)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -491,7 +384,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(225)");
 
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
@@ -506,7 +399,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(225)");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -526,9 +419,45 @@ namespace Data.Migrations
                 {
                     b.HasOne("Data.Entities.Category", "Category")
                         .WithMany("Assets")
-                        .HasForeignKey("CategoryForeignId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Data.Entities.Assignment", b =>
+                {
+                    b.HasOne("Data.Entities.Asset", "Asset")
+                        .WithMany("Assignments")
+                        .HasForeignKey("AssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Auth.ApplicationUser", "ApplicationUser")
+                        .WithMany("Assignments")
+                        .HasForeignKey("AssignedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Asset");
+                });
+
+            modelBuilder.Entity("Data.Entities.RequestReturning", b =>
+                {
+                    b.HasOne("Data.Entities.Assignment", "Assignment")
+                        .WithMany("RequestReturnings")
+                        .HasForeignKey("AssignmentId");
+
+                    b.HasOne("Data.Auth.ApplicationUser", "ApplicationUser")
+                        .WithMany("RequestReturnings")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Assignment");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -580,6 +509,23 @@ namespace Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Auth.ApplicationUser", b =>
+                {
+                    b.Navigation("Assignments");
+
+                    b.Navigation("RequestReturnings");
+                });
+
+            modelBuilder.Entity("Data.Entities.Asset", b =>
+                {
+                    b.Navigation("Assignments");
+                });
+
+            modelBuilder.Entity("Data.Entities.Assignment", b =>
+                {
+                    b.Navigation("RequestReturnings");
                 });
 
             modelBuilder.Entity("Data.Entities.Category", b =>
