@@ -16,6 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
@@ -28,8 +29,6 @@
     <Folder Include="DTOs\" />
     <Folder Include="Repositories\Interfaces\" />
     <Folder Include="Repositories\Implements\" />
-    <Folder Include="Services\Implements\" />
-    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
 </Project>
