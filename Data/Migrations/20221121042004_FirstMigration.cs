@@ -27,17 +27,18 @@ namespace Data.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(225)", maxLength: 225, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TypeStaff = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<int>(type: "int", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
                     JoinedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StaffCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LoginState = table.Column<int>(type: "int", nullable: false),
+                    IsFirstTime = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -59,75 +60,17 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Assignment",
-                columns: table => new
-                {
-                    AssignmentId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 50, nullable: false),
-                    AssignedTo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AssignedDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AssignedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AcceptedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ReturnDate = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    AssignmentState = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    RequestBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AssetName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Specification = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Assignment", x => x.AssignmentId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Category",
                 columns: table => new
                 {
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CategoryName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Category", x => x.CategoryId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Report",
-                columns: table => new
-                {
-                    ReportId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 50, nullable: false),
-                    CategoryName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Total = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    Assigned = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    Available = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    NotAvailable = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    WaitingForRecycling = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    Recycled = table.Column<int>(type: "int", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Report", x => x.ReportId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RequestReturning",
-                columns: table => new
-                {
-                    RequestReturningId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 50, nullable: false),
-                    AssignTo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AssetCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AssignedDate = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AssignmentState = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ReturnDate = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    AssignedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    RequestedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AcceptedBy = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RequestReturning", x => x.RequestReturningId);
+                    table.PrimaryKey("PK_Category", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,7 +100,7 @@ namespace Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(225)", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -179,7 +122,7 @@ namespace Data.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(225)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -196,7 +139,7 @@ namespace Data.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(225)", nullable: false),
                     RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -220,7 +163,7 @@ namespace Data.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(225)", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -240,24 +183,87 @@ namespace Data.Migrations
                 name: "Asset",
                 columns: table => new
                 {
-                    AssetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AssetCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AssetName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CategoryForeignId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 50, nullable: true),
-                    CategoryName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AssetCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AssetName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AssetStatus = table.Column<int>(type: "int", nullable: false),
-                    Specification = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    InstalledDate = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Specification = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InstalledDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Asset", x => x.AssetId);
+                    table.PrimaryKey("PK_Asset", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Asset_Category_CategoryForeignId",
-                        column: x => x.CategoryForeignId,
+                        name: "FK_Asset_Category_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Category",
-                        principalColumn: "CategoryId");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Assignment",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", maxLength: 50, nullable: false),
+                    AssetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AssignedTo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AssignedDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AssignedBy = table.Column<string>(type: "nvarchar(225)", nullable: false),
+                    AcceptedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AssignmentState = table.Column<int>(type: "int", nullable: false),
+                    RequestBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AssetCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AssetName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Specification = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Assignment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Assignment_AspNetUsers_AssignedBy",
+                        column: x => x.AssignedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Assignment_Asset_AssetId",
+                        column: x => x.AssetId,
+                        principalTable: "Asset",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RequestReturnings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(225)", nullable: true),
+                    AssignmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ReturnDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RequestStatus = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequestReturnings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RequestReturnings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_RequestReturnings_Assignment_AssignmentId",
+                        column: x => x.AssignmentId,
+                        principalTable: "Assignment",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -300,9 +306,29 @@ namespace Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Asset_CategoryForeignId",
+                name: "IX_Asset_CategoryId",
                 table: "Asset",
-                column: "CategoryForeignId");
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Assignment_AssetId",
+                table: "Assignment",
+                column: "AssetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Assignment_AssignedBy",
+                table: "Assignment",
+                column: "AssignedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequestReturnings_AssignmentId",
+                table: "RequestReturnings",
+                column: "AssignmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequestReturnings_UserId",
+                table: "RequestReturnings",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -323,22 +349,19 @@ namespace Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Asset");
-
-            migrationBuilder.DropTable(
-                name: "Assignment");
-
-            migrationBuilder.DropTable(
-                name: "Report");
-
-            migrationBuilder.DropTable(
-                name: "RequestReturning");
+                name: "RequestReturnings");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Assignment");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Asset");
 
             migrationBuilder.DropTable(
                 name: "Category");
