@@ -16,37 +16,32 @@ namespace TestWebAPI.Repositories.Implements
             _context = context;
         }
 
-
-        public T Create(T entity)
+        public async Task<T> CreateAsync(T entity)
         {
-            return _dbSet.Add(entity).Entity;
+            var result = _dbSet.Add(entity).Entity;
+
+            return await Task.FromResult(result);
         }
 
-        public bool Delete(T entity)
+        public Task<bool> DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
 
-            return true;
+            return Task.FromResult(true);
         }
 
-        public T? GetOne(Expression<Func<T, bool>>? predicate = null,
-        Expression<Func<T, object>>? includePredicate = null)
+        public async Task<T>? GetOneAsync(Expression<Func<T, bool>>? predicate)
         {
-            return predicate == null ?
-                includePredicate == null ?
-                _dbSet.FirstOrDefault()
-                : _dbSet.Include(includePredicate).FirstOrDefault()
-                : includePredicate == null ? _dbSet.FirstOrDefault(predicate)
-                : _dbSet.Include(includePredicate).FirstOrDefault(predicate);
+            var result = predicate == null ? _dbSet : _dbSet.Where(predicate);
+
+            return await result.FirstOrDefaultAsync();
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? predicate = null,
-            Expression<Func<T, bool>>? includePredicate = null)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate)
         {
-            return predicate == null ?
-               includePredicate == null ? _dbSet : _dbSet.Include(includePredicate)
-               : includePredicate == null ? _dbSet.Where(predicate)
-               : _dbSet.Where(predicate).Include(includePredicate);
+            var result = predicate == null ? _dbSet : _dbSet.Where(predicate);
+
+            return await result.ToListAsync();
         }
 
         public int SaveChanges()
@@ -54,9 +49,11 @@ namespace TestWebAPI.Repositories.Implements
             return _context.SaveChanges();
         }
 
-        public T Update(T entity)
+        public async Task<T> UpdateAsync(T entity)
         {
-            return _dbSet.Update(entity).Entity;
+            var result = _dbSet.Update(entity).Entity;
+
+            return await Task.FromResult(result);
         }
     }
 }

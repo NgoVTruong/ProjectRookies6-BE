@@ -1,9 +1,10 @@
-using Data.Entities;
+using Data.Auth;
 using TestWebAPI.Repositories.Interfaces;
 
 namespace FinalAssignment.Repositories.Interfaces
 {
-    public interface IReportRepository : IBaseRepository<Report>
+    public interface IUserRepository : IBaseRepository<ApplicationUser>
     {
+
     }
 }
