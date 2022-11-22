@@ -307,10 +307,5 @@ namespace FinalAssignment.Services.Implements
 
             return users;
         }
-
-        public async Task<IEnumerable<UserResponse>> GetAll()
-        {
-            var list = await _userRepository.GetAll();
-        }
     }
 }
