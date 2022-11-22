@@ -7,10 +7,9 @@ namespace Data.Entities
     {
         public Guid Id { get; set; }
         public Guid AssetId { get; set; }
-        public string UserId { get; set; }
-        public string AssignedTo { get; set; }
+        public string? AssignedTo { get; set; }
         public string AssignedDate { get; set; }
-        public string AssignedBy { get; set; }
+        public string? AssignedBy { get; set; }
         public string AcceptedBy { get; set; }
         public string Note { get; set; }
         public AssignmentStateEnum AssignmentState { get; set; }
@@ -23,7 +22,9 @@ namespace Data.Entities
 
         public virtual Asset Asset { get; set; }
 
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser AssignedToUser { get; set; }
+
+        public virtual ApplicationUser AssignedByUser { get; set; }
 
         public virtual List<RequestReturning> RequestReturnings { get; set; }
     }

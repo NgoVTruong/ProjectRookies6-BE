@@ -21,6 +21,7 @@ namespace Data.Auth
         public bool IsDeleted { get; set; } //false
 
         public virtual List<RequestReturning> RequestReturnings { get; set; }
-        public virtual ICollection<Assignment> Assignments {get; set;}
+        public virtual ICollection<Assignment> AssignedToMe { get; set; }
+        public virtual ICollection<Assignment> AssignedByMe { get; set; }
     }
 }
