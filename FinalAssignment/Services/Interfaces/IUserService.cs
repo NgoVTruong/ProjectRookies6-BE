@@ -10,6 +10,6 @@ namespace FinalAssignment.Services.Interfaces
         Task<Response> ResetPassword(ResetPasswordRequest model);
         Task<Response> EditUser(EditUserRequest model);
         Task<Response> DeleteUser(string userName);
-        Task<IEnumerable<ApplicationUser>> GetAllUserDependLocation(string userName);
+        Task<IEnumerable<UserResponse>> GetAllUserDependLocation(string userName);
     }
 }
