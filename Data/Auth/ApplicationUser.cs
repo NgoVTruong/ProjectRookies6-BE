@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Data.Entities;
 
 using Common.Enums;
 
@@ -6,21 +7,21 @@ namespace Data.Auth
 {
     public class ApplicationUser : IdentityUser
     {
-        // public string? RefreshToken { get; set; }
-        // public DateTime RefreshTokenExpiryTime { get; set; }
+        // public Guid Id {get; set;}
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public string? FullName {get; set;}
-        // {
-        //     get { return string.Format(FirstName + " " + LastName); }
-        // }
-        public string? TypeStaff {get; set;}
+        public string? FullName { get; set; }
+        public string? Type { get; set; }
         public GenderEnum Gender { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public DateTime? JoinedDate { get; set; }
         public string? StaffCode { get; set; }
         public string? Location { get; set; }
-        public int LoginState { get; set; }
+        public bool IsFirstTime { get; set; } //true
+        public bool IsDeleted { get; set; } //false
 
+        public virtual List<RequestReturning> RequestReturnings { get; set; }
+        public virtual ICollection<Assignment> AssignedToMe { get; set; }
+        public virtual ICollection<Assignment> AssignedByMe { get; set; }
     }
 }

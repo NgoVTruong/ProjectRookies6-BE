@@ -9,6 +9,6 @@ namespace FinalAssignment.DTOs.User
         public GenderEnum Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime JoinedDate { get; set; }
-        public string TypeStaff {get; set;}
+        public string UserRole {get; set;}
     }
 }

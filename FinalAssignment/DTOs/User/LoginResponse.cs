@@ -7,6 +7,6 @@ namespace FinalAssignment.DTOs.User
         public IList<string> Roles { get; set; }
         public string? User { get; set; }
         public string Location { get; set; }
-        public int LoginState { get; set; }
+        public bool IsFirstTime { get; set; }
     }
 }
