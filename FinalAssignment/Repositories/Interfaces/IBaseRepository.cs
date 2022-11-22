@@ -4,15 +4,11 @@ namespace TestWebAPI.Repositories.Interfaces
 {
     public interface IBaseRepository<T> where T : class
     {
-         IEnumerable<T> GetAll(Expression<Func<T, bool>>? predicate = null, Expression<Func<T, bool>>? includePredicate = null);
-        T? GetOne(Expression<Func<T, bool>>? predicate = null, Expression<Func<T, object>>? includePredicate = null);
-        T Create(T entity);
-
-        T Update(T entity);
-
-        bool Delete(T entity);
-
+        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
+        Task<T>? GetOneAsync(Expression<Func<T, bool>> predicate);
+        Task<T> CreateAsync(T entity);
+        Task<T> UpdateAsync(T entity);
+        Task<bool> DeleteAsync(T entity);
         int SaveChanges();
-
     }
 }
