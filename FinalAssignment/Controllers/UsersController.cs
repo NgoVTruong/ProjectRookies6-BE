@@ -67,5 +67,12 @@ namespace FinalAssignment.Controllers
             return Ok(data);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllUser()
+        {
+            var data = await _userService.GetAll();
+
+            return Ok(data);
+        }
     }
 }

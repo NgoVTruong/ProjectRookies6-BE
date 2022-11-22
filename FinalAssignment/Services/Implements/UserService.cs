@@ -6,6 +6,7 @@ using System.Text;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using FinalAssignment.Repositories.Implements;
 
 namespace FinalAssignment.Services.Implements
 {
@@ -14,12 +15,13 @@ namespace FinalAssignment.Services.Implements
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-
-        public UserService(RoleManager<IdentityRole> roleManager, IConfiguration configuration, UserManager<ApplicationUser> userManager)
+        private readonly UserRepository _userRepository;
+        public UserService(RoleManager<IdentityRole> roleManager, IConfiguration configuration, UserManager<ApplicationUser> userManager, UserRepository userRepository)
         {
             _roleManager = roleManager;
             _configuration = configuration;
             _userManager = userManager;
+            _userRepository = userRepository;
         }
 
         public string StaffCodeGen(int number) //35
@@ -304,6 +306,11 @@ namespace FinalAssignment.Services.Implements
             }).ToList();
 
             return users;
+        }
+
+        public async Task<IEnumerable<UserResponse>> GetAll()
+        {
+            var list = await _userRepository.GetAll();
         }
     }
 }
