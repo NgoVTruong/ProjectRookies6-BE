@@ -305,7 +305,10 @@ namespace FinalAssignment.Services.Implements
                 StaffCode = user.StaffCode,
                 UserName = user.UserName,
                 Type = user.Type,
-                JoinDate = user.JoinedDate
+                JoinDate = user.JoinedDate,
+                Location = user.Location,
+                Gender = user.Gender,
+                DateOfBirth= user.DateOfBirth,
             }).ToList();
 
             return users;
