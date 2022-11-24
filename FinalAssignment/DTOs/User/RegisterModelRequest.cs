@@ -24,8 +24,8 @@ namespace FinalAssignment.DTOs.User
         [MaxLength(20)]
         public string? LastName { get; set; }
         public GenderEnum Gender { get; set; }
-        public DateOnly DateOfBirth { get; set; }
-        public DateOnly JoinedDate { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public DateTime JoinedDate { get; set; }
         public string? TypeStaff { get; set; }
         public string? UserRole { get; set; }
         public string? Location { get; set; }
