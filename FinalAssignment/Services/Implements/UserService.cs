@@ -219,57 +219,6 @@ namespace FinalAssignment.Services.Implements
             };
         }
 
-        /*public async Task<Response> EditUser_bak(EditUserRequest model)
-        {
-            var user = await _userManager.FindByNameAsync(model.UserName);
-
-            var deleteRole = await _userManager.RemoveFromRoleAsync(user, model.UserRole);
-            
-            // if (!result.Succeeded)
-            // {
-            //     foreach (var error in result.Errors)
-            //     {
-            //         return new Response
-            //         {
-            //             Status = "Error",
-            //             Message = error.ToString()
-            //         };
-            //     }
-            // }
-
-            if (user == null)
-                return new Response
-                {
-                    Status = "Error",
-                    Message = "User not exists!"
-                };
-
-            user.DateOfBirth = model.DateOfBirth;
-            user.Gender = model.Gender;
-            user.JoinedDate = model.JoinedDate;
-            user.Type = model.UserRole;
-
-
-
-            if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if user
-            {
-                await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
-            }
-
-            if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if user
-            {
-                await _userManager.AddToRoleAsync(user, model.UserRole);
-            }
-
-            await _userManager.UpdateAsync(user);
-
-            return new Response
-            {
-                Status = "Success",
-                Message = "User edit successfully!"
-            };
-        }*/
-
         public async Task<UserResponse> GetUserByUsername(string userName)
         {
             var users = await _userManager.FindByNameAsync(userName);
@@ -284,7 +233,7 @@ namespace FinalAssignment.Services.Implements
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 DateOfBirth = user.DateOfBirth,
-                Gender = (int?)user.Gender,
+                Gender = user.Gender,
                 JoinedDate = user.JoinedDate,
                 Type = user.Type,
             }).ToList().FirstOrDefault();
@@ -388,13 +337,9 @@ namespace FinalAssignment.Services.Implements
                 StaffCode = user.StaffCode,
                 UserName = user.UserName,
                 Type = user.Type,
-<<<<<<< HEAD
                 JoinedDate = user.JoinedDate,
-=======
-                JoinDate = user.JoinedDate,
->>>>>>> c08d1bf2b69e72bfc244d35d7069cae9742cd55a
                 Location = user.Location,
-                Gender = (int?)user.Gender,
+                Gender = user.Gender,
                 DateOfBirth= user.DateOfBirth,
             }).ToList();
 
