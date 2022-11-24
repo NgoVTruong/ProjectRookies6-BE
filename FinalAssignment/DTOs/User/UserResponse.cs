@@ -1,3 +1,4 @@
+using Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,10 @@ namespace FinalAssignment.DTOs.User
         public string StaffCode {get; set;}
         public string FullName {get; set;}
         public string UserName { get; set; }
-        public DateTime JoinDate { get; set; }
+        public DateOnly JoinDate { get; set; }
         public string? Type { get; set; }
+        public string Location { get; set; }
+        public DateOnly DateOfBirth { get; set; }
+        public GenderEnum Gender { get; set; }
     }
 }
