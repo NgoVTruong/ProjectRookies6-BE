@@ -284,7 +284,7 @@ namespace FinalAssignment.Services.Implements
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 DateOfBirth = user.DateOfBirth,
-                Gender = (int?)user.Gender,
+                Gender = user.Gender,
                 JoinedDate = user.JoinedDate,
                 Type = user.Type,
             }).ToList().FirstOrDefault();
@@ -388,7 +388,7 @@ namespace FinalAssignment.Services.Implements
                 StaffCode = user.StaffCode,
                 UserName = user.UserName,
                 Type = user.Type,
-                JoinDate = user.JoinedDate,
+                JoinedDate = user.JoinedDate,
                 Location = user.Location,
                 Gender = user.Gender,
                 DateOfBirth= user.DateOfBirth,
