@@ -452,9 +452,3 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-/Data/Migrations/20221123131914_FannaMigration.cs
-/Data/Migrations/20221123131914_FannaMigration.Designer.cs
-Data/Migrations/20221121075836_Update_Relationships_Between_User_Assignment.cs
-Data/Migrations/20221121042004_FirstMigration.Designer.cs
-Data/Migrations/20221121042004_FirstMigration.cs
-Data/Migrations/20221121042004_FirstMigration.Designer.cs

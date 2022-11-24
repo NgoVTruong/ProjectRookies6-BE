@@ -7,6 +7,9 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using FinalAssignment.Repositories.Implements;
+using System.Diagnostics.Eventing.Reader;
+using Common.Enums;
+
 
 namespace FinalAssignment.Services.Implements
 {
@@ -87,7 +90,7 @@ namespace FinalAssignment.Services.Implements
             if (!result.Succeeded) return new Response
             {
                 Status = "Error",
-                Message = "User creation failed! Please check user details and try again."
+                Message = result.Errors.FirstOrDefault().Description
             };
 
             if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
@@ -216,7 +219,7 @@ namespace FinalAssignment.Services.Implements
             };
         }
 
-        public async Task<Response> EditUser(EditUserRequest model)
+        /*public async Task<Response> EditUser_bak(EditUserRequest model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
 
@@ -265,8 +268,88 @@ namespace FinalAssignment.Services.Implements
                 Status = "Success",
                 Message = "User edit successfully!"
             };
+        }*/
+
+        public async Task<UserResponse> GetUserByUsername(string userName)
+        {
+            var users = await _userManager.FindByNameAsync(userName);
+            if (users == null)
+            {
+                return new UserResponse();
+            }
+
+            var user = _userManager.Users.Where(i => i.UserName == userName).Select(user => new UserResponse()
+            {
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                DateOfBirth = user.DateOfBirth,
+                Gender = (int?)user.Gender,
+                JoinedDate = user.JoinedDate,
+                Type = user.Type,
+            }).ToList().FirstOrDefault();
+
+            return user;
         }
 
+        public async Task<Response> EditUser(EditUserRequest model)
+        {
+            var user = await _userManager.FindByNameAsync(model.UserName);
+
+            if (user == null)
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "User not exists!"
+                };
+
+            if(! Enum.IsDefined(typeof(UserTypeEnum), model.UserRole))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "User Role is invalid!"
+                };
+            }
+
+            user.DateOfBirth = model.DateOfBirth;
+            user.Gender = model.Gender;
+            user.JoinedDate = model.JoinedDate;
+            user.Type = model.UserRole;
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+
+            var removeUserFromRolesResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+
+            if(! removeUserFromRolesResult.Succeeded) 
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = removeUserFromRolesResult.Errors.FirstOrDefault().Description
+                };
+            }
+
+            var addUserToRoleResult = await _userManager.AddToRoleAsync(user, model.UserRole);
+
+            if(! addUserToRoleResult.Succeeded) 
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = addUserToRoleResult.Errors.FirstOrDefault().Description
+                };
+            }
+
+            await _userManager.UpdateAsync(user);
+
+            return new Response
+            {
+                Status = "Success",
+                Message = "User edit successfully!"
+            };
+
+        }
 
         public async Task<Response> DeleteUser(string userName)
         {
@@ -305,7 +388,10 @@ namespace FinalAssignment.Services.Implements
                 StaffCode = user.StaffCode,
                 UserName = user.UserName,
                 Type = user.Type,
-                JoinDate = user.JoinedDate
+                JoinDate = user.JoinedDate,
+                Location = user.Location,
+                Gender = user.Gender,
+                DateOfBirth= user.DateOfBirth,
             }).ToList();
 
             return users;
