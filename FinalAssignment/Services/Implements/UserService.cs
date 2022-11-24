@@ -39,7 +39,8 @@ namespace FinalAssignment.Services.Implements
             {
                 staffCode = staffCode + "0"; // SD00
             }
-            staffCode = staffCode + (check + 1).ToString(); //SD0036
+            string num = (++number).ToString();
+            staffCode = staffCode + num;
             return staffCode;
         }
 
@@ -181,12 +182,7 @@ namespace FinalAssignment.Services.Implements
                     Status = "Error",
                     Message = "User not exists!"
                 };
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var userPassword = user.PasswordHash;
-            var passwordHash = _userManager.PasswordHasher.HashPassword(user, model.NewPassword);
-
-            if (passwordHash == userPassword)
+            if (await _userManager.CheckPasswordAsync(user, model.NewPassword))
             {
                 return new Response
                 {
@@ -195,8 +191,9 @@ namespace FinalAssignment.Services.Implements
                 };
             }
 
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
             user.IsFirstTime = false;
-            // user.PasswordHash = passwordHash;
             await _userManager.UpdateAsync(user);
 
             var resetPassResult = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
