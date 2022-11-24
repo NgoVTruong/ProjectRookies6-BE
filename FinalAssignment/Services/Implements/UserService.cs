@@ -388,7 +388,11 @@ namespace FinalAssignment.Services.Implements
                 StaffCode = user.StaffCode,
                 UserName = user.UserName,
                 Type = user.Type,
+<<<<<<< HEAD
                 JoinedDate = user.JoinedDate,
+=======
+                JoinDate = user.JoinedDate,
+>>>>>>> c08d1bf2b69e72bfc244d35d7069cae9742cd55a
                 Location = user.Location,
                 Gender = (int?)user.Gender,
                 DateOfBirth= user.DateOfBirth,
