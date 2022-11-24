@@ -43,6 +43,14 @@ namespace FinalAssignment.Controllers
             return Ok(data);
         }
 
+        [HttpGet("{userName}")]
+        public async Task<IActionResult> GetUserByUsername(string userName)
+        {
+            var data = await _userService.GetUserByUsername(userName);
+
+            return Ok(data);
+        }
+
         [HttpPut]
         public async Task<IActionResult> EditUser([FromBody] EditUserRequest model)
         {
