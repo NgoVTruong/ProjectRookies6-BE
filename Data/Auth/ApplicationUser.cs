@@ -14,7 +14,7 @@ namespace Data.Auth
         public string? Type { get; set; }
         public GenderEnum Gender { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public DateTime? JoinedDate { get; set; }
+        public DateTime JoinedDate { get; set; }
         public string? StaffCode { get; set; }
         public string? Location { get; set; }
         public bool IsFirstTime { get; set; } //true

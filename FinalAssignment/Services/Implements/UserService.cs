@@ -10,6 +10,7 @@ using FinalAssignment.Repositories.Implements;
 using System.Diagnostics.Eventing.Reader;
 using Common.Enums;
 
+
 namespace FinalAssignment.Services.Implements
 {
     public class UserService : IUserService
@@ -62,7 +63,7 @@ namespace FinalAssignment.Services.Implements
                 UserName = model.UserName,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                FullName = model.FirstName + model.LastName,
+                FullName = model.FirstName +" "+ model.LastName,
                 Type = model.UserRole,
                 DateOfBirth = model.DateOfBirth, // (2000, 1, 1),
                 Gender = model.Gender, // (0 or 1 or 2)
@@ -382,7 +383,12 @@ namespace FinalAssignment.Services.Implements
             var location = user.Location;
             var users = _userManager.Users.Where(i => i.Location == location && i.IsDeleted == false).Select(user => new UserResponse()
             {
-                FirstName = user.FirstName
+                FirstName = user.FirstName,
+                FullName = user.FullName,
+                StaffCode = user.StaffCode,
+                UserName = user.UserName,
+                Type = user.Type,
+                JoinedDate = user.JoinedDate
             }).ToList();
 
             return users;
