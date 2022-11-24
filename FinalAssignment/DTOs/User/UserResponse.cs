@@ -1,3 +1,4 @@
+using Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace FinalAssignment.DTOs.User
         public DateTime? JoinedDate { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Type { get; set; }
+        public string Location { get; set; }
     }
 }
