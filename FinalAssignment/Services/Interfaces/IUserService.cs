@@ -8,6 +8,7 @@ namespace FinalAssignment.Services.Interfaces
         Task<Response> Register(RegisterModelRequest model);
         Task<LoginResponse> Login(LoginRequest model);
         Task<Response> ResetPassword(ResetPasswordRequest model);
+        Task<UserResponse> GetUserByUsername(string model);
         Task<Response> EditUser(EditUserRequest model);
         Task<Response> DeleteUser(string userName);
         Task<IEnumerable<UserResponse>> GetAllUserDependLocation(string userName);
