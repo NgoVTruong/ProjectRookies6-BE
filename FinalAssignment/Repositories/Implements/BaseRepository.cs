@@ -1,4 +1,6 @@
 ﻿using Data;
+using FinalAssignment.Repositories.Implements;
+using FinalAssignment.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using TestWebAPI.Repositories.Interfaces;
@@ -54,6 +56,11 @@ namespace TestWebAPI.Repositories.Implements
             var result = _dbSet.Update(entity).Entity;
 
             return await Task.FromResult(result);
+        }
+
+        public IDatabaseTransaction DatabaseTransaction()
+        {
+            return new EntityDatabseTransaction(_context);
         }
     }
 }
