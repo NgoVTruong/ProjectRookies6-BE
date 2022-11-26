@@ -2,8 +2,10 @@ namespace Common.Enums
 {
     public enum AssetStateEnum
     {
-        Waiting = 0,
-        Approve = 1,
-        Reject = 2
+        Available = 0,
+        NotAvailable = 1,
+        Assigned = 2,
+        WaitingForRecycling = 3,
+        Recycled = 4,
     }
 }
