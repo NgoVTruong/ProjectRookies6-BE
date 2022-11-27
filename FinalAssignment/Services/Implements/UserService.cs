@@ -115,7 +115,7 @@ namespace FinalAssignment.Services.Implements
         {
             var user = await _userManager.FindByNameAsync(model.Username);
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            if (user.IsDeleted == false && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 // var roleList = new List<RoleEachUser>();
