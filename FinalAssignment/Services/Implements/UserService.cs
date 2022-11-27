@@ -7,6 +7,9 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using FinalAssignment.Repositories.Implements;
+using System.Diagnostics.Eventing.Reader;
+using Common.Enums;
+
 
 namespace FinalAssignment.Services.Implements
 {
@@ -36,7 +39,8 @@ namespace FinalAssignment.Services.Implements
             {
                 staffCode = staffCode + "0"; // SD00
             }
-            staffCode = staffCode + (check + 1).ToString(); //SD0036
+            string num = (++number).ToString();
+            staffCode = staffCode + num;
             return staffCode;
         }
 
@@ -87,7 +91,7 @@ namespace FinalAssignment.Services.Implements
             if (!result.Succeeded) return new Response
             {
                 Status = "Error",
-                Message = "User creation failed! Please check user details and try again."
+                Message = result.Errors.FirstOrDefault().Description
             };
 
             if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
@@ -178,12 +182,7 @@ namespace FinalAssignment.Services.Implements
                     Status = "Error",
                     Message = "User not exists!"
                 };
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var userPassword = user.PasswordHash;
-            var passwordHash = _userManager.PasswordHasher.HashPassword(user, model.NewPassword);
-
-            if (passwordHash == userPassword)
+            if (await _userManager.CheckPasswordAsync(user, model.NewPassword))
             {
                 return new Response
                 {
@@ -192,8 +191,9 @@ namespace FinalAssignment.Services.Implements
                 };
             }
 
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
             user.IsFirstTime = false;
-            // user.PasswordHash = passwordHash;
             await _userManager.UpdateAsync(user);
 
             var resetPassResult = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
@@ -216,23 +216,31 @@ namespace FinalAssignment.Services.Implements
             };
         }
 
+        public async Task<UserResponse> GetUserByUsername(string userName)
+        {
+            var users = await _userManager.FindByNameAsync(userName);
+            if (users == null)
+            {
+                return new UserResponse();
+            }
+
+            var user = _userManager.Users.Where(i => i.UserName == userName).Select(user => new UserResponse()
+            {
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                DateOfBirth = user.DateOfBirth,
+                Gender = user.Gender,
+                JoinedDate = user.JoinedDate,
+                Type = user.Type,
+            }).ToList().FirstOrDefault();
+
+            return user;
+        }
+
         public async Task<Response> EditUser(EditUserRequest model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
-
-            var deleteRole = await _userManager.RemoveFromRoleAsync(user, model.UserRole);
-            
-            // if (!result.Succeeded)
-            // {
-            //     foreach (var error in result.Errors)
-            //     {
-            //         return new Response
-            //         {
-            //             Status = "Error",
-            //             Message = error.ToString()
-            //         };
-            //     }
-            // }
 
             if (user == null)
                 return new Response
@@ -241,21 +249,42 @@ namespace FinalAssignment.Services.Implements
                     Message = "User not exists!"
                 };
 
+            if(! Enum.IsDefined(typeof(UserTypeEnum), model.UserRole))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "User Role is invalid!"
+                };
+            }
+
             user.DateOfBirth = model.DateOfBirth;
             user.Gender = model.Gender;
             user.JoinedDate = model.JoinedDate;
             user.Type = model.UserRole;
 
+            var currentRoles = await _userManager.GetRolesAsync(user);
 
+            var removeUserFromRolesResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
 
-            if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if user
+            if(! removeUserFromRolesResult.Succeeded) 
             {
-                await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
+                return new Response
+                {
+                    Status = "Error",
+                    Message = removeUserFromRolesResult.Errors.FirstOrDefault().Description
+                };
             }
 
-            if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if user
+            var addUserToRoleResult = await _userManager.AddToRoleAsync(user, model.UserRole);
+
+            if(! addUserToRoleResult.Succeeded) 
             {
-                await _userManager.AddToRoleAsync(user, model.UserRole);
+                return new Response
+                {
+                    Status = "Error",
+                    Message = addUserToRoleResult.Errors.FirstOrDefault().Description
+                };
             }
 
             await _userManager.UpdateAsync(user);
@@ -265,8 +294,8 @@ namespace FinalAssignment.Services.Implements
                 Status = "Success",
                 Message = "User edit successfully!"
             };
-        }
 
+        }
 
         public async Task<Response> DeleteUser(string userName)
         {
@@ -305,7 +334,7 @@ namespace FinalAssignment.Services.Implements
                 StaffCode = user.StaffCode,
                 UserName = user.UserName,
                 Type = user.Type,
-                JoinDate = user.JoinedDate,
+                JoinedDate = user.JoinedDate,
                 Location = user.Location,
                 Gender = user.Gender,
                 DateOfBirth= user.DateOfBirth,
