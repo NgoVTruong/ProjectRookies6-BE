@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using FinalAssignment.Repositories.Interfaces;
+using System.Linq.Expressions;
 
 namespace TestWebAPI.Repositories.Interfaces
 {
@@ -10,5 +11,7 @@ namespace TestWebAPI.Repositories.Interfaces
         Task<T> UpdateAsync(T entity);
         Task<bool> DeleteAsync(T entity);
         int SaveChanges();
+        IDatabaseTransaction DatabaseTransaction();
+
     }
 }
