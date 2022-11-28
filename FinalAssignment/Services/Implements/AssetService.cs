@@ -63,7 +63,7 @@ namespace FinalAssignment.Services.Implements
 
         }
 
-        public async Task<IEnumerable<AsignedAsset>> GetAssignedAsset(string assetCode)
+        public async Task<AsignedAsset> GetAssignedAsset(string assetCode)
         {
            var getAssignedAsset = await _assignnment.GetAssignedAsset(assetCode);
             return getAssignedAsset;
