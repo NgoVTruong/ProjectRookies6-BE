@@ -39,9 +39,9 @@ namespace FinalAssignment.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string userName)
+        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
         {
-            return await _assetService.GetAllAsset(userName);
+            return await _assetService.GetAllAsset(location);
         }
 
         [HttpGet("detail-asset/{assetCode}")]
