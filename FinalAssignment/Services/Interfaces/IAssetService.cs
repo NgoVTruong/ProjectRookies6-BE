@@ -1,11 +1,12 @@
-﻿using Data.Auth;
-using Data.Entities;
+﻿using Data.Entities;
 using FinalAssignment.DTOs.Asset;
 
 namespace FinalAssignment.Services.Interfaces
 {
     public interface IAssetService
     {
+        Task<Asset?> Create(AssetRequest assetRequest);
+
         Task<bool> DeleteAsset(string assetCode);
 
         Task<IEnumerable<AssetResponse>> GetAllAsset(string adminLocation);
