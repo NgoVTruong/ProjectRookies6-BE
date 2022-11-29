@@ -1,7 +1,6 @@
 ﻿using FinalAssignment.DTOs.Asset;
-using FinalAssignment.DTOs.User;
+using FinalAssignment.Services.Implements;
 using FinalAssignment.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinalAssignment.Controllers
@@ -9,18 +8,26 @@ namespace FinalAssignment.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AssetsController : ControllerBase
-    {/*
-        [HttpGet("list")]
-        public async Task<IActionResult> CreateUser( RegisterModelRequest model)
-        {
-            var data = await _userService.Register(model);
-
-            return Ok(data);
-        }*/
+    {
         private readonly IAssetService _assetService;
-        public AssetsController(IAssetService assetService)
+        public AssetsController(IAssetService assetService )
         {
             _assetService = assetService;
+         
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(AssetRequest assetRequest)
+        {
+
+            /*if (((int)assetRequest.AssetStatus) > 1) return BadRequest($"State invalid");*/
+
+            var result = await _assetService.Create(assetRequest);
+
+            if (result == null)
+                return StatusCode(500, "Sorry the Request failed");
+
+            return Ok(result);
         }
 
         [HttpDelete("{assetCode}")]
