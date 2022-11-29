@@ -58,9 +58,9 @@ namespace FinalAssignment.Services.Implements
             }
         }
 
-        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string userName)
+        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
         {
-            var getListAsset = await _asset.GetAllAsset(userName);
+            var getListAsset = await _asset.GetAllAsset(location);
 
             return getListAsset;
 

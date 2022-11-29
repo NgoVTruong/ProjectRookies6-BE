@@ -10,7 +10,7 @@ namespace FinalAssignment.Repositories.Interfaces
 {
     public interface IAssetRepository : IBaseRepository<Asset>
     {
-        Task<IEnumerable<AssetResponse>> GetAllAsset(string userName);
+        Task<IEnumerable<AssetResponse>> GetAllAsset(string location);
         Task<AssetDetail> AssetDetail(string assetCode);
     }
 }
