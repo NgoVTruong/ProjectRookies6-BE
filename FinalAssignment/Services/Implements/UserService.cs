@@ -53,6 +53,42 @@ namespace FinalAssignment.Services.Implements
                     Message = "User already exists!"
                 };
 
+            bool IsAgeLessThan18Years(DateTime birthDate)
+            {
+                if (DateTime.Now.Year - birthDate.Year > 18)
+                {
+                    return false;
+                }
+                else if (DateTime.Now.Year - birthDate.Year < 18)
+                {
+                    return true;
+                }
+                else //if (DateTime.Now.Year - birthDate.Year == 18)
+                {
+                    if (birthDate.DayOfYear < DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                    else if (birthDate.DayOfYear > DateTime.Now.DayOfYear)
+                    {
+                        return true;
+                    }
+                    else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (IsAgeLessThan18Years(model.DateOfBirth))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "DOB < 18!"
+                };
+            }
+
             var userNumber = _userManager.Users.Count(); // 3
 
             ApplicationUser user = new()
@@ -253,6 +289,42 @@ namespace FinalAssignment.Services.Implements
                 {
                     Status = "Error",
                     Message = "User Role is invalid!"
+                };
+            }
+
+            bool IsAgeLessThan18Years(DateTime birthDate)
+            {
+                if (DateTime.Now.Year - birthDate.Year > 18)
+                {
+                    return false;
+                }
+                else if (DateTime.Now.Year - birthDate.Year < 18)
+                {
+                    return true;
+                }
+                else //if (DateTime.Now.Year - birthDate.Year == 18)
+                {
+                    if (birthDate.DayOfYear < DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                    else if (birthDate.DayOfYear > DateTime.Now.DayOfYear)
+                    {
+                        return true;
+                    }
+                    else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (IsAgeLessThan18Years(model.DateOfBirth))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "DOB < 18!"
                 };
             }
 
