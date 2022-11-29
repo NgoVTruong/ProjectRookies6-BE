@@ -1,6 +1,7 @@
-﻿using Data.Auth;
+﻿using Common.Enums;
 using Data.Entities;
 using FinalAssignment.DTOs.Asset;
+using FinalAssignment.Repositories.Implements;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
 
@@ -9,13 +10,15 @@ namespace FinalAssignment.Services.Implements
     public class AssetService : IAssetService
     {
         private readonly IAssetRepository _asset;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IAssignmentRepository _assignnment;
 
 
-        public AssetService(IAssetRepository asset , IAssignmentRepository assignnment)
+        public AssetService(IAssetRepository asset , IAssignmentRepository assignnment, ICategoryRepository categoryRepository)
         {
             _asset = asset;
             _assignnment = assignnment;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<AssetDetail> GetDetailAsset(string assetCode)
@@ -67,6 +70,63 @@ namespace FinalAssignment.Services.Implements
         {
            var getAssignedAsset = await _assignnment.GetAssignedAsset(assetCode);
             return getAssignedAsset;
+        }
+
+/*        public string AssetCodeGen(int number) //35
+        {
+            int check = number;
+            int count = 0;
+            while (check > 0) //35  //3
+            {
+                check = check / 10; //3 //0
+                count++; //1 //2
+            }
+            string staffCode = "SD";
+            for (int i = 0; i < 4 - count; i++)  //(int i = 0; i < 2; i++)
+            {
+                staffCode = staffCode + "0000"; // SD00
+            }
+            string num = (++number).ToString();
+            staffCode = staffCode + num;
+            return staffCode;
+        }*/
+
+        public async Task<Asset> Create(AssetRequest assetRequest)
+        {
+            var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
+
+            if (category == null) return null;
+
+            var now = DateTime.Now;
+
+            var dateCompare = DateTime.Compare(now, assetRequest.InstalledDate);
+
+            if (dateCompare < 0)
+            {
+                assetRequest.AssetStatus = AssetStateEnum.NotAvailable;
+            }
+
+            var newAsset = new Asset
+            {
+                CategoryId = assetRequest.CategoryId,
+                AssetCode= assetRequest.AssetCode,
+                AssetName = assetRequest.AssetName,
+                Category = category,
+                AssetStatus = assetRequest.AssetStatus,
+                InstalledDate = assetRequest.InstalledDate,
+                Specification = assetRequest.Specification,
+                Location = assetRequest.Location
+            };
+
+            var createdAsset = await _asset.CreateAsync(newAsset);
+            _asset.SaveChanges();
+
+            if (createdAsset == null)
+            {
+                return null;
+            }
+
+            return createdAsset;
         }
     }
 }

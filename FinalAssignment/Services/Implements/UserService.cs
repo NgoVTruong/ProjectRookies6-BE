@@ -1,14 +1,12 @@
+using Common.Enums;
+using Data.Auth;
 using FinalAssignment.DTOs.User;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Data.Auth;
-using System.Text;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using FinalAssignment.Repositories.Implements;
-using System.Diagnostics.Eventing.Reader;
-using Common.Enums;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 
 namespace FinalAssignment.Services.Implements
