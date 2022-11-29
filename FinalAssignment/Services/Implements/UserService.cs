@@ -285,7 +285,7 @@ namespace FinalAssignment.Services.Implements
                 };
             }
 
-            await _userManager.CreateAsync(user);
+            await _userManager.UpdateAsync(user);
 
             return new Response
             {
