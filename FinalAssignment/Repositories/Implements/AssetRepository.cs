@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Data;
 using Data.Auth;
 using Data.Entities;
 using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using System.Linq.Expressions;
+using System.Linq;
 using TestWebAPI.Repositories.Implements;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinalAssignment.Repositories.Implements
 {
@@ -71,8 +70,6 @@ namespace FinalAssignment.Repositories.Implements
                     AssetStatus = (Common.Enums.AssetStateEnum)5
                 }; ;
             }
-
         }
-
     }
 }
