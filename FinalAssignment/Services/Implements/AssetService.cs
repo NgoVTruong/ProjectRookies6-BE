@@ -1,6 +1,7 @@
 ﻿using Common.Enums;
 using Data.Entities;
 using FinalAssignment.DTOs.Asset;
+using FinalAssignment.Repositories.Implements;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
 
@@ -13,10 +14,11 @@ namespace FinalAssignment.Services.Implements
         private readonly IAssignmentRepository _assignnment;
 
 
-        public AssetService(IAssetRepository asset , IAssignmentRepository assignnment)
+        public AssetService(IAssetRepository asset , IAssignmentRepository assignnment, ICategoryRepository categoryRepository)
         {
             _asset = asset;
             _assignnment = assignnment;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<AssetDetail> GetDetailAsset(string assetCode)
@@ -109,6 +111,7 @@ namespace FinalAssignment.Services.Implements
                 CategoryId = assetRequest.CategoryId,
                 AssetCode= assetRequest.AssetCode,
                 AssetName = assetRequest.AssetName,
+                Category = category,
                 AssetStatus = assetRequest.AssetStatus,
                 InstalledDate = assetRequest.InstalledDate,
                 Specification = assetRequest.Specification,
@@ -125,7 +128,5 @@ namespace FinalAssignment.Services.Implements
 
             return createdAsset;
         }
-
-
     }
 }

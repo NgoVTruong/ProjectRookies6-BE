@@ -19,14 +19,7 @@ namespace FinalAssignment.Repositories.Implements
         {
             _userManager = userManager;
         }
-        public override async Task<Asset?> GetOneAsync(Expression<Func<Asset, bool>>? predicate = null)
-        {
-            var dbSet = predicate == null ? _dbSet : _dbSet.Where(predicate);
 
-            return await dbSet
-            .Include(asset => asset.Category)
-            .FirstOrDefaultAsync();
-        }
         public async Task<IEnumerable<AssetResponse>> GetAllAsset(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
