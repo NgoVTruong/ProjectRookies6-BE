@@ -11,22 +11,26 @@ namespace FinalAssignment.Repositories.Implements
     {
         public AssignmentRepository(FinalAssignmentContext context) : base (context)
         {}
-        public async Task<IEnumerable<AsignedAsset>> GetAssignedAsset(string assetCode)
+        public async Task<AsignedAsset> GetAssignedAsset(string assetCode)
         {
-            var assignedAsset = _dbSet.Where(s => s.AssetCode == assetCode)
-                .Select(a => new AsignedAsset
-                {
-                    AssignedTo = a.AssignedTo,
-                    AssignedDate = a.AssignedDate,
-                    AssetName = a.AssetName,
-                    AssignmentState = a.AssignmentState,
-                }).ToList();
+            var assignedAsset = _dbSet.FirstOrDefault(s => s.AssetCode == assetCode);
+               
 
             if (assignedAsset != null)
             {
-                return assignedAsset;
+                return new AsignedAsset
+                {
+                    AssignedTo = assignedAsset.AssignedTo,
+                    AssignedBy = assignedAsset.AssignedBy,
+                    AssignedDate = assignedAsset.AssignedDate,
+                }; 
             }
-            return null;
+            return new AsignedAsset
+            {
+                AssignedTo = "null",
+                AssignedBy = "null",
+                AssignedDate = "0000-00-00",
+            }; ;
         }
     }
 }

@@ -17,12 +17,12 @@ namespace FinalAssignment.DTOs.User
 
         [MinLength(1)]
         [MaxLength(20)]
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; }
 
         [Required]
         [MinLength(1)]
         [MaxLength(20)]
-        public string? LastName { get; set; }
+        public string LastName { get; set; }
         public GenderEnum Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime JoinedDate { get; set; }

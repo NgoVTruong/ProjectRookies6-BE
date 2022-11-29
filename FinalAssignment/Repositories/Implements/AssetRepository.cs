@@ -30,7 +30,7 @@ namespace FinalAssignment.Repositories.Implements
             var location = user.Location;
             var getList = _dbSet.Where(s => s.IsDeleted == false
                                             && s.Location.ToLower().Contains(location.ToLower())
-                                            && s.AssetStatus <= (Common.Enums.AssetStateEnum)3)
+                                            && s.AssetStatus < (Common.Enums.AssetStateEnum)3)
 
                           .Select(i => new AssetResponse
                           {
