@@ -1,6 +1,8 @@
 using Common.Enums;
 using Data.Auth;
 using FinalAssignment.DTOs.User;
+using FinalAssignment.Repositories.Implements;
+using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -16,6 +18,7 @@ namespace FinalAssignment.Services.Implements
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly IUserRepository _userRepository;
         public UserService(RoleManager<IdentityRole> roleManager, IConfiguration configuration, UserManager<ApplicationUser> userManager)
         {
             _roleManager = roleManager;
@@ -93,12 +96,12 @@ namespace FinalAssignment.Services.Implements
 
             ApplicationUser user = new()
             {
-                Email = model.Email,
+
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.UserName,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                FullName = model.FirstName +" "+ model.LastName,
+                FullName = model.FirstName + " " + model.LastName,
                 Type = model.UserRole,
                 DateOfBirth = model.DateOfBirth, // (2000, 1, 1),
                 Gender = model.Gender, // (0 or 1 or 2)
@@ -272,7 +275,7 @@ namespace FinalAssignment.Services.Implements
             return user;
         }
 
-        public async Task<Response> EditUser(EditUserRequest model)
+        public async Task<Response?> EditUser(EditUserRequest model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
 
@@ -283,7 +286,7 @@ namespace FinalAssignment.Services.Implements
                     Message = "User not exists!"
                 };
 
-            if(! Enum.IsDefined(typeof(UserTypeEnum), model.UserRole))
+            if (!Enum.IsDefined(typeof(UserTypeEnum), model.UserRole))
             {
                 return new Response
                 {
@@ -337,7 +340,7 @@ namespace FinalAssignment.Services.Implements
 
             var removeUserFromRolesResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
 
-            if(! removeUserFromRolesResult.Succeeded) 
+            if (!removeUserFromRolesResult.Succeeded)
             {
                 return new Response
                 {
@@ -348,7 +351,7 @@ namespace FinalAssignment.Services.Implements
 
             var addUserToRoleResult = await _userManager.AddToRoleAsync(user, model.UserRole);
 
-            if(! addUserToRoleResult.Succeeded) 
+            if (!addUserToRoleResult.Succeeded)
             {
                 return new Response
                 {
@@ -369,26 +372,38 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<Response> DeleteUser(string userName)
         {
-            // check xem co ton tai user trong Assignment khong, neu co thi bao loi
-            var user = await _userManager.FindByNameAsync(userName);
 
-            if (user == null)
-                return new Response
-                {
-                    Status = "Error",
-                    Message = "User not exists!"
-                };
-
-            user.IsDeleted = true;
-            await _userManager.UpdateAsync(user);
-
-            return new Response
+            using (var transaction = _userRepository.DatabaseTransaction())
             {
-                Status = "Success",
-                Message = "User delete successfully!"
-            };
+                try
+                {    // check xem co ton tai user trong Assignment khong, neu co thi bao loi
+                    var user = await _userManager.FindByNameAsync(userName);
+
+                    if (user == null)
+                        return new Response
+                        {
+                            Status = "Error",
+                            Message = "User not exists!"
+                        };
+
+                    user.IsDeleted = true;
+                    await _userManager.UpdateAsync(user);
+                    transaction.Commit();
+                    return new Response
+                    {
+                        Status = "Success",
+                        Message = "User delete successfully!"
+                    };
+                }
+                catch
+                {
+                    transaction.RollBack();
+                    return null;
+                }
+            }
         }
-        public async Task<IEnumerable<UserResponse>> GetAllUserDependLocation(string userName)
+
+        public async Task<IEnumerable<UserResponse?>> GetAllUserDependLocation(string userName)
         {
             // check xem co ton tai user trong Assignment khong, neu co thi bao loi
             var user = await _userManager.FindByNameAsync(userName);
@@ -407,7 +422,7 @@ namespace FinalAssignment.Services.Implements
                 JoinedDate = user.JoinedDate,
                 Location = user.Location,
                 Gender = user.Gender,
-                DateOfBirth= user.DateOfBirth,
+                DateOfBirth = user.DateOfBirth,
             }).ToList();
 
             return users;

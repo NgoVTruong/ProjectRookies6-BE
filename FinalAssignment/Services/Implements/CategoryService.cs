@@ -16,22 +16,34 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<Category?> Create(CategoryRequest createRequest)
         {
-            if (createRequest == null) return null;
-            var newCategory = new Category
+            using (var transaction = _categoryRepository.DatabaseTransaction())
             {
-                Id = Guid.NewGuid(),
-                CategoryCode = createRequest.CategoryCode,
-                CategoryName = createRequest.CategoryName,
-            };
-            var createCategory = await _categoryRepository.CreateAsync(newCategory);
-            _categoryRepository.SaveChanges();
+                try
+                {
+                    if (createRequest == null) return null;
+                    var newCategory = new Category
+                    {
+                        Id = Guid.NewGuid(),
+                        CategoryCode = createRequest.CategoryCode,
+                        CategoryName = createRequest.CategoryName,
+                    };
+                    var createCategory = await _categoryRepository.CreateAsync(newCategory);
+                    _categoryRepository.SaveChanges();
+                    transaction.Commit();
 
-            return new Category
-            {
-                Id = Guid.NewGuid(),
-                CategoryCode =createRequest.CategoryCode,
-                CategoryName=createCategory.CategoryName,
-            };
+                    return new Category
+                    {
+                        Id = Guid.NewGuid(),
+                        CategoryCode = createRequest.CategoryCode,
+                        CategoryName = createCategory.CategoryName,
+                    };
+                }
+                catch
+                {
+                    transaction.RollBack();
+                    return null;
+                }
+            }
         }
 
         public async Task<IEnumerable<Category>> GetAll()
@@ -43,5 +55,6 @@ namespace FinalAssignment.Services.Implements
         {
             return await _categoryRepository.GetOneAsync(x => x.CategoryName == categoryName);
         }
+
     }
 }

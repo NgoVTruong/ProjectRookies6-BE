@@ -1,11 +1,10 @@
 ﻿using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinalAssignment.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/category-management")]
     [ApiController]
 
     public class CategoryController : ControllerBase
@@ -31,7 +30,7 @@ namespace FinalAssignment.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("categories")]
         public async Task<IActionResult> Create(CategoryRequest createRequest)
         {
 

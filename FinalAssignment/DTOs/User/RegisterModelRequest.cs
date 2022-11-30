@@ -4,9 +4,6 @@ namespace FinalAssignment.DTOs.User
 {
     public class RegisterModelRequest
     {
-        [Required]
-        public string Email { get; set; }
-
         [MinLength(1)]
         [MaxLength(20)]
         public string UserName { get; set; }
