@@ -30,11 +30,6 @@ namespace FinalAssignment.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> CreateUser([FromBody] RegisterModelRequest model)
         {
-            var userExists = await _userService.GetUserByUsername(model.UserName);
-
-            if (userExists != null)
-                return StatusCode(400, $"The user name {model.UserName} has already existed in the system");
-
             try
             {
                 var data = await _userService.Register(model);
