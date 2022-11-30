@@ -39,18 +39,18 @@ namespace FinalAssignment.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string userName)
+        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
         {
-            return await _assetService.GetAllAsset(userName);
+            return await _assetService.GetAllAsset(location);
         }
 
-        [HttpGet("detail-asset/{assetCode}")]
-        public async Task<AssetDetail> GetDetailAsset(string assetCode)
-        {
-            var getDetailAsset = await _assetService.GetDetailAsset(assetCode);
+        //[HttpGet("detail-asset/{assetCode}")]
+        //public async Task<AssetDetail> GetDetailAsset(string assetCode)
+        //{
+        //    var getDetailAsset = await _assetService.GetDetailAsset(assetCode);
 
-            return getDetailAsset;
-        }
+        //    return getDetailAsset;
+        //}
 
         [HttpGet("assigned-asset/{assetCode}")]
         public async Task<AsignedAsset> GetAssignedAsset(string assetCode)
