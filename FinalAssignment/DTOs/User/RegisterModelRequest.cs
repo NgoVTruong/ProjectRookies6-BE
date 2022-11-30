@@ -4,13 +4,13 @@ namespace FinalAssignment.DTOs.User
 {
     public class RegisterModelRequest
     {
-        [MinLength(1)]
+  /*      [MinLength(1)]
         [MaxLength(20)]
-        public string UserName { get; set; }
+        public string UserName { get; set; }*/
 
-        [Required]
+/*        [Required]
         // [RegularExpression(@"[REGEX HERE]", ErrorMessage = "The Password field can not  have white space.")]
-        public string Password { get; set; }
+        public string Password { get; set; }*/
 
         [MinLength(1)]
         [MaxLength(20)]

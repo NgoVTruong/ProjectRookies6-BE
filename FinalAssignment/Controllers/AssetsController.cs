@@ -29,7 +29,7 @@ namespace FinalAssignment.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{assetCode}")]
+        [HttpDelete("assets/{assetCode}")]
         public async Task<bool> DeleteAsset(string assetCode)
         {
             var data = _assetService.DeleteAsset(assetCode);

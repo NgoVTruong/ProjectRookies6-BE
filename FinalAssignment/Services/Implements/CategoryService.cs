@@ -28,6 +28,8 @@ namespace FinalAssignment.Services.Implements
                         CategoryName = createRequest.CategoryName,
                     };
                     var createCategory = await _categoryRepository.CreateAsync(newCategory);
+
+
                     _categoryRepository.SaveChanges();
                     transaction.Commit();
 
