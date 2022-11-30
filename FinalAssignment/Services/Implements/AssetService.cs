@@ -91,42 +91,54 @@ namespace FinalAssignment.Services.Implements
             return staffCode;
         }*/
 
-        public async Task<Asset> Create(AssetRequest assetRequest)
+        public async Task<Asset?> Create(AssetRequest assetRequest)
         {
-            var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
-
-            if (category == null) return null;
-
-            var now = DateTime.Now;
-
-            var dateCompare = DateTime.Compare(now, assetRequest.InstalledDate);
-
-            if (dateCompare < 0)
+            using (var transaction = _categoryRepository.DatabaseTransaction())
             {
-                assetRequest.AssetStatus = AssetStateEnum.NotAvailable;
+                try
+                {
+
+                    var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
+
+                    if (category == null) return null;
+
+                    var now = DateTime.Now;
+
+                    var dateCompare = DateTime.Compare(now, assetRequest.InstalledDate);
+
+                    if (dateCompare < 0)
+                    {
+                        assetRequest.AssetStatus = AssetStateEnum.NotAvailable;
+                    }
+
+                    var newAsset = new Asset
+                    {
+                        CategoryId = assetRequest.CategoryId,
+                        AssetCode = assetRequest.AssetCode,
+                        AssetName = assetRequest.AssetName,
+                        Category = category,
+                        AssetStatus = assetRequest.AssetStatus,
+                        InstalledDate = assetRequest.InstalledDate,
+                        Specification = assetRequest.Specification,
+                        Location = assetRequest.Location
+                    };
+
+                    var createdAsset = await _asset.CreateAsync(newAsset);
+                    _asset.SaveChanges();
+
+                    if (createdAsset == null)
+                    {
+                        return null;
+                    }
+
+                    return createdAsset;
+                }
+                catch
+                {
+                    transaction.RollBack();
+                    return null;
+                }
             }
-
-            var newAsset = new Asset
-            {
-                CategoryId = assetRequest.CategoryId,
-                AssetCode= assetRequest.AssetCode,
-                AssetName = assetRequest.AssetName,
-                Category = category,
-                AssetStatus = assetRequest.AssetStatus,
-                InstalledDate = assetRequest.InstalledDate,
-                Specification = assetRequest.Specification,
-                Location = assetRequest.Location
-            };
-
-            var createdAsset = await _asset.CreateAsync(newAsset);
-            _asset.SaveChanges();
-
-            if (createdAsset == null)
-            {
-                return null;
-            }
-
-            return createdAsset;
         }
     }
 }

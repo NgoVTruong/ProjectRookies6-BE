@@ -1,11 +1,10 @@
 ﻿using FinalAssignment.DTOs.Asset;
-using FinalAssignment.Services.Implements;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinalAssignment.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/asset-management")]
     [ApiController]
     public class AssetsController : ControllerBase
     {
@@ -16,7 +15,7 @@ namespace FinalAssignment.Controllers
          
         }
 
-        [HttpPost]
+        [HttpPost("assets")]
         public async Task<IActionResult> Create(AssetRequest assetRequest)
         {
 
