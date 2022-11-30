@@ -20,14 +20,9 @@ namespace FinalAssignment.Repositories.Implements
             _userManager = userManager;
         }
 
-        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string userName)
+        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
         {
-            var user = await _userManager.FindByNameAsync(userName);
-            if (user == null)
-            {
-                return Enumerable.Empty<AssetResponse>();
-            }
-            var location = user.Location;
+            
             var getList = _dbSet.Where(s => s.IsDeleted == false
                                             && s.Location.ToLower().Contains(location.ToLower())
                                             && s.AssetStatus < (Common.Enums.AssetStateEnum)3)
@@ -39,7 +34,10 @@ namespace FinalAssignment.Repositories.Implements
                               CategoryName = i.CategoryName,
                               AssetStatus = i.AssetStatus,
                           }).ToList();
-
+            if (getList == null)
+            {
+                return Enumerable.Empty<AssetResponse>();
+            }
             return getList;
 
         }
