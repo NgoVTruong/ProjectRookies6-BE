@@ -9,12 +9,13 @@ namespace FinalAssignment.Repositories.Implements
 
     public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepository
     {
-        public AssignmentRepository(FinalAssignmentContext context) : base (context)
-        {}
+        public AssignmentRepository(FinalAssignmentContext context) : base(context)
+        {
+        }
         public async Task<AsignedAsset> GetAssignedAsset(string assetCode)
         {
             var assignedAsset = _dbSet.FirstOrDefault(s => s.AssetCode == assetCode);
-               
+
 
             if (assignedAsset != null)
             {
@@ -23,7 +24,7 @@ namespace FinalAssignment.Repositories.Implements
                     AssignedTo = assignedAsset.AssignedTo,
                     AssignedBy = assignedAsset.AssignedBy,
                     AssignedDate = assignedAsset.AssignedDate,
-                }; 
+                };
             }
             return new AsignedAsset
             {
