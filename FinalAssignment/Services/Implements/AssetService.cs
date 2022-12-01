@@ -153,5 +153,24 @@ namespace FinalAssignment.Services.Implements
                 }
             }
         }
+
+        public async Task<EditAssetResponse> EditAsset(EditAssetRequest asset, string assetCode)
+        {
+            using (var transaction = _asset.DatabaseTransaction())
+            {
+                try
+                {
+                    var getEditAsset = await _asset.EditAsset(asset, assetCode);
+                    transaction.Commit();
+                    return getEditAsset;
+                }
+                catch
+                {
+                    transaction.RollBack();
+                    return null;
+                }
+
+            }
+        }
     }
 }
