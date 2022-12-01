@@ -7,9 +7,7 @@ namespace FinalAssignment.DTOs.Asset
     {
         public Guid Id { get; set; }
 
-        public Guid? CategoryId { get; set; }
-
-        public string? AssetCode { get; set; }
+        public Guid CategoryId { get; set; }       
 
         public string? AssetName { get; set; }
 

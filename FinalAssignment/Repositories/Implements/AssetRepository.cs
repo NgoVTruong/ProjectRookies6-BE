@@ -69,5 +69,11 @@ namespace FinalAssignment.Repositories.Implements
                 }; ;
             }
         }
+
+        public  int GetAll(Guid id)
+        {
+            var getAll =  _dbSet.Where(x => x.CategoryId == id).Count();
+            return  getAll;
+        }
     }
 }

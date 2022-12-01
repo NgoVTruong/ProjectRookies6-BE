@@ -1,11 +1,14 @@
 using Common.Enums;
 using Data.Auth;
+using Data.Entities;
+using FinalAssignment.DTOs.Asset;
 using FinalAssignment.DTOs.User;
 using FinalAssignment.Repositories.Implements;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -47,105 +50,203 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<Response> Register(RegisterModelRequest model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.UserName);
 
-            if (userExists != null)
-                return new Response
-                {
-                    Status = "Error",
-                    Message = "User already exists!"
-                };
 
-            bool IsAgeLessThan18Years(DateTime birthDate)
+            var getUserName = model.LastName;
+
+            string[] array = getUserName.Split(" ");
+
+
+            var userNameSplit = "";
+            for (int i = 0; i < array.Length; i++)
             {
-                if (DateTime.Now.Year - birthDate.Year > 18)
+                for (int j = 0; j < array[i].Length; j++)
                 {
-                    return false;
+                    if (j == 0) userNameSplit += array[i][j];
                 }
-                else if (DateTime.Now.Year - birthDate.Year < 18)
+
+            }
+            var fullname = model.FirstName + " " + model.LastName;
+
+            var getFullName = _userManager.Users.Where(i => i.FullName == fullname);
+
+            if (getFullName.Count() > 0)
+            {
+                int userNumberExist = getFullName.Count();
+                var userName = model.FirstName.ToLower() + userNameSplit.ToLower() + (userNumberExist).ToString();
+                var password = userName + '@' + model.DateOfBirth.ToString("yyyyMMdd");
+
+                bool IsAgeLessThan18Years(DateTime birthDate)
                 {
-                    return true;
-                }
-                else //if (DateTime.Now.Year - birthDate.Year == 18)
-                {
-                    if (birthDate.DayOfYear < DateTime.Now.DayOfYear)
+                    if (DateTime.Now.Year - birthDate.Year > 18)
                     {
                         return false;
                     }
-                    else if (birthDate.DayOfYear > DateTime.Now.DayOfYear)
+                    else if (DateTime.Now.Year - birthDate.Year < 18)
                     {
                         return true;
                     }
-                    else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                    else //if (DateTime.Now.Year - birthDate.Year == 18)
+                    {
+                        if (birthDate.DayOfYear < DateTime.Now.DayOfYear)
+                        {
+                            return false;
+                        }
+                        else if (birthDate.DayOfYear > DateTime.Now.DayOfYear)
+                        {
+                            return true;
+                        }
+                        else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                if (IsAgeLessThan18Years(model.DateOfBirth))
+                {
+                    return new Response
+                    {
+                        Status = "Error",
+                        Message = "DOB < 18!"
+                    };
+                }
+
+                var userNumber = _userManager.Users.Count(); // 3
+
+                ApplicationUser user = new()
+                {
+
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = userName,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    FullName = model.FirstName + " " + model.LastName,
+                    Type = model.UserRole,
+                    DateOfBirth = model.DateOfBirth, // (2000, 1, 1),
+                    Gender = model.Gender, // (0 or 1 or 2)
+                    JoinedDate = model.JoinedDate, // >(2018, 1, 1),
+                    StaffCode = StaffCodeGen(userNumber), //SD0036
+                    Location = model.Location,
+                    IsFirstTime = true, // First time = 0
+                    IsDeleted = false,
+                };
+
+
+                var result = await _userManager.CreateAsync(user, password);
+
+                if (!result.Succeeded) return new Response
+                {
+                    Status = "Error",
+                    Message = result.Errors.FirstOrDefault().Description
+                };
+
+                if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
+                }
+
+                if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
+                {
+                    await _userManager.AddToRoleAsync(user, model.UserRole);
+                }
+
+                return new Response
+                {
+                    Status = "Success",
+                    Message = "User created successfully!",
+                    UserName = userName,
+                    Password = password,
+                };
+            }
+            else
+            {
+                var userName = model.FirstName.ToLower() + userNameSplit.ToLower();
+                var password = userName + '@' + model.DateOfBirth.ToString("yyyyMMdd");
+
+                bool IsAgeLessThan18Years(DateTime birthDate)
+                {
+                    if (DateTime.Now.Year - birthDate.Year > 18)
                     {
                         return false;
                     }
+                    else if (DateTime.Now.Year - birthDate.Year < 18)
+                    {
+                        return true;
+                    }
+                    else //if (DateTime.Now.Year - birthDate.Year == 18)
+                    {
+                        if (birthDate.DayOfYear < DateTime.Now.DayOfYear)
+                        {
+                            return false;
+                        }
+                        else if (birthDate.DayOfYear > DateTime.Now.DayOfYear)
+                        {
+                            return true;
+                        }
+                        else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                        {
+                            return false;
+                        }
+                    }
                 }
-            }
 
-            if (IsAgeLessThan18Years(model.DateOfBirth))
-            {
-                return new Response
+                if (IsAgeLessThan18Years(model.DateOfBirth))
+                {
+                    return new Response
+                    {
+                        Status = "Error",
+                        Message = "DOB < 18!"
+                    };
+                }
+
+                var userNumber = _userManager.Users.Count(); // 3
+
+                ApplicationUser user = new()
+                {
+
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = userName,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    FullName = model.FirstName + " " + model.LastName,
+                    Type = model.UserRole,
+                    DateOfBirth = model.DateOfBirth, // (2000, 1, 1),
+                    Gender = model.Gender, // (0 or 1 or 2)
+                    JoinedDate = model.JoinedDate, // >(2018, 1, 1),
+                    StaffCode = StaffCodeGen(userNumber), //SD0036
+                    Location = model.Location,
+                    IsFirstTime = true, // First time = 0
+                    IsDeleted = false,
+                };
+
+
+                var result = await _userManager.CreateAsync(user, password);
+
+                if (!result.Succeeded) return new Response
                 {
                     Status = "Error",
-                    Message = "DOB < 18!"
+                    Message = result.Errors.FirstOrDefault().Description
                 };
-            }
 
-            var userNumber = _userManager.Users.Count(); // 3
+                if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
+                }
 
-            ApplicationUser user = new()
-            {
+                if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
+                {
+                    await _userManager.AddToRoleAsync(user, model.UserRole);
+                }
 
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.UserName,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                FullName = model.FirstName + " " + model.LastName,
-                Type = model.UserRole,
-                DateOfBirth = model.DateOfBirth, // (2000, 1, 1),
-                Gender = model.Gender, // (0 or 1 or 2)
-                JoinedDate = model.JoinedDate, // >(2018, 1, 1),
-                StaffCode = StaffCodeGen(userNumber), //SD0036
-                Location = model.Location,
-                IsFirstTime = true, // First time = 0
-                IsDeleted = false,
-            };
-
-            bool whiteSpace = model.Password.Contains(" ");
-
-            if (whiteSpace)
-            {
                 return new Response
                 {
-                    Status = "Error",
-                    Message = "Password cannot have white space."
+                    Status = "Success",
+                    Message = "User created successfully!",
+                    UserName = userName,
+                    Password = password,
                 };
             }
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded) return new Response
-            {
-                Status = "Error",
-                Message = result.Errors.FirstOrDefault().Description
-            };
-
-            if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
-            {
-                await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
-            }
-
-            if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
-            {
-                await _userManager.AddToRoleAsync(user, model.UserRole);
-            }
-
-            return new Response
-            {
-                Status = "Success",
-                Message = "User created successfully!"
-            };
         }
 
         public async Task<LoginResponse> Login(LoginRequest model)

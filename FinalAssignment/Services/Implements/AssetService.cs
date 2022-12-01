@@ -14,7 +14,7 @@ namespace FinalAssignment.Services.Implements
         private readonly IAssignmentRepository _assignnment;
 
 
-        public AssetService(IAssetRepository asset , IAssignmentRepository assignnment, ICategoryRepository categoryRepository)
+        public AssetService(IAssetRepository asset, IAssignmentRepository assignnment, ICategoryRepository categoryRepository)
         {
             _asset = asset;
             _assignnment = assignnment;
@@ -36,10 +36,10 @@ namespace FinalAssignment.Services.Implements
                 {
                     var asset = await _asset.GetOneAsync(s => s.AssetCode == assetCode);
                     var assignment = await _assignnment.GetOneAsync(a => a.AssetCode == assetCode);
-                    
+
                     if (asset != null && assignment == null)
                     {
-                        
+
                         asset.IsDeleted = true;
                         _asset.UpdateAsync(asset);
                         _asset.SaveChanges();
@@ -68,28 +68,28 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<AsignedAsset> GetAssignedAsset(string assetCode)
         {
-           var getAssignedAsset = await _assignnment.GetAssignedAsset(assetCode);
+            var getAssignedAsset = await _assignnment.GetAssignedAsset(assetCode);
             return getAssignedAsset;
         }
 
-/*        public string AssetCodeGen(int number) //35
-        {
-            int check = number;
-            int count = 0;
-            while (check > 0) //35  //3
-            {
-                check = check / 10; //3 //0
-                count++; //1 //2
-            }
-            string staffCode = "SD";
-            for (int i = 0; i < 4 - count; i++)  //(int i = 0; i < 2; i++)
-            {
-                staffCode = staffCode + "0000"; // SD00
-            }
-            string num = (++number).ToString();
-            staffCode = staffCode + num;
-            return staffCode;
-        }*/
+        /*        public string AssetCodeGen(int number) //35
+                {
+                    int check = number;
+                    int count = 0;
+                    while (check > 0) //35  //3
+                    {
+                        check = check / 10; //3 //0
+                        count++; //1 //2
+                    }
+                    string staffCode = "SD";
+                    for (int i = 0; i < 4 - count; i++)  //(int i = 0; i < 2; i++)
+                    {
+                        staffCode = staffCode + "0000"; // SD00
+                    }
+                    string num = (++number).ToString();
+                    staffCode = staffCode + num;
+                    return staffCode;
+                }*/
 
         public async Task<Asset?> Create(AssetRequest assetRequest)
         {
@@ -97,8 +97,20 @@ namespace FinalAssignment.Services.Implements
             {
                 try
                 {
-
                     var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
+
+                    var getAssetCode = category.CategoryName;
+
+                    var assetCode = "";
+                    for (int i = 0; i < getAssetCode.Length; i++)
+                    {
+                        if (i <= 1) assetCode += getAssetCode[i];
+
+                    }
+                    ;
+                    var assetcheck = _asset.GetAll(assetRequest.CategoryId);
+                    int numberOfAsset = assetcheck + 1;
+                    assetCode = assetCode.ToUpper() + "00000" + numberOfAsset;
 
                     if (category == null) return null;
 
@@ -114,9 +126,9 @@ namespace FinalAssignment.Services.Implements
                     var newAsset = new Asset
                     {
                         CategoryId = assetRequest.CategoryId,
-                        AssetCode = assetRequest.AssetCode,
+                        AssetCode = assetCode,
                         AssetName = assetRequest.AssetName,
-                        Category = category,
+                        CategoryName = category.CategoryName,
                         AssetStatus = assetRequest.AssetStatus,
                         InstalledDate = assetRequest.InstalledDate,
                         Specification = assetRequest.Specification,
@@ -125,6 +137,7 @@ namespace FinalAssignment.Services.Implements
 
                     var createdAsset = await _asset.CreateAsync(newAsset);
                     _asset.SaveChanges();
+                    transaction.Commit();
 
                     if (createdAsset == null)
                     {
