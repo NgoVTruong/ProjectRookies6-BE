@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace FinalAssignment.DTOs.Asset
+﻿namespace FinalAssignment.DTOs.Asset
 {
     public class CategoryResponse
     {

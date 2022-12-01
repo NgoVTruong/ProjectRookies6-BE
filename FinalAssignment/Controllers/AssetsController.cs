@@ -20,7 +20,7 @@ namespace FinalAssignment.Controllers
         public async Task<IActionResult> Create(AssetRequest assetRequest)
         {
 
-            /*if (((int)assetRequest.AssetStatus) > 1) return BadRequest($"State invalid");*/
+            if ((assetRequest.AssetName) !=null) return BadRequest($"State invalid");
 
             var result = await _assetService.Create(assetRequest);
 
