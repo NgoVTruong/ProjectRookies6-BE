@@ -8,7 +8,7 @@ namespace FinalAssignment.Controllers
     [ApiController]
     // [Authorize(Roles = UserRoles.Admin)]
     [EnableCors("MyCors")]
-    [Route("api/[controller]")]
+    [Route("api/user-management")]
     public class UsersController : ControllerBase
     {
         private readonly ILoggerManager _logger;
@@ -30,9 +30,17 @@ namespace FinalAssignment.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> CreateUser([FromBody] RegisterModelRequest model)
         {
-            var data = await _userService.Register(model);
 
-            return Ok(data);
+            try
+            {
+                var data = await _userService.Register(model);
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
         }
 
         [HttpPost("reset-password")]

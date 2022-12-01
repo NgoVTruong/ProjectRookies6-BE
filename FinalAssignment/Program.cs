@@ -31,7 +31,6 @@ builder.Services.AddDbContext<FinalAssignmentContext>(options =>
 });
 
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 
 builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
@@ -40,9 +39,12 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<IAssignmentService, AssignmentService>();
+
 builder.Services.AddScoped<IRequestReturningRepository, RequestReturningRepository>();
 
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
+
 builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 
 builder.Services.AddCors(options =>
@@ -92,12 +94,23 @@ builder.Services.AddAuthentication(options =>
                     };
                 });
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Default Password settings.
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+});
 
 var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILoggerManager>();
 app.ConfigureExceptionHandler(logger);
 // Update database automatically
 InitializeDatabase(app).Wait();
+builder.Services.AddHttpContextAccessor();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();

@@ -1,11 +1,10 @@
 ﻿using FinalAssignment.DTOs.Asset;
-using FinalAssignment.Services.Implements;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinalAssignment.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/asset-management")]
     [ApiController]
     public class AssetsController : ControllerBase
     {
@@ -16,7 +15,7 @@ namespace FinalAssignment.Controllers
          
         }
 
-        [HttpPost]
+        [HttpPost("assets")]
         public async Task<IActionResult> Create(AssetRequest assetRequest)
         {
 
@@ -30,7 +29,7 @@ namespace FinalAssignment.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{assetCode}")]
+        [HttpDelete("assets/{assetCode}")]
         public async Task<bool> DeleteAsset(string assetCode)
         {
             var data = _assetService.DeleteAsset(assetCode);
