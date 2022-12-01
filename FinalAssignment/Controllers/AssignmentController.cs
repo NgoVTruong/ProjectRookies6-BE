@@ -8,9 +8,9 @@ namespace FinalAssignment.Controllers
     [ApiController]
     public class AssignmentController : ControllerBase
     {
-        private readonly ILogger _logger;
+        private readonly ILoggerManager _logger;
         private readonly IAssignmentService _assignmentService;
-        public AssignmentController(IAssignmentService assignmentService, ILogger logger)
+        public AssignmentController(IAssignmentService assignmentService, ILoggerManager logger)
         {
             _assignmentService = assignmentService;
             _logger = logger;
