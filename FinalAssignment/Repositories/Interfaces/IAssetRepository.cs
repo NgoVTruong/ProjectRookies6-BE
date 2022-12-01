@@ -12,7 +12,7 @@ namespace FinalAssignment.Repositories.Interfaces
     {
         Task<IEnumerable<AssetResponse>> GetAllAsset(string location);
         Task<AssetDetail> AssetDetail(string assetCode);
-
-       int GetAll(Guid id);
+        Task<EditAssetResponse> EditAsset(EditAssetRequest asset, string assetCode);
+        int GetAll(Guid id);
     }
 }

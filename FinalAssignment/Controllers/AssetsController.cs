@@ -29,6 +29,17 @@ namespace FinalAssignment.Controllers
             return Ok(result);
         }
 
+        [HttpPut("assets/{assetCode}")]
+        public async Task<IActionResult> EditAsset(EditAssetRequest asset, string assetCode)
+        {
+            var editAsset = await _assetService.EditAsset(asset, assetCode);
+            if (editAsset == null)
+            {
+                return StatusCode(400, "Not found the Asset");
+            }
+            return StatusCode(200, "Edit successfully");
+        }
+
         [HttpDelete("assets/{assetCode}")]
         public async Task<bool> DeleteAsset(string assetCode)
         {
@@ -51,7 +62,7 @@ namespace FinalAssignment.Controllers
         //    return getDetailAsset;
         //}
 
-        [HttpGet("assigned-asset/{assetCode}")]
+        [HttpGet("detail-asset/{assetCode}")]
         public async Task<AsignedAsset> GetAssignedAsset(string assetCode)
         {
             var getAssignedAsset = await _assetService.GetAssignedAsset(assetCode);
