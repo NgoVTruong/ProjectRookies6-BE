@@ -1,4 +1,5 @@
-﻿using FinalAssignment.DTOs.Asset;
+﻿using Common.Enums;
+using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,11 +34,24 @@ namespace FinalAssignment.Controllers
         public async Task<IActionResult> EditAsset(EditAssetRequest asset, string assetCode)
         {
             var editAsset = await _assetService.EditAsset(asset, assetCode);
+            if (editAsset.InstalledDate > DateTime.Now)
+            {
+                return BadRequest("Invalid InstallDate!");
+            }
+            if (editAsset.AssetName == "" || editAsset.Specification == ""
+             )
+            {
+                return BadRequest("Must fill all blank!");
+            }
+            if (editAsset.AssetStatus == AssetStateEnum.Assigned)
+            {
+                return BadRequest("Invalid AssetStatus!");
+            }
             if (editAsset == null)
             {
                 return StatusCode(400, "Not found the Asset");
             }
-            return StatusCode(200, "Edit successfully");
+            return StatusCode(200, "Edit successfully!");
         }
 
         [HttpDelete("assets/{assetCode}")]
