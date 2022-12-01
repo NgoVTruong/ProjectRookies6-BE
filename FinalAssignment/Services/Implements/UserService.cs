@@ -432,6 +432,42 @@ namespace FinalAssignment.Services.Implements
                 };
             }
 
+            bool IsJoinedDateLessThanDob(DateTime birthDate, DateTime joindedDate)
+            {
+                if (joindedDate.Year > birthDate.Year)
+                {
+                    return false;
+                }
+                else if (joindedDate.Year < birthDate.Year )
+                {
+                    return true;
+                }
+                else //if (DateTime.Now.Year - birthDate.Year == 18)
+                {
+                    if (birthDate.DayOfYear < joindedDate.DayOfYear)
+                    {
+                        return false;
+                    }
+                    else if (birthDate.DayOfYear > joindedDate.DayOfYear)
+                    {
+                        return true;
+                    }
+                    else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (IsJoinedDateLessThanDob(model.DateOfBirth, model.JoinedDate))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "Joined < DoB!"
+                };
+            }
+
             user.DateOfBirth = model.DateOfBirth;
             user.Gender = model.Gender;
             user.JoinedDate = model.JoinedDate;
