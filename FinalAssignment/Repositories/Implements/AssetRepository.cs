@@ -29,6 +29,7 @@ namespace FinalAssignment.Repositories.Implements
 
                           .Select(i => new AssetResponse
                           {
+                              AccessId = i.Id,
                               AssetCode = i.AssetCode,
                               AssetName = i.AssetName,
                               CategoryName = i.CategoryName,
@@ -75,6 +76,33 @@ namespace FinalAssignment.Repositories.Implements
         {
             var getAll =  _dbSet.Where(x => x.CategoryId == id).Count();
             return  getAll;
+        }
+
+        public async Task<EditAssetResponse> EditAsset(EditAssetRequest asset, string assetCode)
+        {
+            var getEditAsset = _dbSet.FirstOrDefault(s => s.AssetCode == assetCode);
+            if (getEditAsset == null)
+            {
+                return null;
+            }
+
+            getEditAsset.AssetName = asset.AssetName;
+            getEditAsset.Specification = asset.Specification;
+            getEditAsset.InstalledDate = asset.InstalledDate;
+            getEditAsset.AssetStatus = asset.AssetStatus;
+
+            var editSuccess = _dbSet.Update(getEditAsset);
+            _context.SaveChanges();
+
+
+            return new EditAssetResponse
+            {
+                AssetName = editSuccess.Entity.AssetName,
+                CategoryName = editSuccess.Entity.CategoryName,
+                Specification = editSuccess.Entity.Specification,
+                InstalledDate = editSuccess.Entity.InstalledDate,
+                AssetStatus = editSuccess.Entity.AssetStatus
+            };
         }
     }
 }

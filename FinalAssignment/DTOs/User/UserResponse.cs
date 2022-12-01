@@ -3,7 +3,8 @@ using Common.Enums;
 namespace FinalAssignment.DTOs.User
 {
     public class UserResponse
-    {
+    {   
+        public string UserId { get; set; }
         public string FirstName {get; set;}
         public string LastName { get; set; }
         public string StaffCode {get; set;}

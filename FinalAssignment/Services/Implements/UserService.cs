@@ -363,7 +363,8 @@ namespace FinalAssignment.Services.Implements
             }
 
             var user = _userManager.Users.Where(i => i.UserName == userName).Select(user => new UserResponse()
-            {
+            {   
+                UserId = user.Id,
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -418,7 +419,7 @@ namespace FinalAssignment.Services.Implements
                     }
                     else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
                     {
-                        return false;
+                        return true;
                     }
                 }
             }
@@ -429,6 +430,78 @@ namespace FinalAssignment.Services.Implements
                 {
                     Status = "Error",
                     Message = "DOB < 18!"
+                };
+            }
+
+            bool IsJoinedDateLessThanDob(DateTime birthDate, DateTime joindedDate)
+            {
+                if (joindedDate.Year > birthDate.Year)
+                {
+                    return false;
+                }
+                else if (joindedDate.Year < birthDate.Year )
+                {
+                    return true;
+                }
+                else //if (DateTime.Now.Year - birthDate.Year == 18)
+                {
+                    if (birthDate.DayOfYear < joindedDate.DayOfYear)
+                    {
+                        return false;
+                    }
+                    else if (birthDate.DayOfYear > joindedDate.DayOfYear)
+                    {
+                        return true;
+                    }
+                    else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (IsJoinedDateLessThanDob(model.DateOfBirth, model.JoinedDate))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "Joined < DoB!"
+                };
+            }
+
+            bool IsJoinedInTheFuture(DateTime joidedDate)
+            {
+                if (DateTime.Now.Year > joidedDate.Year)
+                {
+                    return false;
+                }
+                else if (DateTime.Now.Year < joidedDate.Year)
+                {
+                    return true;
+                }
+                else //if (DateTime.Now.Year - birthDate.Year == 18)
+                {
+                    if (joidedDate.DayOfYear <= DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                    else if (joidedDate.DayOfYear > DateTime.Now.DayOfYear)
+                    {
+                        return true;
+                    }
+                    else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (IsJoinedInTheFuture(model.JoinedDate))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "Joined can't select day in the future!"
                 };
             }
 
@@ -515,6 +588,7 @@ namespace FinalAssignment.Services.Implements
             var location = user.Location;
             var users = _userManager.Users.Where(i => i.Location == location && i.IsDeleted == false).Select(user => new UserResponse()
             {
+                UserId = user.Id,
                 FirstName = user.FirstName,
                 FullName = user.FullName,
                 StaffCode = user.StaffCode,

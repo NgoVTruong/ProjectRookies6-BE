@@ -30,7 +30,6 @@ namespace FinalAssignment.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> CreateUser([FromBody] RegisterModelRequest model)
         {
-
             try
             {
                 var data = await _userService.Register(model);
