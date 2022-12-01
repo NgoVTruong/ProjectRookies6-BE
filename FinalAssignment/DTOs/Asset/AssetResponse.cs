@@ -10,6 +10,8 @@ namespace FinalAssignment.DTOs.Asset
 
         public string? CategoryName { get; set; }
 
+        public DateTime InstalledDate { get; set; }
+
         public AssetStateEnum AssetStatus { get; set; }
     }
 }

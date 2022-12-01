@@ -72,25 +72,6 @@ namespace FinalAssignment.Services.Implements
             return getAssignedAsset;
         }
 
-        /*        public string AssetCodeGen(int number) //35
-                {
-                    int check = number;
-                    int count = 0;
-                    while (check > 0) //35  //3
-                    {
-                        check = check / 10; //3 //0
-                        count++; //1 //2
-                    }
-                    string staffCode = "SD";
-                    for (int i = 0; i < 4 - count; i++)  //(int i = 0; i < 2; i++)
-                    {
-                        staffCode = staffCode + "0000"; // SD00
-                    }
-                    string num = (++number).ToString();
-                    staffCode = staffCode + num;
-                    return staffCode;
-                }*/
-
         public async Task<Asset?> Create(AssetRequest assetRequest)
         {
             using (var transaction = _categoryRepository.DatabaseTransaction())

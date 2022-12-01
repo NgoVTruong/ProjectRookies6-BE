@@ -6,7 +6,6 @@ namespace FinalAssignment.DTOs.Asset
     {
         public Guid Id { get; set; }
 
-        [Required]
         public string? CategoryCode { get; set; }
 
         [Required]
