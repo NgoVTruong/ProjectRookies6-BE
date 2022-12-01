@@ -29,6 +29,7 @@ namespace FinalAssignment.Repositories.Implements
 
                           .Select(i => new AssetResponse
                           {
+                              AccessId = i.Id,
                               AssetCode = i.AssetCode,
                               AssetName = i.AssetName,
                               CategoryName = i.CategoryName,

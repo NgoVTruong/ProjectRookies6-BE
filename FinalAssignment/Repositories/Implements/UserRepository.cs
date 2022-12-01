@@ -10,11 +10,5 @@ namespace FinalAssignment.Repositories.Implements
         public UserRepository(FinalAssignmentContext context) : base (context)
         {
         }
-
- /*       public int GetAll(string userName )
-        {
-            var getAll = _dbSet.Where(x => x.UserName == userName).Count();
-            return getAll;
-        }*/
     }
 }
