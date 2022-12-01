@@ -70,7 +70,7 @@ namespace FinalAssignment.Services.Implements
 
             var getFullName = _userManager.Users.Where(i => i.FullName == fullname);
 
-            if (getFullName == null)
+            if (getFullName.Count() > 0)
             {
                 int userNumberExist = getFullName.Count();
                 var userName = model.FirstName.ToLower() + userNameSplit.ToLower() + (userNumberExist).ToString();
@@ -241,14 +241,12 @@ namespace FinalAssignment.Services.Implements
 
                 return new Response
                 {
-                    Status = "Success1111",
+                    Status = "Success",
                     Message = "User created successfully!",
                     UserName = userName,
                     Password = password,
                 };
             }
-
-
         }
 
         public async Task<LoginResponse> Login(LoginRequest model)

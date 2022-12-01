@@ -109,9 +109,8 @@ namespace FinalAssignment.Services.Implements
                     }
                     ;
                     var assetcheck = _asset.GetAll(assetRequest.CategoryId);
-                    int x = assetcheck + 1;
-                    assetCode = assetCode.ToUpper() + "00000" + x;
-
+                    int numberOfAsset = assetcheck + 1;
+                    assetCode = assetCode.ToUpper() + "00000" + numberOfAsset;
 
                     if (category == null) return null;
 
