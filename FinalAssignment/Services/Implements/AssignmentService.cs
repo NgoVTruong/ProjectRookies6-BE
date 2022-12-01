@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using FinalAssignment.DTOs.Assignment;
+using FinalAssignment.Repositories.Implements;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
 
@@ -8,9 +9,13 @@ namespace FinalAssignment.Services.Implements
     public class AssignmentService : IAssignmentService
     {
         private readonly IAssignmentRepository _assignmentRepository;
-        public AssignmentService(IAssignmentRepository assignmentRepository)
+        private readonly IUserRepository _userRepository;
+        private readonly IAssetRepository _assetRepository;
+        public AssignmentService(IAssignmentRepository assignmentRepository, IUserRepository userRepository, IAssetRepository assetRepository)
         {
             _assignmentRepository = assignmentRepository;
+            _userRepository = userRepository;
+            _assetRepository = assetRepository;
         }
         public async Task<CreateAssignmentResponse> Create(CreateAssignmentRequest assignmentRequest)
         {
