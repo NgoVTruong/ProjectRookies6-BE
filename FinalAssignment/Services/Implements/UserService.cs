@@ -363,7 +363,8 @@ namespace FinalAssignment.Services.Implements
             }
 
             var user = _userManager.Users.Where(i => i.UserName == userName).Select(user => new UserResponse()
-            {
+            {   
+                UserId = user.Id,
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -587,6 +588,7 @@ namespace FinalAssignment.Services.Implements
             var location = user.Location;
             var users = _userManager.Users.Where(i => i.Location == location && i.IsDeleted == false).Select(user => new UserResponse()
             {
+                UserId = user.Id,
                 FirstName = user.FirstName,
                 FullName = user.FullName,
                 StaffCode = user.StaffCode,
