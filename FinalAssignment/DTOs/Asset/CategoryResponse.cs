@@ -1,9 +1,13 @@
-﻿namespace FinalAssignment.DTOs.Asset
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FinalAssignment.DTOs.Asset
 {
     public class CategoryResponse
     {
         public Guid Id { get; set; }
+
         public string? CategoryCode { get; set; }
+              
         public string? CategoryName { get; set; }
     }
 }
