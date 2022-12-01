@@ -29,10 +29,11 @@ namespace FinalAssignment.Repositories.Implements
 
                           .Select(i => new AssetResponse
                           {
-                              AccessId = i.Id,
+                              AssetId = i.Id,
                               AssetCode = i.AssetCode,
                               AssetName = i.AssetName,
                               CategoryName = i.CategoryName,
+                              InstalledDate = i.InstalledDate,
                               AssetStatus = i.AssetStatus,
                           }).ToList();
             if (getList == null)
