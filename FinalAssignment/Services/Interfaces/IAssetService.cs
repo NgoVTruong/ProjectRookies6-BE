@@ -6,6 +6,8 @@ namespace FinalAssignment.Services.Interfaces
     public interface IAssetService
     {
         Task<Asset?> Create(AssetRequest assetRequest);
+
+        Task<Asset> GetAssetByName(string assetName);
         Task<EditAssetResponse> EditAsset(EditAssetRequest asset, string assetCode);
 
         Task<bool> DeleteAsset(string assetCode);

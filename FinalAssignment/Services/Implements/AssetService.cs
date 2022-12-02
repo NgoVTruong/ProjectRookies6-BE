@@ -74,12 +74,13 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<Asset?> Create(AssetRequest assetRequest)
         {
-            using (var transaction = _categoryRepository.DatabaseTransaction())
+            using (var transaction = _asset.DatabaseTransaction())
             {
+                
                 try
                 {
-                    /*var checkAsset = await _asset.GetOneAsync(x => x.AssetName != assetRequest.AssetName);*/
-         
+                    
+
                     var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
 
                     var getAssetCode = category.CategoryName;
@@ -155,6 +156,11 @@ namespace FinalAssignment.Services.Implements
                 }
 
             }
+        }
+
+        public async Task<Asset> GetAssetByName(string assetName)
+        {
+            return await _asset.GetOneAsync(x => x.AssetName == assetName);
         }
     }
 }
