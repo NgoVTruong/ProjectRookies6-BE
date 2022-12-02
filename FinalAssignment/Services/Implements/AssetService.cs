@@ -162,5 +162,11 @@ namespace FinalAssignment.Services.Implements
         {
             return await _asset.GetOneAsync(x => x.AssetName == assetName);
         }
+
+        public async Task<EditAssetResponse> getEditAsset(string assetCode)
+        {
+            var getEdit = await _asset.getEditAsset(assetCode);
+            return getEdit;
+        }
     }
 }
