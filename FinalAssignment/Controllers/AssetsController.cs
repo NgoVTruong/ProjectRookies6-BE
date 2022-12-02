@@ -1,5 +1,6 @@
 ﻿using Common.Enums;
 using FinalAssignment.DTOs.Asset;
+using FinalAssignment.Services.Implements;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,11 @@ namespace FinalAssignment.Controllers
         [HttpPost("assets")]
         public async Task<IActionResult> Create(AssetRequest assetRequest)
         {
+            var asset = await _assetService.GetAssetByName(assetRequest.AssetName);
+
+            if (asset != null)
+                return BadRequest("Asset is already existed. Please enter a different asset. Prefix is already existed. Please enter a different prefix");
+
             var result = await _assetService.Create(assetRequest);
 
             if (result == null) 

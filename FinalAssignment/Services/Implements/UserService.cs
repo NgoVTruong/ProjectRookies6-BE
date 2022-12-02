@@ -28,29 +28,27 @@ namespace FinalAssignment.Services.Implements
             _configuration = configuration;
             _userManager = userManager;
         }
-
-        public string StaffCodeGen(int number) //35
-        {
-            int check = number;
-            int count = 0;
-            while (check > 0) //35  //3
-            {
-                check = check / 10; //3 //0
-                count++; //1 //2
-            }
-            string staffCode = "SD";
-            for (int i = 0; i < 4 - count; i++)  //(int i = 0; i < 2; i++)
-            {
-                staffCode = staffCode + "0"; // SD00
-            }
-            string num = (++number).ToString();
-            staffCode = staffCode + num;
-            return staffCode;
-        }
-
+       
         public async Task<Response> Register(RegisterModelRequest model)
         {
-
+             string StaffCodeGen(int number) //35
+            {
+                int check = number;
+                int count = 0;
+                while (check > 0) //35  //3
+                {
+                    check = check / 10; //3 //0
+                    count++; //1 //2
+                }
+                string staffCode = "SD";
+                for (int i = 0; i < 4 - count; i++)  //(int i = 0; i < 2; i++)
+                {
+                    staffCode = staffCode + "0"; // SD00
+                }
+                string num = (++number).ToString();
+                staffCode = staffCode + num;
+                return staffCode;
+            }
 
             var getUserName = model.LastName;
 
@@ -281,7 +279,8 @@ namespace FinalAssignment.Services.Implements
                 await _userManager.UpdateAsync(user);
 
                 return new LoginResponse
-                {
+                {   
+                    Id = user.Id,
                     AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                     // RefreshToken = refreshToken,
                     Expiration = token.ValidTo,
