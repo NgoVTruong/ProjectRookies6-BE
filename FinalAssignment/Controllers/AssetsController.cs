@@ -10,24 +10,30 @@ namespace FinalAssignment.Controllers
     public class AssetsController : ControllerBase
     {
         private readonly IAssetService _assetService;
-        public AssetsController(IAssetService assetService )
+        public AssetsController(IAssetService assetService)
         {
             _assetService = assetService;
-         
+
         }
 
         [HttpPost("assets")]
         public async Task<IActionResult> Create(AssetRequest assetRequest)
         {
-
-            if ((assetRequest.AssetName) !=null) return BadRequest($"State invalid");
-
             var result = await _assetService.Create(assetRequest);
 
-            if (result == null)
-                return StatusCode(500, "Sorry the Request failed");
+            if (result == null) 
+            {            
+                return StatusCode(500, "Sorry the Request failed"); 
+            }
 
             return Ok(result);
+        }
+
+        [HttpGet("edited-asset/{assetCode}")]
+        public async Task<EditAssetResponse> getEditAsset(string assetCode)
+        {
+            var getEdit = await _assetService.getEditAsset(assetCode);
+            return getEdit;
         }
 
         [HttpPut("assets/{assetCode}")]

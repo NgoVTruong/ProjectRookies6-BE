@@ -78,6 +78,8 @@ namespace FinalAssignment.Services.Implements
             {
                 try
                 {
+                    /*var checkAsset = await _asset.GetOneAsync(x => x.AssetName != assetRequest.AssetName);*/
+         
                     var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
 
                     var getAssetCode = category.CategoryName;
@@ -116,6 +118,7 @@ namespace FinalAssignment.Services.Implements
                         Location = assetRequest.Location
                     };
 
+
                     var createdAsset = await _asset.CreateAsync(newAsset);
                     _asset.SaveChanges();
                     transaction.Commit();
@@ -152,6 +155,12 @@ namespace FinalAssignment.Services.Implements
                 }
 
             }
+        }
+
+        public async Task<EditAssetResponse> getEditAsset(string assetCode)
+        {
+            var getEdit = await _asset.getEditAsset(assetCode);
+            return getEdit;
         }
     }
 }

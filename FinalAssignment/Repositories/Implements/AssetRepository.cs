@@ -33,7 +33,6 @@ namespace FinalAssignment.Repositories.Implements
                               AssetCode = i.AssetCode,
                               AssetName = i.AssetName,
                               CategoryName = i.CategoryName,
-                              InstalledDate = i.InstalledDate,
                               AssetStatus = i.AssetStatus,
                           }).ToList();
             if (getList == null)
@@ -102,6 +101,23 @@ namespace FinalAssignment.Repositories.Implements
                 Specification = editSuccess.Entity.Specification,
                 InstalledDate = editSuccess.Entity.InstalledDate,
                 AssetStatus = editSuccess.Entity.AssetStatus
+            };
+        }
+
+        public async Task<EditAssetResponse> getEditAsset(string assetCode)
+        {
+            var getEdit = _dbSet.FirstOrDefault(s => s.AssetCode == assetCode);
+            if (getEdit == null)
+            {
+                return null;
+            }
+            return new EditAssetResponse
+            {
+                AssetName = getEdit.AssetName,
+                CategoryName = getEdit.CategoryName,
+                Specification = getEdit.Specification,
+                InstalledDate = getEdit.InstalledDate,
+                AssetStatus = getEdit.AssetStatus
             };
         }
     }
