@@ -4,10 +4,7 @@ using Data.Entities;
 using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using System.Linq.Expressions;
-using System.Linq;
 using TestWebAPI.Repositories.Implements;
-using Microsoft.EntityFrameworkCore;
 
 namespace FinalAssignment.Repositories.Implements
 {
