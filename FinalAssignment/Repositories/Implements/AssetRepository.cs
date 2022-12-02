@@ -33,7 +33,6 @@ namespace FinalAssignment.Repositories.Implements
                               AssetCode = i.AssetCode,
                               AssetName = i.AssetName,
                               CategoryName = i.CategoryName,
-                              InstalledDate = i.InstalledDate,
                               AssetStatus = i.AssetStatus,
                           }).ToList();
             if (getList == null)
