@@ -1,7 +1,6 @@
 ﻿using Common.Enums;
 using Data.Entities;
 using FinalAssignment.DTOs.Asset;
-using FinalAssignment.Repositories.Implements;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
 
@@ -75,12 +74,9 @@ namespace FinalAssignment.Services.Implements
         public async Task<Asset?> Create(AssetRequest assetRequest)
         {
             using (var transaction = _asset.DatabaseTransaction())
-            {
-                
+            {                
                 try
-                {
-                    
-
+                {                
                     var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
 
                     var getAssetCode = category.CategoryName;
@@ -118,7 +114,6 @@ namespace FinalAssignment.Services.Implements
                         Specification = assetRequest.Specification,
                         Location = assetRequest.Location
                     };
-
 
                     var createdAsset = await _asset.CreateAsync(newAsset);
                     _asset.SaveChanges();
@@ -158,11 +153,15 @@ namespace FinalAssignment.Services.Implements
             }
         }
 
-
-        public async Task<EditAssetResponse> getEditAsset(string assetCode)
+        public async Task<EditAssetResponse> GetEditAsset(string assetCode)
         {
-            var getEdit = await _asset.getEditAsset(assetCode);
+            var getEdit = await _asset.GetEditAsset(assetCode);
             return getEdit;
+        }
+
+        public async Task<Asset> GetAssetByName(string assetName)
+        {
+            return await _asset.GetOneAsync(x => x.AssetName == assetName);
         }
     }
 }

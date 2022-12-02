@@ -4,10 +4,7 @@ using Data.Entities;
 using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using System.Linq.Expressions;
-using System.Linq;
 using TestWebAPI.Repositories.Implements;
-using Microsoft.EntityFrameworkCore;
 
 namespace FinalAssignment.Repositories.Implements
 {
@@ -104,7 +101,7 @@ namespace FinalAssignment.Repositories.Implements
             };
         }
 
-        public async Task<EditAssetResponse> getEditAsset(string assetCode)
+        public async Task<EditAssetResponse> GetEditAsset(string assetCode)
         {
             var getEdit = _dbSet.FirstOrDefault(s => s.AssetCode == assetCode);
             if (getEdit == null)
