@@ -279,7 +279,8 @@ namespace FinalAssignment.Services.Implements
                 await _userManager.UpdateAsync(user);
 
                 return new LoginResponse
-                {
+                {   
+                    Id = user.Id,
                     AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                     // RefreshToken = refreshToken,
                     Expiration = token.ValidTo,
