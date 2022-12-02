@@ -78,6 +78,8 @@ namespace FinalAssignment.Services.Implements
             {
                 try
                 {
+                    /*var checkAsset = await _asset.GetOneAsync(x => x.AssetName != assetRequest.AssetName);*/
+         
                     var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
 
                     var getAssetCode = category.CategoryName;
@@ -115,6 +117,7 @@ namespace FinalAssignment.Services.Implements
                         Specification = assetRequest.Specification,
                         Location = assetRequest.Location
                     };
+
 
                     var createdAsset = await _asset.CreateAsync(newAsset);
                     _asset.SaveChanges();
