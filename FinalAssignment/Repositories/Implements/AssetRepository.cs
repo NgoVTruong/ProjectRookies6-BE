@@ -104,7 +104,7 @@ namespace FinalAssignment.Repositories.Implements
             };
         }
 
-        public async Task<EditAssetResponse> getEditAsset(string assetCode)
+        public async Task<EditAssetResponse> GetEditAsset(string assetCode)
         {
             var getEdit = _dbSet.FirstOrDefault(s => s.AssetCode == assetCode);
             if (getEdit == null)
