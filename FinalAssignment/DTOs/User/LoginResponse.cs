@@ -1,7 +1,8 @@
 namespace FinalAssignment.DTOs.User
 {
     public class LoginResponse
-    {
+    {   
+        public string Id { get; set; }
         public string? AccessToken { get; set; }
         public DateTime Expiration { get; set; }
         public IList<string> Roles { get; set; }
