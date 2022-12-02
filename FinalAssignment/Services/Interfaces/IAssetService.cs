@@ -8,12 +8,17 @@ namespace FinalAssignment.Services.Interfaces
         Task<Asset?> Create(AssetRequest assetRequest);
 
         Task<Asset> GetAssetByName(string assetName);
+
         Task<EditAssetResponse> EditAsset(EditAssetRequest asset, string assetCode);
 
         Task<bool> DeleteAsset(string assetCode);
+
         Task<IEnumerable<AssetResponse>> GetAllAsset(string location);
+
         Task<AssetDetail> GetDetailAsset(string assetCode);
+
         Task<AsignedAsset> GetAssignedAsset(string assetCode);
+
         Task<EditAssetResponse> GetEditAsset(string assetCode);
 
     }
