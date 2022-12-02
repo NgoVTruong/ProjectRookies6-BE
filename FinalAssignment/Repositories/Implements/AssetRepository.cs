@@ -103,6 +103,7 @@ namespace FinalAssignment.Repositories.Implements
                 AssetStatus = editSuccess.Entity.AssetStatus
             };
         }
+
         public async Task<EditAssetResponse> getEditAsset(string assetCode)
         {
             var getEdit = _dbSet.FirstOrDefault(s => s.AssetCode == assetCode);

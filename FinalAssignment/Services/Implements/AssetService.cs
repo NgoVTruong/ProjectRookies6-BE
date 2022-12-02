@@ -158,10 +158,6 @@ namespace FinalAssignment.Services.Implements
             }
         }
 
-        public async Task<Asset> GetAssetByName(string assetName)
-        {
-            return await _asset.GetOneAsync(x => x.AssetName == assetName);
-        }
 
         public async Task<EditAssetResponse> getEditAsset(string assetCode)
         {
