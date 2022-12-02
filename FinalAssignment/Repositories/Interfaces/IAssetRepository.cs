@@ -12,7 +12,7 @@ namespace FinalAssignment.Repositories.Interfaces
 
         Task<EditAssetResponse> EditAsset(EditAssetRequest asset, string assetCode);
         int GetAll(Guid id);
-        Task<EditAssetResponse> getEditAsset(string assetCode);
+
 
     }
 }
