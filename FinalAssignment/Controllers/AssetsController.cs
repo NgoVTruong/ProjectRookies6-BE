@@ -1,4 +1,6 @@
-﻿using FinalAssignment.DTOs.Asset;
+﻿using Common.Enums;
+using FinalAssignment.DTOs.Asset;
+using FinalAssignment.Services.Implements;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,35 +11,59 @@ namespace FinalAssignment.Controllers
     public class AssetsController : ControllerBase
     {
         private readonly IAssetService _assetService;
-        public AssetsController(IAssetService assetService )
+        public AssetsController(IAssetService assetService)
         {
             _assetService = assetService;
-         
+
         }
 
         [HttpPost("assets")]
         public async Task<IActionResult> Create(AssetRequest assetRequest)
         {
+            var asset = await _assetService.GetAssetByName(assetRequest.AssetName);
 
-            /*if (((int)assetRequest.AssetStatus) > 1) return BadRequest($"State invalid");*/
+            if (asset != null)
+                return BadRequest("Asset is already existed. Please enter a different asset. Prefix is already existed. Please enter a different prefix");
 
             var result = await _assetService.Create(assetRequest);
 
-            if (result == null)
-                return StatusCode(500, "Sorry the Request failed");
+            if (result == null) 
+            {            
+                return StatusCode(500, "Sorry the Request failed"); 
+            }
 
             return Ok(result);
+        }
+
+        [HttpGet("edited-asset/{assetCode}")]
+        public async Task<EditAssetResponse> getEditAsset(string assetCode)
+        {
+            var getEdit = await _assetService.getEditAsset(assetCode);
+            return getEdit;
         }
 
         [HttpPut("assets/{assetCode}")]
         public async Task<IActionResult> EditAsset(EditAssetRequest asset, string assetCode)
         {
             var editAsset = await _assetService.EditAsset(asset, assetCode);
+            if (editAsset.InstalledDate > DateTime.Now)
+            {
+                return BadRequest("Invalid InstallDate!");
+            }
+            if (editAsset.AssetName == "" || editAsset.Specification == ""
+             )
+            {
+                return BadRequest("Must fill all blank!");
+            }
+            if (editAsset.AssetStatus == AssetStateEnum.Assigned)
+            {
+                return BadRequest("Invalid AssetStatus!");
+            }
             if (editAsset == null)
             {
                 return StatusCode(400, "Not found the Asset");
             }
-            return StatusCode(200, "Edit successfully");
+            return StatusCode(200, "Edit successfully!");
         }
 
         [HttpDelete("assets/{assetCode}")]
