@@ -159,9 +159,9 @@ namespace FinalAssignment.Services.Implements
         }
 
 
-        public async Task<EditAssetResponse> getEditAsset(string assetCode)
+        public async Task<EditAssetResponse> GetEditAsset(string assetCode)
         {
-            var getEdit = await _asset.getEditAsset(assetCode);
+            var getEdit = await _asset.GetEditAsset(assetCode);
             return getEdit;
         }
     }

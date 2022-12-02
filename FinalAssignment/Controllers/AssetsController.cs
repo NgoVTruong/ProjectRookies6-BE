@@ -36,9 +36,9 @@ namespace FinalAssignment.Controllers
         }
 
         [HttpGet("edited-asset/{assetCode}")]
-        public async Task<EditAssetResponse> getEditAsset(string assetCode)
+        public async Task<EditAssetResponse> GetEditAsset(string assetCode)
         {
-            var getEdit = await _assetService.getEditAsset(assetCode);
+            var getEdit = await _assetService.GetEditAsset(assetCode);
             return getEdit;
         }
 

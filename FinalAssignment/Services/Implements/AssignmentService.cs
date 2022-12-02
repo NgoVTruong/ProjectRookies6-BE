@@ -25,7 +25,7 @@ namespace FinalAssignment.Services.Implements
                 var newAssignment = new Assignment
                 {   
                     Id = Guid.NewGuid(),
-                    AcceptedBy = assignmentRequest.AssignedBy,
+                    AcceptedBy = assignmentRequest.AssignedTo,
                     AssignedTo = assignmentRequest.AssignedTo,
                     AssetCode = assignmentRequest.AssetCode,
                     AssetName = assignmentRequest.AssetName,
