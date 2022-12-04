@@ -84,7 +84,7 @@ namespace FinalAssignment.Controllers
         }
 
         [HttpGet("assets-detail/{assetCode}")]
-        public async Task<AsignedAsset> GetAssignedAsset(string assetCode)
+        public async Task<DetailAsset> GetAssignedAsset(string assetCode)
         {
             var getAssignedAsset = await _assetService.GetAssignedAsset(assetCode);
             return getAssignedAsset;
