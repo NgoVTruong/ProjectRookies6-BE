@@ -43,8 +43,12 @@ namespace FinalAssignment.Services.Implements
 
                 _assignmentRepository.SaveChanges();
 
-                transaction.Commit();
+                var asset = await _assetRepository.GetOneAsync(x => x.Id == assignmentRequest.AssetId);
+                asset.AssetStatus = (Common.Enums.AssetStateEnum)1;
 
+                await _assetRepository.UpdateAsync(asset);
+                _assetRepository.SaveChanges();
+                transaction.Commit();
 
                 return new CreateAssignmentResponse
                 {
