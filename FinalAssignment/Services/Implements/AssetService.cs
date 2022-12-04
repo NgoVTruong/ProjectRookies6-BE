@@ -64,6 +64,13 @@ namespace FinalAssignment.Services.Implements
             return getListAsset;
 
         }
+        public async Task<IEnumerable<AssetResponse>> GetAllAssetByStatus(string location)
+        {
+            var getListAsset = await _asset.GetAllAssetByStatus(location);
+
+            return getListAsset;
+
+        }
 
         public async Task<AsignedAsset> GetAssignedAsset(string assetCode)
         {

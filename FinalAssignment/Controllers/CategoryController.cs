@@ -15,7 +15,7 @@ namespace FinalAssignment.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet()]
+        [HttpGet("categories")]
         public async Task<IActionResult> GetAll()
         {
             try
