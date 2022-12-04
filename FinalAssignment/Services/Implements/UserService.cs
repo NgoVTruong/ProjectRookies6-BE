@@ -546,10 +546,7 @@ namespace FinalAssignment.Services.Implements
         public async Task<Response> DeleteUser(string userName)
         {
 
-            using (var transaction = _userRepository.DatabaseTransaction())
-            {
-                try
-                {    // check xem co ton tai user trong Assignment khong, neu co thi bao loi
+            // check xem co ton tai user trong Assignment khong, neu co thi bao loi
                     var user = await _userManager.FindByNameAsync(userName);
 
                     if (user == null)
@@ -561,19 +558,15 @@ namespace FinalAssignment.Services.Implements
 
                     user.IsDeleted = true;
                     await _userManager.UpdateAsync(user);
-                    transaction.Commit();
+                
                     return new Response
                     {
                         Status = "Success",
                         Message = "User delete successfully!"
                     };
-                }
-                catch
-                {
-                    transaction.RollBack();
-                    return null;
-                }
-            }
+                
+       
+            
         }
 
         public async Task<IEnumerable<UserResponse?>> GetAllUserDependLocation(string userName)

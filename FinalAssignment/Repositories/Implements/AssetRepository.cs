@@ -18,11 +18,9 @@ namespace FinalAssignment.Repositories.Implements
         }
 
         public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
-        {
-            
+        {            
             var getList = _dbSet.Where(s => s.IsDeleted == false
-                                            && s.Location.ToLower().Contains(location.ToLower())
-                                            && s.AssetStatus < (Common.Enums.AssetStateEnum)3)
+                                            && s.Location.ToLower().Contains(location.ToLower()))
 
                           .Select(i => new AssetResponse
                           {
@@ -37,7 +35,27 @@ namespace FinalAssignment.Repositories.Implements
                 return Enumerable.Empty<AssetResponse>();
             }
             return getList;
+        }
 
+        public async Task<IEnumerable<AssetResponse>> GetAllAssetByStatus(string location)
+        {
+            var getList = _dbSet.Where(s => s.IsDeleted == false
+                                            && s.Location.ToLower().Contains(location.ToLower())
+                                            && s.AssetStatus == 0)
+
+                          .Select(i => new AssetResponse
+                          {
+                              AssetId = i.Id,
+                              AssetCode = i.AssetCode,
+                              AssetName = i.AssetName,
+                              CategoryName = i.CategoryName,
+                              AssetStatus = i.AssetStatus,
+                          }).ToList();
+            if (getList == null)
+            {
+                return Enumerable.Empty<AssetResponse>();
+            }
+            return getList;
         }
 
         public async Task<AssetDetail> AssetDetail(string assetCode)
