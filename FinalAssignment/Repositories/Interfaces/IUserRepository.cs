@@ -5,6 +5,6 @@ namespace FinalAssignment.Repositories.Interfaces
 {
     public interface IUserRepository : IBaseRepository<ApplicationUser>
     {
-        Task<string> getUserName(string id);
+        string getUserName(string id);
     }
 }
