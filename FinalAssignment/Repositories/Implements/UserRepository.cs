@@ -10,5 +10,11 @@ namespace FinalAssignment.Repositories.Implements
         public UserRepository(FinalAssignmentContext context) : base (context)
         {
         }
+
+        public async Task<string> getUserName(string id)
+        {
+           var getUser = _dbSet.FirstOrDefault(x => x.Id == id);
+            return  getUser.UserName;
+        }
     }
 }
