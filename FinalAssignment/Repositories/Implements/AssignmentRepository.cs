@@ -21,8 +21,8 @@ namespace FinalAssignment.Repositories.Implements
             {
                 return new AsignedAsset
                 {
-                    AssignedTo = assignedAsset.AssignedTo,
-                    AssignedBy = assignedAsset.AssignedBy,
+                    AssignedTo = assignedAsset.AssignedToUser.UserName,
+                    AssignedBy = assignedAsset.AssignedByUser.UserName,
                     AssignedDate = assignedAsset.AssignedDate,
                 };
             }
