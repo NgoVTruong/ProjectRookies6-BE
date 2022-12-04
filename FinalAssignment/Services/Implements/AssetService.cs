@@ -76,17 +76,18 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<DetailAsset> GetAssignedAsset(string assetCode)
         {
-            var getAssignedAsset = await _assignnment.GetAssignedAsset(assetCode);
-            string getAssignedTo = _user.getUserName(getAssignedAsset.AssignedTo);
-            string getAssignedBy = _user.getUserName(getAssignedAsset.AssignedBy);
-
+            //var getAssignedAsset = await _assignnment.GetAssignedAsset(assetCode);
+            //string getAssignedTo = _user.getUserName(getAssignedAsset.AssignedTo);
+            //string getAssignedBy = _user.getUserName(getAssignedAsset.AssignedBy);
+            var asset = await _assignnment.GetOneAsync(id => id.AssetCode == assetCode);
+            var userTo = await _user.GetOneAsync(x => x.Id == asset.AssignedTo);
+            var userBy = await _user.GetOneAsync(x => x.Id == asset.AssignedBy);
             return new DetailAsset
             {
-                AssignedTo = getAssignedTo,
-                AssignedBy = getAssignedBy,
-                AssignedDate = getAssignedAsset.AssignedDate,
+                AssignedTo = userTo.UserName,
+                AssignedBy = userBy.UserName,
+                AssignedDate = asset.AssignedDate,
             };
-            
         }
 
         public async Task<Asset?> Create(AssetRequest assetRequest)
