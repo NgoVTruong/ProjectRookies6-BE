@@ -9,15 +9,17 @@ namespace FinalAssignment.Services.Implements
     public class AssetService : IAssetService
     {
         private readonly IAssetRepository _asset;
+        private readonly IUserRepository _user;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IAssignmentRepository _assignnment;
 
 
-        public AssetService(IAssetRepository asset, IAssignmentRepository assignnment, ICategoryRepository categoryRepository)
+        public AssetService(IAssetRepository asset, IUserRepository user, IAssignmentRepository assignnment, ICategoryRepository categoryRepository)
         {
             _asset = asset;
             _assignnment = assignnment;
             _categoryRepository = categoryRepository;
+            _user = user;
         }
 
         public async Task<AssetDetail> GetDetailAsset(string assetCode)
@@ -72,18 +74,27 @@ namespace FinalAssignment.Services.Implements
 
         }
 
-        public async Task<AsignedAsset> GetAssignedAsset(string assetCode)
+        public async Task<DetailAsset> GetAssignedAsset(string assetCode)
         {
             var getAssignedAsset = await _assignnment.GetAssignedAsset(assetCode);
-            return getAssignedAsset;
+            string getAssignedTo = _user.getUserName(getAssignedAsset.AssignedTo);
+            string getAssignedBy = _user.getUserName(getAssignedAsset.AssignedBy);
+
+            return new DetailAsset
+            {
+                AssignedTo = getAssignedTo,
+                AssignedBy = getAssignedBy,
+                AssignedDate = getAssignedAsset.AssignedDate,
+            };
+            
         }
 
         public async Task<Asset?> Create(AssetRequest assetRequest)
         {
             using (var transaction = _asset.DatabaseTransaction())
-            {                
+            {
                 try
-                {                
+                {
                     var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
 
                     var getAssetCode = category.CategoryName;
