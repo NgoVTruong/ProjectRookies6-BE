@@ -12,7 +12,7 @@ namespace FinalAssignment.Services.Interfaces
         Task<IEnumerable<AssetResponse>> GetAllAsset(string location);
         Task<IEnumerable<AssetResponse>> GetAllAssetByStatus(string location);
         Task<AssetDetail> GetDetailAsset(string assetCode);
-        Task<AsignedAsset> GetAssignedAsset(string assetCode);
+        Task<DetailAsset> GetAssignedAsset(string assetCode);
         Task<EditAssetResponse> GetEditAsset(string assetCode);
     }
 }
