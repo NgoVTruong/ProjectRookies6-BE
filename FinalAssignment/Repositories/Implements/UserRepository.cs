@@ -11,10 +11,12 @@ namespace FinalAssignment.Repositories.Implements
         {
         }
 
-        public async Task<string> getUserName(string id)
+        public  string getUserName(string id)
         {
-           var getUser = _dbSet.FirstOrDefault(x => x.Id == id);
-            return  getUser.UserName;
+            var getUser =  _dbSet.FirstOrDefault(x => x.Id == id);
+            if (getUser == null) return null;
+            string a = getUser.UserName;
+            return a;
         }
     }
 }
