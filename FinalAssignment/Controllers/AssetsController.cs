@@ -1,6 +1,5 @@
 ﻿using Common.Enums;
 using FinalAssignment.DTOs.Asset;
-using FinalAssignment.Services.Implements;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +13,6 @@ namespace FinalAssignment.Controllers
         public AssetsController(IAssetService assetService)
         {
             _assetService = assetService;
-
         }
 
         [HttpPost("assets")]
@@ -35,7 +33,7 @@ namespace FinalAssignment.Controllers
             return Ok(result);
         }
 
-        [HttpGet("edited-asset/{assetCode}")]
+        [HttpGet("assets/{assetCode}")]
         public async Task<EditAssetResponse> GetEditAsset(string assetCode)
         {
             var getEdit = await _assetService.GetEditAsset(assetCode);
@@ -74,21 +72,18 @@ namespace FinalAssignment.Controllers
             return await data;
         }
 
-        [HttpGet]
+        [HttpGet("assets")]
         public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
         {
             return await _assetService.GetAllAsset(location);
         }
+        [HttpGet("assets-status")]
+        public async Task<IEnumerable<AssetResponse>> GetAllAssetByStatus(string location)
+        {
+            return await _assetService.GetAllAssetByStatus(location);
+        }
 
-        //[HttpGet("detail-asset/{assetCode}")]
-        //public async Task<AssetDetail> GetDetailAsset(string assetCode)
-        //{
-        //    var getDetailAsset = await _assetService.GetDetailAsset(assetCode);
-
-        //    return getDetailAsset;
-        //}
-
-        [HttpGet("detail-asset/{assetCode}")]
+        [HttpGet("assets-detail/{assetCode}")]
         public async Task<AsignedAsset> GetAssignedAsset(string assetCode)
         {
             var getAssignedAsset = await _assetService.GetAssignedAsset(assetCode);
