@@ -3,6 +3,7 @@ using FinalAssignment.DTOs.Assignment;
 using FinalAssignment.Repositories.Implements;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
+using System.Collections.Generic;
 
 namespace FinalAssignment.Services.Implements
 {
@@ -25,7 +26,7 @@ namespace FinalAssignment.Services.Implements
                 var assetDetail = await _assetRepository.GetOneAsync(a => a.Id == assignmentRequest.AssetId);
 
                 var newAssignment = new Assignment
-                {   
+                {
                     Id = Guid.NewGuid(),
                     AcceptedBy = assignmentRequest.AssignedTo,
                     AssignedTo = assignmentRequest.AssignedTo,
@@ -68,6 +69,30 @@ namespace FinalAssignment.Services.Implements
                     Message = "Create fail"
                 };
             }
+        }
+
+        public async Task<IEnumerable<GetAllAssignmentResponse>> GetAll()
+        {
+            var assignmentList = (await _assignmentRepository.GetAllAsync()).ToList();
+            foreach (var userId in assignmentList)
+            {
+                var userTo = await _userRepository.GetOneAsync(x => x.Id == userId.AssignedTo);
+                var userBy = await _userRepository.GetOneAsync(x => x.Id == userId.AssignedBy);
+                return assignmentList.Select(ass => new GetAllAssignmentResponse
+                {
+                    AssetCode = ass.AssetCode,
+                    AssetName = ass.AssetName,
+                    AssignedBy = userTo.UserName,
+                    AssignedDate = ass.AssignedDate,
+                    AssignedTo = userBy.UserName,
+                    AssignmentState = ass.AssignmentState,
+                });
+            }
+            if (assignmentList == null)
+            {
+                return null;
+            }
+            return null;
         }
     }
 }
