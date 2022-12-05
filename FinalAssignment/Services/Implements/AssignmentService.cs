@@ -22,6 +22,8 @@ namespace FinalAssignment.Services.Implements
             using var transaction = _assignmentRepository.DatabaseTransaction();
             try
             {
+                var assetDetail = await _assetRepository.GetOneAsync(a => a.Id == assignmentRequest.AssetId);
+
                 var newAssignment = new Assignment
                 {   
                     Id = Guid.NewGuid(),
@@ -32,7 +34,7 @@ namespace FinalAssignment.Services.Implements
                     AssignedDate = assignmentRequest.AsssignedDate,
                     AssignmentState = 0,
                     IsDeleted = false,
-                    Specification = "null",
+                    Specification = assetDetail.Specification,
                     Note = assignmentRequest.Note,
                     AssetId = assignmentRequest.AssetId,
                     RequestBy = assignmentRequest.AssignedBy,
