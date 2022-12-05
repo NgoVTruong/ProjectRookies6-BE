@@ -65,11 +65,14 @@ namespace FinalAssignment.Controllers
         }
 
         [HttpDelete("assets/{assetCode}")]
-        public async Task<bool> DeleteAsset(string assetCode)
+        public async Task<IActionResult> DeleteAsset(string assetCode)
         {
             var data = _assetService.DeleteAsset(assetCode);
-
-            return await data;
+            if ((bool)await data == true)
+            {
+                return StatusCode(200, "delete successfully!");
+            }
+            return StatusCode(400, "delete false");
         }
 
         [HttpGet("assets")]
