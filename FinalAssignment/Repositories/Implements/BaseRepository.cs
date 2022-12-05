@@ -1,4 +1,6 @@
 ﻿using Data;
+using FinalAssignment.Repositories.Implements;
+using FinalAssignment.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using TestWebAPI.Repositories.Interfaces;
@@ -30,11 +32,11 @@ namespace TestWebAPI.Repositories.Implements
             return Task.FromResult(true);
         }
 
-        public async Task<T>? GetOneAsync(Expression<Func<T, bool>>? predicate)
+        public virtual async Task<T?> GetOneAsync(Expression<Func<T, bool>>? predicate = null)
         {
-            var result = predicate == null ? _dbSet : _dbSet.Where(predicate);
+            var dbSet = predicate == null ? _dbSet.FirstOrDefaultAsync() : _dbSet.FirstOrDefaultAsync(predicate);
 
-            return await result.FirstOrDefaultAsync();
+            return await dbSet;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate)
@@ -54,6 +56,11 @@ namespace TestWebAPI.Repositories.Implements
             var result = _dbSet.Update(entity).Entity;
 
             return await Task.FromResult(result);
+        }
+
+        public IDatabaseTransaction DatabaseTransaction()
+        {
+            return new EntityDatabseTransaction(_context);
         }
     }
 }

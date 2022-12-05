@@ -1,12 +1,18 @@
+using Common.Enums;
+using Data.Auth;
+using Data.Entities;
+using FinalAssignment.DTOs.Asset;
 using FinalAssignment.DTOs.User;
+using FinalAssignment.Repositories.Implements;
+using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Data.Auth;
-using System.Text;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using FinalAssignment.Repositories.Implements;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
 
 namespace FinalAssignment.Services.Implements
 {
@@ -15,103 +21,237 @@ namespace FinalAssignment.Services.Implements
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly IUserRepository _userRepository;
         public UserService(RoleManager<IdentityRole> roleManager, IConfiguration configuration, UserManager<ApplicationUser> userManager)
         {
             _roleManager = roleManager;
             _configuration = configuration;
             _userManager = userManager;
         }
-
-        public string StaffCodeGen(int number) //35
-        {
-            int check = number;
-            int count = 0;
-            while (check > 0) //35  //3
-            {
-                check = check / 10; //3 //0
-                count++; //1 //2
-            }
-            string staffCode = "SD";
-            for (int i = 0; i < 4 - count; i++)  //(int i = 0; i < 2; i++)
-            {
-                staffCode = staffCode + "0"; // SD00
-            }
-            staffCode = staffCode + (check + 1).ToString(); //SD0036
-            return staffCode;
-        }
-
+       
         public async Task<Response> Register(RegisterModelRequest model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.UserName);
-
-            if (userExists != null)
-                return new Response
+             string StaffCodeGen(int number) //35
+            {
+                int check = number;
+                int count = 0;
+                while (check > 0) //35  //3
                 {
-                    Status = "Error",
-                    Message = "User already exists!"
+                    check = check / 10; //3 //0
+                    count++; //1 //2
+                }
+                string staffCode = "SD";
+                for (int i = 0; i < 4 - count; i++)  //(int i = 0; i < 2; i++)
+                {
+                    staffCode = staffCode + "0"; // SD00
+                }
+                string num = (++number).ToString();
+                staffCode = staffCode + num;
+                return staffCode;
+            }
+
+            var getUserName = model.LastName;
+
+            string[] array = getUserName.Split(" ");
+
+
+            var userNameSplit = "";
+            for (int i = 0; i < array.Length; i++)
+            {
+                for (int j = 0; j < array[i].Length; j++)
+                {
+                    if (j == 0) userNameSplit += array[i][j];
+                }
+
+            }
+            var fullname = model.FirstName + " " + model.LastName;
+
+            var getFullName = _userManager.Users.Where(i => i.FullName == fullname);
+
+            if (getFullName.Count() > 0)
+            {
+                int userNumberExist = getFullName.Count();
+                var userName = model.FirstName.ToLower() + userNameSplit.ToLower() + (userNumberExist).ToString();
+                var password = userName + '@' + model.DateOfBirth.ToString("yyyyMMdd");
+
+                bool IsAgeLessThan18Years(DateTime birthDate)
+                {
+                    if (DateTime.Now.Year - birthDate.Year > 18)
+                    {
+                        return false;
+                    }
+                    else if (DateTime.Now.Year - birthDate.Year < 18)
+                    {
+                        return true;
+                    }
+                    else //if (DateTime.Now.Year - birthDate.Year == 18)
+                    {
+                        if (birthDate.DayOfYear < DateTime.Now.DayOfYear)
+                        {
+                            return false;
+                        }
+                        else if (birthDate.DayOfYear > DateTime.Now.DayOfYear)
+                        {
+                            return true;
+                        }
+                        else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                if (IsAgeLessThan18Years(model.DateOfBirth))
+                {
+                    return new Response
+                    {
+                        Status = "Error",
+                        Message = "DOB < 18!"
+                    };
+                }
+
+                var userNumber = _userManager.Users.Count(); // 3
+
+                ApplicationUser user = new()
+                {
+
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = userName,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    FullName = model.FirstName + " " + model.LastName,
+                    Type = model.UserRole,
+                    DateOfBirth = model.DateOfBirth, // (2000, 1, 1),
+                    Gender = model.Gender, // (0 or 1 or 2)
+                    JoinedDate = model.JoinedDate, // >(2018, 1, 1),
+                    StaffCode = StaffCodeGen(userNumber), //SD0036
+                    Location = model.Location,
+                    IsFirstTime = true, // First time = 0
+                    IsDeleted = false,
                 };
 
-            var userNumber = _userManager.Users.Count(); // 3
 
-            ApplicationUser user = new()
-            {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.UserName,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                FullName = model.FirstName + model.LastName,
-                Type = model.UserRole,
-                DateOfBirth = model.DateOfBirth, // (2000, 1, 1),
-                Gender = model.Gender, // (0 or 1 or 2)
-                JoinedDate = model.JoinedDate, // >(2018, 1, 1),
-                StaffCode = StaffCodeGen(userNumber), //SD0036
-                Location = model.Location,
-                IsFirstTime = true, // First time = 0
-                IsDeleted = false,
-            };
+                var result = await _userManager.CreateAsync(user, password);
 
-            bool whiteSpace = model.Password.Contains(" ");
-
-            if (whiteSpace)
-            {
-                return new Response
+                if (!result.Succeeded) return new Response
                 {
                     Status = "Error",
-                    Message = "Password cannot have white space."
+                    Message = result.Errors.FirstOrDefault().Description
+                };
+
+                if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
+                }
+
+                if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
+                {
+                    await _userManager.AddToRoleAsync(user, model.UserRole);
+                }
+
+                return new Response
+                {
+                    Status = "Success",
+                    Message = "User created successfully!",
+                    UserName = userName,
+                    Password = password,
                 };
             }
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded) return new Response
+            else
             {
-                Status = "Error",
-                Message = "User creation failed! Please check user details and try again."
-            };
+                var userName = model.FirstName.ToLower() + userNameSplit.ToLower();
+                var password = userName + '@' + model.DateOfBirth.ToString("yyyyMMdd");
 
-            if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
-            {
-                await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
+                bool IsAgeLessThan18Years(DateTime birthDate)
+                {
+                    if (DateTime.Now.Year - birthDate.Year > 18)
+                    {
+                        return false;
+                    }
+                    else if (DateTime.Now.Year - birthDate.Year < 18)
+                    {
+                        return true;
+                    }
+                    else //if (DateTime.Now.Year - birthDate.Year == 18)
+                    {
+                        if (birthDate.DayOfYear < DateTime.Now.DayOfYear)
+                        {
+                            return false;
+                        }
+                        else if (birthDate.DayOfYear > DateTime.Now.DayOfYear)
+                        {
+                            return true;
+                        }
+                        else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                if (IsAgeLessThan18Years(model.DateOfBirth))
+                {
+                    return new Response
+                    {
+                        Status = "Error",
+                        Message = "DOB < 18!"
+                    };
+                }
+
+                var userNumber = _userManager.Users.Count(); // 3
+
+                ApplicationUser user = new()
+                {
+
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = userName,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    FullName = model.FirstName + " " + model.LastName,
+                    Type = model.UserRole,
+                    DateOfBirth = model.DateOfBirth, // (2000, 1, 1),
+                    Gender = model.Gender, // (0 or 1 or 2)
+                    JoinedDate = model.JoinedDate, // >(2018, 1, 1),
+                    StaffCode = StaffCodeGen(userNumber), //SD0036
+                    Location = model.Location,
+                    IsFirstTime = true, // First time = 0
+                    IsDeleted = false,
+                };
+
+
+                var result = await _userManager.CreateAsync(user, password);
+
+                if (!result.Succeeded) return new Response
+                {
+                    Status = "Error",
+                    Message = result.Errors.FirstOrDefault().Description
+                };
+
+                if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
+                }
+
+                if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
+                {
+                    await _userManager.AddToRoleAsync(user, model.UserRole);
+                }
+
+                return new Response
+                {
+                    Status = "Success",
+                    Message = "User created successfully!",
+                    UserName = userName,
+                    Password = password,
+                };
             }
-
-            if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if staff
-            {
-                await _userManager.AddToRoleAsync(user, model.UserRole);
-            }
-
-            return new Response
-            {
-                Status = "Success",
-                Message = "User created successfully!"
-            };
         }
 
         public async Task<LoginResponse> Login(LoginRequest model)
         {
             var user = await _userManager.FindByNameAsync(model.Username);
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            if (user.IsDeleted == false && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 // var roleList = new List<RoleEachUser>();
@@ -139,7 +279,8 @@ namespace FinalAssignment.Services.Implements
                 await _userManager.UpdateAsync(user);
 
                 return new LoginResponse
-                {
+                {   
+                    Id = user.Id,
                     AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                     // RefreshToken = refreshToken,
                     Expiration = token.ValidTo,
@@ -178,12 +319,7 @@ namespace FinalAssignment.Services.Implements
                     Status = "Error",
                     Message = "User not exists!"
                 };
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var userPassword = user.PasswordHash;
-            var passwordHash = _userManager.PasswordHasher.HashPassword(user, model.NewPassword);
-
-            if (passwordHash == userPassword)
+            if (await _userManager.CheckPasswordAsync(user, model.NewPassword))
             {
                 return new Response
                 {
@@ -192,8 +328,9 @@ namespace FinalAssignment.Services.Implements
                 };
             }
 
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
             user.IsFirstTime = false;
-            // user.PasswordHash = passwordHash;
             await _userManager.UpdateAsync(user);
 
             var resetPassResult = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
@@ -216,23 +353,32 @@ namespace FinalAssignment.Services.Implements
             };
         }
 
-        public async Task<Response> EditUser(EditUserRequest model)
+        public async Task<UserResponse> GetUserByUsername(string userName)
+        {
+            var users = await _userManager.FindByNameAsync(userName);
+            if (users == null)
+            {
+                return new UserResponse();
+            }
+
+            var user = _userManager.Users.Where(i => i.UserName == userName).Select(user => new UserResponse()
+            {   
+                UserId = user.Id,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                DateOfBirth = user.DateOfBirth,
+                Gender = user.Gender,
+                JoinedDate = user.JoinedDate,
+                Type = user.Type,
+            }).ToList().FirstOrDefault();
+
+            return user;
+        }
+
+        public async Task<Response?> EditUser(EditUserRequest model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
-
-            var deleteRole = await _userManager.RemoveFromRoleAsync(user, model.UserRole);
-            
-            // if (!result.Succeeded)
-            // {
-            //     foreach (var error in result.Errors)
-            //     {
-            //         return new Response
-            //         {
-            //             Status = "Error",
-            //             Message = error.ToString()
-            //         };
-            //     }
-            // }
 
             if (user == null)
                 return new Response
@@ -241,21 +387,150 @@ namespace FinalAssignment.Services.Implements
                     Message = "User not exists!"
                 };
 
+            if (!Enum.IsDefined(typeof(UserTypeEnum), model.UserRole))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "User Role is invalid!"
+                };
+            }
+
+            bool IsAgeLessThan18Years(DateTime birthDate)
+            {
+                if (DateTime.Now.Year - birthDate.Year > 18)
+                {
+                    return false;
+                }
+                else if (DateTime.Now.Year - birthDate.Year < 18)
+                {
+                    return true;
+                }
+                else //if (DateTime.Now.Year - birthDate.Year == 18)
+                {
+                    if (birthDate.DayOfYear < DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                    else if (birthDate.DayOfYear > DateTime.Now.DayOfYear)
+                    {
+                        return true;
+                    }
+                    else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if (IsAgeLessThan18Years(model.DateOfBirth))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "DOB < 18!"
+                };
+            }
+
+            bool IsJoinedDateLessThanDob(DateTime birthDate, DateTime joindedDate)
+            {
+                if (joindedDate.Year > birthDate.Year)
+                {
+                    return false;
+                }
+                else if (joindedDate.Year < birthDate.Year )
+                {
+                    return true;
+                }
+                else //if (DateTime.Now.Year - birthDate.Year == 18)
+                {
+                    if (birthDate.DayOfYear < joindedDate.DayOfYear)
+                    {
+                        return false;
+                    }
+                    else if (birthDate.DayOfYear > joindedDate.DayOfYear)
+                    {
+                        return true;
+                    }
+                    else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (IsJoinedDateLessThanDob(model.DateOfBirth, model.JoinedDate))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "Joined < DoB!"
+                };
+            }
+
+            bool IsJoinedInTheFuture(DateTime joidedDate)
+            {
+                if (DateTime.Now.Year > joidedDate.Year)
+                {
+                    return false;
+                }
+                else if (DateTime.Now.Year < joidedDate.Year)
+                {
+                    return true;
+                }
+                else //if (DateTime.Now.Year - birthDate.Year == 18)
+                {
+                    if (joidedDate.DayOfYear <= DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                    else if (joidedDate.DayOfYear > DateTime.Now.DayOfYear)
+                    {
+                        return true;
+                    }
+                    else //if (birthDate.DayOfYear == DateTime.Now.DayOfYear)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (IsJoinedInTheFuture(model.JoinedDate))
+            {
+                return new Response
+                {
+                    Status = "Error",
+                    Message = "Joined can't select day in the future!"
+                };
+            }
+
             user.DateOfBirth = model.DateOfBirth;
             user.Gender = model.Gender;
             user.JoinedDate = model.JoinedDate;
             user.Type = model.UserRole;
 
+            var currentRoles = await _userManager.GetRolesAsync(user);
 
+            var removeUserFromRolesResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
 
-            if (!await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if user
+            if (!removeUserFromRolesResult.Succeeded)
             {
-                await _roleManager.CreateAsync(new IdentityRole(model.UserRole));
+                return new Response
+                {
+                    Status = "Error",
+                    Message = removeUserFromRolesResult.Errors.FirstOrDefault().Description
+                };
             }
 
-            if (await _roleManager.RoleExistsAsync(model.UserRole)) // "Admin" if admin and "Staff" if user
+            var addUserToRoleResult = await _userManager.AddToRoleAsync(user, model.UserRole);
+
+            if (!addUserToRoleResult.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, model.UserRole);
+                return new Response
+                {
+                    Status = "Error",
+                    Message = addUserToRoleResult.Errors.FirstOrDefault().Description
+                };
             }
 
             await _userManager.UpdateAsync(user);
@@ -265,31 +540,36 @@ namespace FinalAssignment.Services.Implements
                 Status = "Success",
                 Message = "User edit successfully!"
             };
-        }
 
+        }
 
         public async Task<Response> DeleteUser(string userName)
         {
+
             // check xem co ton tai user trong Assignment khong, neu co thi bao loi
-            var user = await _userManager.FindByNameAsync(userName);
+                    var user = await _userManager.FindByNameAsync(userName);
 
-            if (user == null)
-                return new Response
-                {
-                    Status = "Error",
-                    Message = "User not exists!"
-                };
+                    if (user == null)
+                        return new Response
+                        {
+                            Status = "Error",
+                            Message = "User not exists!"
+                        };
 
-            user.IsDeleted = true;
-            await _userManager.UpdateAsync(user);
-
-            return new Response
-            {
-                Status = "Success",
-                Message = "User delete successfully!"
-            };
+                    user.IsDeleted = true;
+                    await _userManager.UpdateAsync(user);
+                
+                    return new Response
+                    {
+                        Status = "Success",
+                        Message = "User delete successfully!"
+                    };
+                
+       
+            
         }
-        public async Task<IEnumerable<UserResponse>> GetAllUserDependLocation(string userName)
+
+        public async Task<IEnumerable<UserResponse?>> GetAllUserDependLocation(string userName)
         {
             // check xem co ton tai user trong Assignment khong, neu co thi bao loi
             var user = await _userManager.FindByNameAsync(userName);
@@ -300,7 +580,16 @@ namespace FinalAssignment.Services.Implements
             var location = user.Location;
             var users = _userManager.Users.Where(i => i.Location == location && i.IsDeleted == false).Select(user => new UserResponse()
             {
-                FirstName = user.FirstName
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                FullName = user.FullName,
+                StaffCode = user.StaffCode,
+                UserName = user.UserName,
+                Type = user.Type,
+                JoinedDate = user.JoinedDate,
+                Location = user.Location,
+                Gender = user.Gender,
+                DateOfBirth = user.DateOfBirth,
             }).ToList();
 
             return users;
