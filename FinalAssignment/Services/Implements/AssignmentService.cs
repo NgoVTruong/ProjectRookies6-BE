@@ -82,9 +82,9 @@ namespace FinalAssignment.Services.Implements
                 {
                     AssetCode = ass.AssetCode,
                     AssetName = ass.AssetName,
-                    AssignedBy = userTo.UserName,
+                    AssignedBy = userBy.UserName,
                     AssignedDate = ass.AssignedDate,
-                    AssignedTo = userBy.UserName,
+                    AssignedTo = userTo.UserName,
                     AssignmentState = ass.AssignmentState,
                 });
             }
