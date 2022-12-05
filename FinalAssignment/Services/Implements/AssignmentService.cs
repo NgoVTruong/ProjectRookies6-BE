@@ -1,22 +1,26 @@
-﻿using Data.Entities;
+﻿using Data.Auth;
+using Data.Entities;
 using FinalAssignment.DTOs.Assignment;
 using FinalAssignment.Repositories.Implements;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
 namespace FinalAssignment.Services.Implements
 {
     public class AssignmentService : IAssignmentService
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAssignmentRepository _assignmentRepository;
         private readonly IUserRepository _userRepository;
         private readonly IAssetRepository _assetRepository;
-        public AssignmentService(IAssignmentRepository assignmentRepository, IUserRepository userRepository, IAssetRepository assetRepository)
+        public AssignmentService(IAssignmentRepository assignmentRepository, IUserRepository userRepository, IAssetRepository assetRepository, UserManager<ApplicationUser> userManager)
         {
             _assignmentRepository = assignmentRepository;
             _userRepository = userRepository;
             _assetRepository = assetRepository;
+            _userManager = userManager;
         }
         public async Task<CreateAssignmentResponse> Create(CreateAssignmentRequest assignmentRequest)
         {
@@ -73,26 +77,28 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAll()
         {
-            var assignmentList = (await _assignmentRepository.GetAllAsync()).ToList();
-            foreach (var userId in assignmentList)
-            {
-                var userTo = await _userRepository.GetOneAsync(x => x.Id == userId.AssignedTo);
-                var userBy = await _userRepository.GetOneAsync(x => x.Id == userId.AssignedBy);
-                return assignmentList.Select(ass => new GetAllAssignmentResponse
-                {
-                    AssetCode = ass.AssetCode,
-                    AssetName = ass.AssetName,
-                    AssignedBy = userBy.UserName,
-                    AssignedDate = ass.AssignedDate,
-                    AssignedTo = userTo.UserName,
-                    AssignmentState = ass.AssignmentState,
-                });
-            }
+            var assignmentList = await _assignmentRepository.GetAllAsync();
             if (assignmentList == null)
             {
                 return null;
             }
-            return null;
+            var newAssignments = new List<GetAllAssignmentResponse>();
+            foreach (var assignment in assignmentList)
+            {
+                var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
+                var userBy = await _userManager.FindByIdAsync(assignment.AssignedBy);
+                var data = new GetAllAssignmentResponse()
+                {
+                    AssetCode = assignment.AssetCode,
+                    AssignedBy = userBy.UserName,
+                    AssetName = assignment.AssetName,
+                    AssignedDate = assignment.AssignedDate,
+                    AssignedTo = userTo.UserName,
+                    AssignmentState = assignment.AssignmentState,
+                };
+                newAssignments.Add(data);
+            }
+            return newAssignments;
         }
     }
 }
