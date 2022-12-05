@@ -24,5 +24,14 @@ namespace FinalAssignment.Controllers
 
             return Ok(result);
         }
+        [HttpGet("assignments")]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _assignmentService.GetAll();
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
     }
 }
