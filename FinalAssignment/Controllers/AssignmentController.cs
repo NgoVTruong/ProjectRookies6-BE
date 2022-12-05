@@ -24,6 +24,7 @@ namespace FinalAssignment.Controllers
 
             return Ok(result);
         }
+
         [HttpGet("assignments")]
         public async Task<IActionResult> GetAll()
         {
