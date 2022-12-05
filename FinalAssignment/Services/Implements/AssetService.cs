@@ -46,15 +46,15 @@ namespace FinalAssignment.Services.Implements
                         _asset.SaveChanges();
                         transaction.Commit();
 
-                        return await Task.FromResult(true);
+                        return true;
                     }
 
-                    return await Task.FromResult(false);
+                    return false;
                 }
                 catch
                 {
                     transaction.RollBack();
-                    return await Task.FromResult(false);
+                    return false;
                 }
             }
         }
