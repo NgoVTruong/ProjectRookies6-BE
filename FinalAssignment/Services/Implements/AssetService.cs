@@ -35,7 +35,7 @@ namespace FinalAssignment.Services.Implements
                 try
                 {
                     var asset = await _asset.GetOneAsync(s => s.AssetCode == assetCode);
-                    var assignment = await _assignnment.GetOneAsync(a => a.AssetCode == assetCode);
+                    var assignment = await _assignnment.GetOneAsync(a => a.AssetCode == assetCode && a.IsDeleted == false);
 
                     if (asset != null && assignment == null)
                     {
@@ -44,15 +44,15 @@ namespace FinalAssignment.Services.Implements
                         _asset.SaveChanges();
                         transaction.Commit();
 
-                        return await Task.FromResult(true);
+                        return true;
                     }
 
-                    return await Task.FromResult(false);
+                    return false;
                 }
                 catch
                 {
                     transaction.RollBack();
-                    return await Task.FromResult(false);
+                    return false;
                 }
             }
         }
@@ -76,10 +76,13 @@ namespace FinalAssignment.Services.Implements
             var asset = await _assignnment.GetOneAsync(id => id.AssetCode == assetCode);
             var userTo = await _user.GetOneAsync(x => x.Id == asset.AssignedTo);
             var userBy = await _user.GetOneAsync(x => x.Id == asset.AssignedBy);
+            var cateName = await _asset.GetOneAsync(x => x.AssetCode == assetCode);
             return new DetailAsset
             {
                 AssignedTo = userTo.UserName,
                 AssignedBy = userBy.UserName,
+                AssetName = asset.AssetName,
+                CategoryName = cateName.CategoryName,
                 AssignedDate = asset.AssignedDate,
             };
         }
@@ -175,6 +178,16 @@ namespace FinalAssignment.Services.Implements
         public async Task<Asset> GetAssetByName(string assetName)
         {
             return await _asset.GetOneAsync(x => x.AssetName == assetName);
+        }
+
+        public async Task<bool> CheckAsset(string assetCode)
+        {
+            var assignment = await _assignnment.GetOneAsync(a => a.AssetCode == assetCode && a.IsDeleted == false);
+            if (assignment == null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
