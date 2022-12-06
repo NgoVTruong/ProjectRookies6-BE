@@ -75,6 +75,18 @@ namespace FinalAssignment.Controllers
             return StatusCode(400, "delete false");
         }
 
+
+        [HttpGet("{assetCode}")]
+        public async Task<IActionResult> CheckAsset(string assetCode)
+        {
+            var checkAsset = await _assetService.CheckAsset(assetCode);
+            if (checkAsset == true)
+            {
+                return StatusCode(200, "Can delete asset");
+            }
+            return StatusCode(400, "can not delete asset");
+        }
+
         [HttpGet("assets")]
         public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
         {
