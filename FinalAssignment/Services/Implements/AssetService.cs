@@ -179,5 +179,15 @@ namespace FinalAssignment.Services.Implements
         {
             return await _asset.GetOneAsync(x => x.AssetName == assetName);
         }
+
+        public async Task<bool> CheckAsset(string assetCode)
+        {
+            var assignment = await _assignnment.GetOneAsync(a => a.AssetCode == assetCode && a.IsDeleted == false);
+            if (assignment == null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
