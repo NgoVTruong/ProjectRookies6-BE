@@ -43,6 +43,7 @@ builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 
 builder.Services.AddScoped<IRequestReturningRepository, RequestReturningRepository>();
+builder.Services.AddScoped<IRequestReturningService, RequestReturningService>();
 
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 
