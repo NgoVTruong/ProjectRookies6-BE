@@ -23,6 +23,8 @@ namespace FinalAssignment.Repositories.Implements
                 {
                     AssignedTo = assignedAsset.AssignedTo,
                     AssignedBy = assignedAsset.AcceptedBy,
+                    AssetName = assignedAsset.AssetName,
+                    CategoryName = assignedAsset.Asset.CategoryName,
                     AssignedDate = assignedAsset.AssignedDate
                 };
             }
@@ -30,6 +32,8 @@ namespace FinalAssignment.Repositories.Implements
             {
                 AssignedTo = "null",
                 AssignedBy = "null",
+                AssetName = "null",
+                CategoryName = "null",
                 AssignedDate = "0000-00-00",
             }; ;
         }

@@ -35,7 +35,7 @@ namespace FinalAssignment.Services.Implements
                 try
                 {
                     var asset = await _asset.GetOneAsync(s => s.AssetCode == assetCode);
-                    var assignment = await _assignnment.GetOneAsync(a => a.AssetCode == assetCode);
+                    var assignment = await _assignnment.GetAllAsync(a => a.AssetCode == assetCode && a.IsDeleted == false);
 
                     if (asset != null && assignment == null)
                     {
@@ -80,6 +80,8 @@ namespace FinalAssignment.Services.Implements
             {
                 AssignedTo = userTo.UserName,
                 AssignedBy = userBy.UserName,
+                AssetName = asset.AssetName,
+                CategoryName = asset.Asset.CategoryName,
                 AssignedDate = asset.AssignedDate,
             };
         }
