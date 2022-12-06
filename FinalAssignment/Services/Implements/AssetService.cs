@@ -76,12 +76,13 @@ namespace FinalAssignment.Services.Implements
             var asset = await _assignnment.GetOneAsync(id => id.AssetCode == assetCode);
             var userTo = await _user.GetOneAsync(x => x.Id == asset.AssignedTo);
             var userBy = await _user.GetOneAsync(x => x.Id == asset.AssignedBy);
+            var cateName = await _asset.GetOneAsync(x => x.AssetCode == assetCode);
             return new DetailAsset
             {
                 AssignedTo = userTo.UserName,
                 AssignedBy = userBy.UserName,
                 AssetName = asset.AssetName,
-                CategoryName = asset.Asset.CategoryName,
+                CategoryName = cateName.CategoryName,
                 AssignedDate = asset.AssignedDate,
             };
         }
