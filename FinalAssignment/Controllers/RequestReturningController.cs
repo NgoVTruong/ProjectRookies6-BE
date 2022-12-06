@@ -20,7 +20,7 @@ namespace FinalAssignment.Controllers
 
             var request = await _requestReturningService.CreateRequestForReturning(model);
 
-            if (request != null)
+            if (request == null)
                 return BadRequest("Assignment is not existed. Please choose a different assignment");
 
             if (request.Status.Equals("Error"))
