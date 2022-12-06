@@ -6,6 +6,7 @@ namespace FinalAssignment.DTOs.Asset
     {
         public string AssignedTo { get; set; }
         public string AssignedBy { get; set; }
+        public string AssetName { get; set; }
 
         public string AssignedDate { get; set; }
     }

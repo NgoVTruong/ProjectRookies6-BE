@@ -9,6 +9,8 @@ namespace FinalAssignment.Services.Interfaces
         Task<Asset> GetAssetByName(string assetName);
         Task<EditAssetResponse> EditAsset(EditAssetRequest asset, string assetCode);
         Task<bool> DeleteAsset(string assetCode);
+        Task<bool> CheckAsset(string assetCode);
+
         Task<IEnumerable<AssetResponse>> GetAllAsset(string location);
         Task<IEnumerable<AssetResponse>> GetAllAssetByStatus(string location);
         Task<AssetDetail> GetDetailAsset(string assetCode);
