@@ -92,6 +92,8 @@ namespace FinalAssignment.Repositories.Implements
             return  getAll;
         }
 
+       
+
         public async Task<EditAssetResponse> EditAsset(EditAssetRequest asset, string assetCode)
         {
             var getEditAsset = _dbSet.FirstOrDefault(s => s.AssetCode == assetCode);
@@ -104,6 +106,7 @@ namespace FinalAssignment.Repositories.Implements
             getEditAsset.Specification = asset.Specification;
             getEditAsset.InstalledDate = asset.InstalledDate;
             getEditAsset.AssetStatus = asset.AssetStatus;
+            getEditAsset.Time = DateTime.Now;
 
             var editSuccess = _dbSet.Update(getEditAsset);
             _context.SaveChanges();
@@ -134,6 +137,12 @@ namespace FinalAssignment.Repositories.Implements
                 InstalledDate = getEdit.InstalledDate,
                 AssetStatus = getEdit.AssetStatus
             };
+        }
+
+        public int GetAllAssetCode(string assetCode)
+        {
+            var getAllAssetCode = _dbSet.Where(x => x.AssetCode == assetCode).Count();
+            return getAllAssetCode;
         }
     }
 }

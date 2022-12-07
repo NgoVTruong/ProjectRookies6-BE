@@ -21,6 +21,7 @@ namespace Data.Entities
         public string? Location { get; set; }
         public bool IsDeleted { get; set; } //false
 
+        public DateTime Time { get; set; }  
         public  Category? Category { get; set; }
         public  ICollection<Assignment>? Assignments { get; set; }
     }

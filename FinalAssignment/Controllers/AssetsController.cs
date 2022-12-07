@@ -2,6 +2,7 @@
 using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Data.Entities;
 
 namespace FinalAssignment.Controllers
 {
@@ -15,14 +16,14 @@ namespace FinalAssignment.Controllers
             _assetService = assetService;
         }
 
-        [HttpPost("assets")]
+        [HttpPost("")]
         public async Task<IActionResult> Create(AssetRequest assetRequest)
-        {
+        {/*
             var asset = await _assetService.GetAssetByName(assetRequest.AssetName);
 
             if (asset != null)
                 return BadRequest("Asset is already existed. Please enter a different asset. Prefix is already existed. Please enter a different prefix");
-
+*/
             var result = await _assetService.Create(assetRequest);
 
             if (result == null) 
@@ -40,7 +41,7 @@ namespace FinalAssignment.Controllers
             return getEdit;
         }
 
-        [HttpPut("assets/{assetCode}")]
+        [HttpPut("{assetCode}")]
         public async Task<IActionResult> EditAsset(EditAssetRequest asset, string assetCode)
         {
             var editAsset = await _assetService.EditAsset(asset, assetCode);
@@ -64,7 +65,7 @@ namespace FinalAssignment.Controllers
             return StatusCode(200, "Edit successfully!");
         }
 
-        [HttpDelete("assets/{assetCode}")]
+        [HttpDelete("{assetCode}")]
         public async Task<IActionResult> DeleteAsset(string assetCode)
         {
             var data = _assetService.DeleteAsset(assetCode);
@@ -88,7 +89,7 @@ namespace FinalAssignment.Controllers
         }
 
         [HttpGet("assets")]
-        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
+        public async Task<IEnumerable<Asset>> GetAllAsset(string location)
         {
             return await _assetService.GetAllAsset(location);
         }
