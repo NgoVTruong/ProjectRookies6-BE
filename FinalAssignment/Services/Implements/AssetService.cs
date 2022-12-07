@@ -57,11 +57,21 @@ namespace FinalAssignment.Services.Implements
             }
         }
 
-        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
+        public async Task<IEnumerable<Asset>> GetAllAsset(string location)
         {
-            var getListAsset = await _asset.GetAllAsset(location);
+            var getListAsset = await _asset.GetAllAsync(i => i.Location == location);
 
-            return getListAsset;
+            var getListAssetOrderBy = getListAsset.OrderBy(a => a.AssetCode);
+            foreach (var item in getListAssetOrderBy)
+            {
+                if (DateTime.Now.Second - item.Time.Second <= 10)
+                {
+                    var getListAssetOrderByTime = getListAsset.OrderByDescending(a => a.Time);
+                    return getListAssetOrderByTime;
+                }
+            }
+
+            return getListAssetOrderBy;
         }
 
         public async Task<IEnumerable<AssetResponse>> GetAllAssetByStatus(string location)
@@ -147,6 +157,7 @@ namespace FinalAssignment.Services.Implements
                         AssetStatus = assetRequest.AssetStatus,
                         InstalledDate = assetRequest.InstalledDate,
                         Specification = assetRequest.Specification,
+                        Time=DateTime.Now,
                         Location = assetRequest.Location
                     };
 

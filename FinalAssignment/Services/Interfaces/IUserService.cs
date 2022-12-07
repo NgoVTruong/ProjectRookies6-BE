@@ -11,6 +11,7 @@ namespace FinalAssignment.Services.Interfaces
         Task<UserResponse> GetUserByUsername(string model);
         Task<Response> EditUser(EditUserRequest model);
         Task<Response> DeleteUser(string userName);
+        Task<Response> CheckValidUser(string userName);
         Task<IEnumerable<UserResponse>> GetAllUserDependLocation(string userName);
     }
 }
