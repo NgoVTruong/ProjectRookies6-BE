@@ -17,12 +17,12 @@ namespace FinalAssignment.Controllers
 
         [HttpPost("assets")]
         public async Task<IActionResult> Create(AssetRequest assetRequest)
-        {
+        {/*
             var asset = await _assetService.GetAssetByName(assetRequest.AssetName);
 
             if (asset != null)
                 return BadRequest("Asset is already existed. Please enter a different asset. Prefix is already existed. Please enter a different prefix");
-
+*/
             var result = await _assetService.Create(assetRequest);
 
             if (result == null) 
@@ -73,6 +73,18 @@ namespace FinalAssignment.Controllers
                 return StatusCode(200, "delete successfully!");
             }
             return StatusCode(400, "delete false");
+        }
+
+
+        [HttpGet("{assetCode}")]
+        public async Task<IActionResult> CheckAsset(string assetCode)
+        {
+            var checkAsset = await _assetService.CheckAsset(assetCode);
+            if (checkAsset == true)
+            {
+                return StatusCode(200, "Can delete asset");
+            }
+            return StatusCode(400, "can not delete asset");
         }
 
         [HttpGet("assets")]

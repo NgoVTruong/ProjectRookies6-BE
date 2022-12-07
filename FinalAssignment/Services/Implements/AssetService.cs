@@ -93,20 +93,39 @@ namespace FinalAssignment.Services.Implements
             {
                 try
                 {
+                   
                     var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
+                    var assetCodeCheck = (await _asset.GetAllAsync()).Count();
 
-                    var getAssetCode = category.CategoryName;
-
-                    var assetCode = "";
-                    for (int i = 0; i < getAssetCode.Length; i++)
-                    {
-                        if (i <= 1) assetCode += getAssetCode[i];
-
-                    }
-                    ;
+                    string getAssetCode = category.CategoryName;
+   
                     var assetcheck = _asset.GetAll(assetRequest.CategoryId);
-                    int numberOfAsset = assetcheck + 1;
-                    assetCode = assetCode.ToUpper() + "00000" + numberOfAsset;
+
+                    string AssetCodeGen(int number) //35
+                    {
+                        int check = number;
+                        int count = 0;
+                        while (check > 0) //35  //3
+                        {
+                            check = check / 10; //3 //0
+                            count++; //1 //2
+                        }
+                        string assetCode = "";
+
+                        for (int i = 0; i < getAssetCode.Length; i++)
+                        {
+                            if (i <= 1) assetCode += getAssetCode[i];
+
+                        };
+                        for (int i = 0; i < 5 - count; i++)  //(int i = 0; i < 2; i++)
+                        {
+                            assetCode = assetCode + "0"; // SD00
+                        }
+                        string num = (++number).ToString();                      
+
+                        assetCode = assetCode.ToUpper() + num;
+                        return assetCode;
+                    }
 
                     if (category == null) return null;
 
@@ -122,7 +141,7 @@ namespace FinalAssignment.Services.Implements
                     var newAsset = new Asset
                     {
                         CategoryId = assetRequest.CategoryId,
-                        AssetCode = assetCode,
+                        AssetCode = AssetCodeGen(assetCodeCheck),
                         AssetName = assetRequest.AssetName,
                         CategoryName = category.CategoryName,
                         AssetStatus = assetRequest.AssetStatus,
@@ -134,6 +153,7 @@ namespace FinalAssignment.Services.Implements
                     var createdAsset = await _asset.CreateAsync(newAsset);
                     _asset.SaveChanges();
                     transaction.Commit();
+
 
                     if (createdAsset == null)
                     {
@@ -178,6 +198,16 @@ namespace FinalAssignment.Services.Implements
         public async Task<Asset> GetAssetByName(string assetName)
         {
             return await _asset.GetOneAsync(x => x.AssetName == assetName);
+        }
+
+        public async Task<bool> CheckAsset(string assetCode)
+        {
+            var assignment = await _assignnment.GetOneAsync(a => a.AssetCode == assetCode && a.IsDeleted == false);
+            if (assignment == null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
