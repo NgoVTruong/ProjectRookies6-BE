@@ -59,7 +59,8 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<Asset>> GetAllAsset(string location)
         {
-            var getListAsset = await _asset.GetAllAsync(i => i.Location == location);
+            var getListAsset = await _asset.GetAllAsync(s => s.IsDeleted == false
+                                            && s.Location.ToLower().Contains(location.ToLower()));
 
             var getListAssetOrderBy = getListAsset.OrderBy(a => a.AssetCode);
             foreach (var item in getListAssetOrderBy)
