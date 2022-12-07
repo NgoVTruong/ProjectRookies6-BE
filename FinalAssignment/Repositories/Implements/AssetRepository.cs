@@ -106,6 +106,7 @@ namespace FinalAssignment.Repositories.Implements
             getEditAsset.Specification = asset.Specification;
             getEditAsset.InstalledDate = asset.InstalledDate;
             getEditAsset.AssetStatus = asset.AssetStatus;
+            getEditAsset.Time = DateTime.Now;
 
             var editSuccess = _dbSet.Update(getEditAsset);
             _context.SaveChanges();

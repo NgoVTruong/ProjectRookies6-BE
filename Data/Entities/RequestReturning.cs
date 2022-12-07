@@ -12,6 +12,8 @@ namespace Data.Entities
 
         public string? ReturnDate { get; set; }
         public RequestStateEnum RequestStatus { get; set; }
+        public DateTime Time { get; set; }
+
 
         public virtual ApplicationUser? ApplicationUser { get; set; }
 
