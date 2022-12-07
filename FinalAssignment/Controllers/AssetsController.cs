@@ -2,6 +2,7 @@
 using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Data.Entities;
 
 namespace FinalAssignment.Controllers
 {
@@ -88,7 +89,7 @@ namespace FinalAssignment.Controllers
         }
 
         [HttpGet("assets")]
-        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
+        public async Task<IEnumerable<Asset>> GetAllAsset(string location)
         {
             return await _assetService.GetAllAsset(location);
         }

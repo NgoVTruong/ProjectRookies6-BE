@@ -11,7 +11,7 @@ namespace FinalAssignment.Services.Interfaces
         Task<bool> DeleteAsset(string assetCode);
         Task<bool> CheckAsset(string assetCode);
 
-        Task<IEnumerable<AssetResponse>> GetAllAsset(string location);
+        Task<IEnumerable<Asset>> GetAllAsset(string location);
         Task<IEnumerable<AssetResponse>> GetAllAssetByStatus(string location);
         Task<AssetDetail> GetDetailAsset(string assetCode);
         Task<DetailAsset> GetAssignedAsset(string assetCode);
