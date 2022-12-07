@@ -71,6 +71,12 @@ namespace FinalAssignment.Controllers
         {
             var data = await _userService.DeleteUser(userName);
 
+            if (data.Status.Equals("Error1"))
+                return StatusCode(500, "User not exists!");
+
+            if (data.Status.Equals("Error2"))
+                return StatusCode(500, data.Message);
+
             return Ok(data);
         }
 
