@@ -57,11 +57,21 @@ namespace FinalAssignment.Services.Implements
             }
         }
 
-        public async Task<IEnumerable<AssetResponse>> GetAllAsset(string location)
+        public async Task<IEnumerable<Asset>> GetAllAsset(string location)
         {
-            var getListAsset = await _asset.GetAllAsset(location);
+            var getListAsset = await _asset.GetAllAsync(i => i.Location == location);
 
-            return getListAsset;
+            var getListAssetOrderBy = getListAsset.OrderBy(a => a.AssetCode);
+            foreach (var item in getListAssetOrderBy)
+            {
+                if (DateTime.Now.Second - item.Time.Second <= 10)
+                {
+                    var getListAssetOrderByTime = getListAsset.OrderByDescending(a => a.Time);
+                    return getListAssetOrderByTime;
+                }
+            }
+
+            return getListAssetOrderBy;
         }
 
         public async Task<IEnumerable<AssetResponse>> GetAllAssetByStatus(string location)
@@ -93,20 +103,39 @@ namespace FinalAssignment.Services.Implements
             {
                 try
                 {
+                   
                     var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
+                    var assetCodeCheck = (await _asset.GetAllAsync()).Count();
 
-                    var getAssetCode = category.CategoryName;
-
-                    var assetCode = "";
-                    for (int i = 0; i < getAssetCode.Length; i++)
-                    {
-                        if (i <= 1) assetCode += getAssetCode[i];
-
-                    }
-                    ;
+                    string getAssetCode = category.CategoryName;
+   
                     var assetcheck = _asset.GetAll(assetRequest.CategoryId);
-                    int numberOfAsset = assetcheck + 1;
-                    assetCode = assetCode.ToUpper() + "00000" + numberOfAsset;
+
+                    string AssetCodeGen(int number) //35
+                    {
+                        int check = number;
+                        int count = 0;
+                        while (check > 0) //35  //3
+                        {
+                            check = check / 10; //3 //0
+                            count++; //1 //2
+                        }
+                        string assetCode = "";
+
+                        for (int i = 0; i < getAssetCode.Length; i++)
+                        {
+                            if (i <= 1) assetCode += getAssetCode[i];
+
+                        };
+                        for (int i = 0; i < 5 - count; i++)  //(int i = 0; i < 2; i++)
+                        {
+                            assetCode = assetCode + "0"; // SD00
+                        }
+                        string num = (++number).ToString();                      
+
+                        assetCode = assetCode.ToUpper() + num;
+                        return assetCode;
+                    }
 
                     if (category == null) return null;
 
@@ -122,18 +151,20 @@ namespace FinalAssignment.Services.Implements
                     var newAsset = new Asset
                     {
                         CategoryId = assetRequest.CategoryId,
-                        AssetCode = assetCode,
+                        AssetCode = AssetCodeGen(assetCodeCheck),
                         AssetName = assetRequest.AssetName,
                         CategoryName = category.CategoryName,
                         AssetStatus = assetRequest.AssetStatus,
                         InstalledDate = assetRequest.InstalledDate,
                         Specification = assetRequest.Specification,
+                        Time=DateTime.Now,
                         Location = assetRequest.Location
                     };
 
                     var createdAsset = await _asset.CreateAsync(newAsset);
                     _asset.SaveChanges();
                     transaction.Commit();
+
 
                     if (createdAsset == null)
                     {

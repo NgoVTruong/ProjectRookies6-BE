@@ -92,6 +92,8 @@ namespace FinalAssignment.Repositories.Implements
             return  getAll;
         }
 
+       
+
         public async Task<EditAssetResponse> EditAsset(EditAssetRequest asset, string assetCode)
         {
             var getEditAsset = _dbSet.FirstOrDefault(s => s.AssetCode == assetCode);
@@ -134,6 +136,12 @@ namespace FinalAssignment.Repositories.Implements
                 InstalledDate = getEdit.InstalledDate,
                 AssetStatus = getEdit.AssetStatus
             };
+        }
+
+        public int GetAllAssetCode(string assetCode)
+        {
+            var getAllAssetCode = _dbSet.Where(x => x.AssetCode == assetCode).Count();
+            return getAllAssetCode;
         }
     }
 }
