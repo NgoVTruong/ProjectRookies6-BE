@@ -22,16 +22,18 @@ namespace FinalAssignment.Services.Implements
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
-        public UserService(RoleManager<IdentityRole> roleManager, IConfiguration configuration, UserManager<ApplicationUser> userManager)
+        private readonly IAssignmentRepository _assignmentRepository;
+        public UserService(RoleManager<IdentityRole> roleManager, IConfiguration configuration, UserManager<ApplicationUser> userManager, IAssignmentRepository assignmentRepository)
         {
             _roleManager = roleManager;
             _configuration = configuration;
             _userManager = userManager;
+            _assignmentRepository = assignmentRepository;
         }
-       
+
         public async Task<Response> Register(RegisterModelRequest model)
         {
-             string StaffCodeGen(int number) //35
+            string StaffCodeGen(int number) //35
             {
                 int check = number;
                 int count = 0;
@@ -279,7 +281,7 @@ namespace FinalAssignment.Services.Implements
                 await _userManager.UpdateAsync(user);
 
                 return new LoginResponse
-                {   
+                {
                     Id = user.Id,
                     AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                     // RefreshToken = refreshToken,
@@ -362,7 +364,7 @@ namespace FinalAssignment.Services.Implements
             }
 
             var user = _userManager.Users.Where(i => i.UserName == userName).Select(user => new UserResponse()
-            {   
+            {
                 UserId = user.Id,
                 UserName = user.UserName,
                 FirstName = user.FirstName,
@@ -438,7 +440,7 @@ namespace FinalAssignment.Services.Implements
                 {
                     return false;
                 }
-                else if (joindedDate.Year < birthDate.Year )
+                else if (joindedDate.Year < birthDate.Year)
                 {
                     return true;
                 }
@@ -547,26 +549,39 @@ namespace FinalAssignment.Services.Implements
         {
 
             // check xem co ton tai user trong Assignment khong, neu co thi bao loi
-                    var user = await _userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByNameAsync(userName);
 
-                    if (user == null)
-                        return new Response
-                        {
-                            Status = "Error",
-                            Message = "User not exists!"
-                        };
-
-                    user.IsDeleted = true;
-                    await _userManager.UpdateAsync(user);
-                
+            if (user.IsDeleted == true)
+                return new Response
+                {
+                    Status = "Error1",
+                    Message = "User not exists!"
+                };
+            var checkAssignments = await _assignmentRepository
+            .GetAllAsync(i => i.AssignmentState == AssignmentStateEnum.WaitingForAcceptance ||
+                              i.AssignmentState == AssignmentStateEnum.Accepted ||
+                              i.AssignmentState == AssignmentStateEnum.WaitingForReturning);
+            foreach (var assignnment in checkAssignments)
+            {
+                if (assignnment.AssignedTo == user.Id)
+                {
                     return new Response
                     {
-                        Status = "Success",
-                        Message = "User delete successfully!"
+                        Status = "Error2",
+                        Message = "There are valid assignments belonging to this user. Please close all assignments before disabling user."
                     };
-                
-       
-            
+                }
+            }
+
+            user.IsDeleted = true;
+            await _userManager.UpdateAsync(user);
+
+            return new Response
+            {
+                Status = "Success",
+                Message = "User delete successfully!"
+            };
+
         }
 
         public async Task<IEnumerable<UserResponse?>> GetAllUserDependLocation(string userName)
