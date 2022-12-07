@@ -79,6 +79,21 @@ namespace FinalAssignment.Controllers
 
             return Ok(data);
         }
+        
+        [HttpPost("{userName}")]
+        public async Task<IActionResult> CheckValidUser(string userName)
+        {
+            var data = await _userService.CheckValidUser(userName);
+
+            if (data.Status.Equals("Error1"))
+                return StatusCode(500, data);
+
+            if (data.Status.Equals("Error2"))
+                return StatusCode(500, data);
+
+            return Ok(data);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> GetAllUserDependLocation(string userName)
