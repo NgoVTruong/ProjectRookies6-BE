@@ -1,11 +1,10 @@
 ﻿using Data.Auth;
 using Data.Entities;
 using FinalAssignment.DTOs.Assignment;
-using FinalAssignment.Repositories.Implements;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
+
 
 namespace FinalAssignment.Services.Implements
 {
@@ -75,6 +74,7 @@ namespace FinalAssignment.Services.Implements
             }
         }
 
+
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAll()
         {
             var assignmentList = await _assignmentRepository.GetAllAsync();
@@ -100,5 +100,6 @@ namespace FinalAssignment.Services.Implements
             }
             return newAssignments;
         }
+
     }
 }
