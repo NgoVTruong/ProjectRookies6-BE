@@ -551,7 +551,7 @@ namespace FinalAssignment.Services.Implements
             // check xem co ton tai user trong Assignment khong, neu co thi bao loi
             var user = await _userManager.FindByNameAsync(userName);
 
-            if (user == null)
+            if (user.IsDeleted == true)
                 return new Response
                 {
                     Status = "Error1",
