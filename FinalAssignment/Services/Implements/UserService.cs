@@ -583,6 +583,42 @@ namespace FinalAssignment.Services.Implements
             };
 
         }
+        
+        public async Task<Response> CheckValidUser(string userName)
+        {
+
+            // check xem co ton tai user trong Assignment khong, neu co thi bao loi
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user.IsDeleted == true)
+                return new Response
+                {
+                    Status = "Error1",
+                    Message = "User not exists!"
+                };
+            var checkAssignments = await _assignmentRepository
+            .GetAllAsync(i => i.AssignmentState == AssignmentStateEnum.WaitingForAcceptance ||
+                              i.AssignmentState == AssignmentStateEnum.Accepted ||
+                              i.AssignmentState == AssignmentStateEnum.WaitingForReturning);
+            foreach (var assignnment in checkAssignments)
+            {
+                if (assignnment.AssignedTo == user.Id)
+                {
+                    return new Response
+                    {
+                        Status = "Error2",
+                        Message = "There are valid assignments belonging to this user. Please close all assignments before disabling user."
+                    };
+                }
+            }
+
+            return new Response
+            {
+                Status = "Success",
+                Message = "User is valid!"
+            };
+
+        }
 
         public async Task<IEnumerable<UserResponse?>> GetAllUserDependLocation(string userName)
         {
