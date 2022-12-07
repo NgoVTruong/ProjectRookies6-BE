@@ -16,7 +16,7 @@ namespace FinalAssignment.Controllers
             _assetService = assetService;
         }
 
-        [HttpPost("assets")]
+        [HttpPost("")]
         public async Task<IActionResult> Create(AssetRequest assetRequest)
         {/*
             var asset = await _assetService.GetAssetByName(assetRequest.AssetName);
@@ -41,7 +41,7 @@ namespace FinalAssignment.Controllers
             return getEdit;
         }
 
-        [HttpPut("assets/{assetCode}")]
+        [HttpPut("{assetCode}")]
         public async Task<IActionResult> EditAsset(EditAssetRequest asset, string assetCode)
         {
             var editAsset = await _assetService.EditAsset(asset, assetCode);
@@ -65,7 +65,7 @@ namespace FinalAssignment.Controllers
             return StatusCode(200, "Edit successfully!");
         }
 
-        [HttpDelete("assets/{assetCode}")]
+        [HttpDelete("{assetCode}")]
         public async Task<IActionResult> DeleteAsset(string assetCode)
         {
             var data = _assetService.DeleteAsset(assetCode);
