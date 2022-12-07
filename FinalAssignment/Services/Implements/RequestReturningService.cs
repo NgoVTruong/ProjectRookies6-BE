@@ -32,6 +32,7 @@ namespace FinalAssignment.Services.Implements
                         AssignmentId = model.AssignmentId,
                         ReturnDate = null,
                         RequestStatus = RequestStateEnum.WaitingForReturning,
+                        Time = DateTime.Now,
                     };
 
                     await _requestReturningRepository.CreateAsync(newRequest);
@@ -58,6 +59,23 @@ namespace FinalAssignment.Services.Implements
                     Message = "User created request for returning fail!",
                 };
             }
+        }
+
+        public async Task<IEnumerable<RequestReturning>> GetAllReturningRequest()
+        {
+            var getRequest = _requestReturningRepository.GetAllRequest();
+            var getListRequestOrderBy = getRequest.OrderBy(a => a.Assignment.AssetCode);
+            foreach (var item in getListRequestOrderBy)
+            {
+                if (DateTime.Now.Second - item.Time.Second <= 10)
+                {
+                    var getListRequestOrderByTime = getRequest.OrderByDescending(a => a.Time);
+                    return getListRequestOrderByTime;
+                }
+            }
+
+            return getListRequestOrderBy;
+
         }
     }
 }
