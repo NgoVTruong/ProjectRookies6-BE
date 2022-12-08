@@ -31,7 +31,7 @@ namespace FinalAssignment.Controllers
         }
 
         [HttpGet("returning-request")]
-        public async Task<IEnumerable<RequestReturning>> GetAllReturningRequest()
+        public async Task<IEnumerable<ReturningRequest>> GetAllReturningRequest()
         {
             return await _requestReturningService.GetAllReturningRequest();
         }
