@@ -67,7 +67,7 @@ namespace FinalAssignment.Services.Implements
             {
                 TimeSpan checkTime = DateTime.Now - item.Time;
 
-                if (checkTime.TotalSeconds <= 10)
+                if (checkTime.TotalSeconds <= 7)
                 {
                     var getListAssetOrderByTime = getListAsset.OrderByDescending(a => a.Time);
                     return getListAssetOrderByTime;
