@@ -77,7 +77,7 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAll()
         {
-            var assignmentList = await _assignmentRepository.GetAllAsync();
+            var assignmentList = (await _assignmentRepository.GetAllAsync()).Where(x => x.IsDeleted == false);
             if (assignmentList == null)
             {
                 return null;
@@ -87,19 +87,44 @@ namespace FinalAssignment.Services.Implements
             {
                 var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
                 var userBy = await _userManager.FindByIdAsync(assignment.AssignedBy);
+                var asset = await _assetRepository.GetOneAsync(x => x.AssetCode == assignment.AssetCode);
                 var data = new GetAllAssignmentResponse()
-                {
+                {   
+                    Id = assignment.Id,
                     AssetCode = assignment.AssetCode,
                     AssignedBy = userBy.UserName,
                     AssetName = assignment.AssetName,
                     AssignedDate = assignment.AssignedDate,
                     AssignedTo = userTo.UserName,
                     AssignmentState = assignment.AssignmentState,
+                    Specification =  asset.Specification,
+                    Note = assignment.Note
                 };
                 newAssignments.Add(data);
             }
             return newAssignments;
         }
-
+  
+        public async Task<GetAssignmentDetailResponse> GetAssignmentDetail(string assetCode)
+        {
+            var assignment = await _assignmentRepository.GetOneAsync(x => x.AssetCode == assetCode);
+            if (assignment == null)
+            {
+                return null;
+            }
+            var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
+            var userBy = await _userManager.FindByIdAsync(assignment.AssignedBy);
+            return new GetAssignmentDetailResponse()
+            {
+                AssetCode = assignment.AssetCode,
+                AssetId = assignment.AssetId.ToString(),
+                AssignedBy = userBy.UserName,
+                AssignedTo = userTo.UserName,
+                Note = assignment.Note,
+                Specification = assignment.Specification,
+                AssignedDate = assignment.AssignedDate,
+                state = assignment.AssignmentState
+            };
+        }
     }
 }

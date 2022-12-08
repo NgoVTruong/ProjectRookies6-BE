@@ -6,5 +6,6 @@ namespace FinalAssignment.Services.Interfaces
     {
         Task<CreateAssignmentResponse> Create (CreateAssignmentRequest assignmentRequest);
         Task<IEnumerable<GetAllAssignmentResponse>> GetAll();
+        Task<GetAssignmentDetailResponse> GetAssignmentDetail(string assetCode);
     }
 }

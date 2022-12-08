@@ -1,6 +1,7 @@
 ﻿using FinalAssignment.DTOs.Assignment;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace FinalAssignment.Controllers
 {
@@ -29,6 +30,15 @@ namespace FinalAssignment.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await _assignmentService.GetAll();
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
+        [HttpGet("assignments-detail")]
+        public async Task<IActionResult> GetAssignmentDetail(string assetCode)
+        {
+            var result = await _assignmentService.GetAssignmentDetail(assetCode);
 
             if (result == null) return StatusCode(500, "Result null");
 
