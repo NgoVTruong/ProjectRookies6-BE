@@ -1,7 +1,6 @@
 ﻿using FinalAssignment.DTOs.Assignment;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
 
 namespace FinalAssignment.Controllers
 {
@@ -26,6 +25,26 @@ namespace FinalAssignment.Controllers
             return Ok(result);
         }
 
+        [HttpPut("assignments")]
+        public async Task<IActionResult> EditAssignment(EditAssignmentRequest editAssignmentRequest, Guid id)
+        {
+            var result = await _assignmentService.EditAssignment(editAssignmentRequest, id);
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
+
+        [HttpGet("assignments/{id}")]
+        public async Task<IActionResult> GetAssignmentById(Guid id)
+        {
+            var result = await _assignmentService.GetAssignmentById(id);
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
+
         [HttpGet("assignments")]
         public async Task<IActionResult> GetAll()
         {
@@ -35,6 +54,27 @@ namespace FinalAssignment.Controllers
 
             return Ok(result);
         }
+        
+        [HttpPut("assignments/accept-assignment/{id}")]
+        public async Task<IActionResult> AcceptAssignment(Guid id)
+        {
+            var result = await _assignmentService.AcceptAssignment(id);
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
+        
+        [HttpGet("assignments/{userId}")]
+        public async Task<IActionResult> GetAllDependUser(string userId)
+        {
+            var result = await _assignmentService.GetAllDependUser(userId);
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
+        
         [HttpGet("assignments-detail")]
         public async Task<IActionResult> GetAssignmentDetail(string assetCode)
         {
