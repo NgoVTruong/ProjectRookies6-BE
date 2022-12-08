@@ -35,6 +35,17 @@ namespace FinalAssignment.Controllers
 
             return Ok(result);
         }
+        
+        [HttpGet("assignments/{userId}")]
+        public async Task<IActionResult> GetAllDependUser(string userId)
+        {
+            var result = await _assignmentService.GetAllDependUser(userId);
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
+        
         [HttpGet("assignments-detail")]
         public async Task<IActionResult> GetAssignmentDetail(string assetCode)
         {
