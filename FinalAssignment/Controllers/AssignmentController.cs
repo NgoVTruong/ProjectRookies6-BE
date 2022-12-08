@@ -36,6 +36,16 @@ namespace FinalAssignment.Controllers
             return Ok(result);
         }
         
+        [HttpPut("assignments/accept-assignment/{id}")]
+        public async Task<IActionResult> AcceptAssignment(Guid id)
+        {
+            var result = await _assignmentService.AcceptAssignment(id);
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
+        
         [HttpGet("assignments/{userId}")]
         public async Task<IActionResult> GetAllDependUser(string userId)
         {
