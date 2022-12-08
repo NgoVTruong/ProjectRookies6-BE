@@ -21,6 +21,47 @@ namespace FinalAssignment.Services.Implements
             _assetRepository = assetRepository;
             _userManager = userManager;
         }
+        
+        public async Task<CreateAssignmentResponse> AcceptAssignment(Guid id)
+        {
+            using var transaction = _assignmentRepository.DatabaseTransaction();
+            try
+            {
+                var assignment = await _assignmentRepository.GetOneAsync(x => x.Id == id);
+
+                if (assignment == null)
+                {
+                    return new CreateAssignmentResponse
+                    {
+                        IsSucced = false,
+                        Message = "Assignment is not exists!"
+                    };
+                }
+
+                assignment.AssignmentState= Common.Enums.AssignmentStateEnum.Accepted;
+                await _assignmentRepository.UpdateAsync(assignment);
+
+                _assignmentRepository.SaveChanges();
+                transaction.Commit();
+
+                return new CreateAssignmentResponse
+                {
+                    IsSucced = true,
+                    Message = "Accept Assignment Succeed"
+                };
+            }
+            catch (Exception)
+            {
+                transaction.RollBack();
+
+                return new CreateAssignmentResponse
+                {
+                    IsSucced = false,
+                    Message = "Accept Assignment Fail"
+                };
+            }
+        }
+        
         public async Task<CreateAssignmentResponse> Create(CreateAssignmentRequest assignmentRequest)
         {
             using var transaction = _assignmentRepository.DatabaseTransaction();
