@@ -8,5 +8,6 @@ namespace FinalAssignment.Services.Interfaces
         Task<IEnumerable<GetAllAssignmentResponse>> GetAll();
         Task<IEnumerable<GetAllAssignmentResponse>> GetAllDependUser(string userId);
         Task<GetAssignmentDetailResponse> GetAssignmentDetail(string assetCode);
+        Task<CreateAssignmentResponse> AcceptAssignment(Guid id);
     }
 }
