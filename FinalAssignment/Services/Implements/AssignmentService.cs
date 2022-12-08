@@ -89,7 +89,7 @@ namespace FinalAssignment.Services.Implements
                 var userBy = await _userManager.FindByIdAsync(assignment.AssignedBy);
                 var asset = await _assetRepository.GetOneAsync(x => x.AssetCode == assignment.AssetCode);
                 var data = new GetAllAssignmentResponse()
-                {   
+                {
                     Id = assignment.Id,
                     AssetCode = assignment.AssetCode,
                     AssignedBy = userBy.UserName,
