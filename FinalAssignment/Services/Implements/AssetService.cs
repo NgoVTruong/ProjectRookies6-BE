@@ -65,7 +65,9 @@ namespace FinalAssignment.Services.Implements
             var getListAssetOrderBy = getListAsset.OrderBy(a => a.AssetCode);
             foreach (var item in getListAssetOrderBy)
             {
-                if (DateTime.Now.Second - item.Time.Second <= 10)
+                TimeSpan checkTime = DateTime.Now - item.Time;
+
+                if (checkTime.TotalSeconds <= 10)
                 {
                     var getListAssetOrderByTime = getListAsset.OrderByDescending(a => a.Time);
                     return getListAssetOrderByTime;
