@@ -61,10 +61,10 @@ namespace FinalAssignment.Services.Implements
             }
         }
 
-        public async Task<IEnumerable<RequestReturning>> GetAllReturningRequest()
+        public async Task<IEnumerable<ReturningRequest>> GetAllReturningRequest()
         {
             var getRequest = _requestReturningRepository.GetAllRequest();
-            var getListRequestOrderBy = getRequest.OrderBy(a => a.Assignment.AssetCode);
+            var getListRequestOrderBy = getRequest.OrderBy(a => a.AssetCode);
             foreach (var item in getListRequestOrderBy)
             {
                 TimeSpan checkTime = DateTime.Now - item.Time;

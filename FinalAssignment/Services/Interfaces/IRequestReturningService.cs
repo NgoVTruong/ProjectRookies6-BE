@@ -6,7 +6,8 @@ namespace FinalAssignment.Services.Interfaces
     public interface IRequestReturningService
     {
         Task<CreateRequestReturningResponse> CreateRequestForReturning(CreateRequestReturningRequest requestReturning);
-        Task<IEnumerable<RequestReturning>> GetAllReturningRequest();
+        Task<IEnumerable<ReturningRequest>> GetAllReturningRequest();
+
 
     }
 }
