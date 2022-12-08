@@ -107,7 +107,7 @@ namespace FinalAssignment.Services.Implements
         
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAllDependUser(string userId)
         {
-            var assignmentList = (await _assignmentRepository.GetAllAsync()).Where(x => x.IsDeleted == false && x.AssignedTo == userId );
+            var assignmentList = (await _assignmentRepository.GetAllAsync()).Where(x => x.IsDeleted == false && x.AssignedTo == userId  && DateTime.Parse(x.AssignedDate) <= DateTime.Now);
             if (assignmentList == null)
             {
                 return null;
