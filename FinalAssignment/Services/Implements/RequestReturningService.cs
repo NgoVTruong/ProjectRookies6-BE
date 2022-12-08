@@ -67,7 +67,8 @@ namespace FinalAssignment.Services.Implements
             var getListRequestOrderBy = getRequest.OrderBy(a => a.Assignment.AssetCode);
             foreach (var item in getListRequestOrderBy)
             {
-                if (DateTime.Now.Second - item.Time.Second <= 10)
+                TimeSpan checkTime = DateTime.Now - item.Time;
+                if (checkTime.TotalSeconds <= 10)
                 {
                     var getListRequestOrderByTime = getRequest.OrderByDescending(a => a.Time);
                     return getListRequestOrderByTime;
