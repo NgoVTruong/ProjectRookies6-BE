@@ -10,10 +10,16 @@ namespace FinalAssignment.Services.Implements
     {
         private readonly IRequestReturningRepository _requestReturningRepository;
         private readonly IAssignmentRepository _assignmentRepository;
-        public RequestReturningService(IAssignmentRepository assignmentRepository, IRequestReturningRepository requestReturningRepository)
+        private readonly IUserRepository _user;
+        private readonly IAssetRepository _assetRepository;
+
+        public RequestReturningService(IAssignmentRepository assignmentRepository, IUserRepository user,
+            IAssetRepository asset, IRequestReturningRepository requestReturningRepository)
         {
             _requestReturningRepository = requestReturningRepository;
             _assignmentRepository = assignmentRepository;
+            _assetRepository = asset;
+            _user = user;
         }
         public async Task<CreateRequestReturningResponse> CreateRequestForReturning(CreateRequestReturningRequest model)
         {
@@ -64,18 +70,50 @@ namespace FinalAssignment.Services.Implements
         public async Task<IEnumerable<ReturningRequest>> GetAllReturningRequest()
         {
             var getRequest = _requestReturningRepository.GetAllRequest();
-            var getListRequestOrderBy = getRequest.OrderBy(a => a.AssetCode);
-            foreach (var item in getListRequestOrderBy)
-            {
-                TimeSpan checkTime = DateTime.Now - item.Time;
-                if (checkTime.TotalSeconds <= 10)
-                {
-                    var getListRequestOrderByTime = getRequest.OrderByDescending(a => a.Time);
-                    return getListRequestOrderByTime;
-                }
-            }
+            var requestList = new List<ReturningRequest>();
 
-            return getListRequestOrderBy;
+            foreach (var request in getRequest)
+            {
+                var userTo = await _user.GetOneAsync(s => s.Id == request.AcceptedBy);
+                var userBy = await _user.GetOneAsync(s => s.Id == request.RequestBy);
+                var data = new ReturningRequest()
+                {
+                    Id = request.Id,
+                    AssetCode = request.AssetCode,
+                    AssetName = request.AssetName,
+                    AcceptedBy = userTo.UserName,
+                    AssignedDate = request.AssignedDate,
+                    RequestBy = userBy.UserName,
+                    ReturnDate = request.ReturnDate,
+                    RequestStatus = request.RequestStatus,
+                    Time = request.Time,
+                };
+                requestList.Add(data);
+            }
+            //var requestListOrderBy = getRequest.OrderBy(a => a.AssetCode);
+
+            //foreach (var item in requestListOrderBy)
+            //{
+            //    TimeSpan checkTime = DateTime.Now - item.Time;
+            //    if (checkTime.TotalSeconds <= 10)
+            //    {
+            //        var getListRequestOrderByTime = getRequest.OrderByDescending(a => a.Time);
+            //        return getListRequestOrderByTime.Select(i => new ReturningRequest
+            //        {
+            //            Id = i.Id,
+            //            AssetCode = i.AssetCode,
+            //            AssetName = i.AssetName,
+            //            AcceptedBy = i.AcceptedBy,
+            //            AssignedDate = i.AssignedDate,
+            //            RequestBy = i.RequestBy,
+            //            ReturnDate = i.ReturnDate,
+            //            RequestStatus = i.RequestStatus,
+            //            Time = i.Time,
+            //        });
+            //    }
+            //}
+
+            return requestList;
 
         }
     }
