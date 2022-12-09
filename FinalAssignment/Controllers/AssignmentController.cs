@@ -35,7 +35,7 @@ namespace FinalAssignment.Controllers
             return Ok(result);
         }
 
-        [HttpGet("assignments/{id}")]
+        [HttpGet("assignments-id/{id}")]
         public async Task<IActionResult> GetAssignmentById(Guid id)
         {
             var result = await _assignmentService.GetAssignmentById(id);

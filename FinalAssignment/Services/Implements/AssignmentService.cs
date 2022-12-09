@@ -196,7 +196,7 @@ namespace FinalAssignment.Services.Implements
                 state = assignment.AssignmentState
             };
         }
-        public async Task<Assignment> EditAssignment(EditAssignmentRequest editAssignmentRequest, Guid id)
+        public async Task<Assignment?> EditAssignment(EditAssignmentRequest editAssignmentRequest, Guid id)
         {
             var editAssignment = await _assignmentRepository.GetOneAsync(x => x.Id == id);
 
@@ -230,7 +230,7 @@ namespace FinalAssignment.Services.Implements
             };
         }
 
-        public async Task<Assignment> GetAssignmentById(Guid id)
+        public async Task<Assignment?> GetAssignmentById(Guid id)
         {
             return await _assignmentRepository.GetOneAsync(a => a.Id == id);
         }

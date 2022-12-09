@@ -17,6 +17,6 @@ namespace FinalAssignment.Services.Interfaces
 
         Task<Assignment?> EditAssignment(EditAssignmentRequest editAssignmentRequest, Guid id);
 
-        Task<Assignment> GetAssignmentById(Guid id);
+        Task<Assignment?> GetAssignmentById(Guid id);
     }
 }
