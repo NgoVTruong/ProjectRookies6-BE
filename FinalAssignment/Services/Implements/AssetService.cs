@@ -67,10 +67,11 @@ namespace FinalAssignment.Services.Implements
             {
                 TimeSpan checkTime = DateTime.Now - item.Time;
 
-                if (checkTime.TotalSeconds <= 7)
+                if (checkTime.TotalSeconds <= 5)
                 {
-                    var getListAssetOrderByTime = getListAsset.OrderByDescending(a => a.Time);
-                    return getListAssetOrderByTime;
+                    //var getListAssetOrderByTime = getListAsset.OrderByDescending(a => a.Time);
+                    //return getListAssetOrderByTime;
+                    return getListAssetOrderBy.Prepend(item);
                 }
             }
 
