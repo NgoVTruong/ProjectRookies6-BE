@@ -22,7 +22,7 @@ namespace Data.Entities
         public bool IsDeleted { get; set; } //false
 
         public DateTime Time { get; set; }  
-        public  Category? Category { get; set; }
+        public Category? Category { get; set; }
         public  ICollection<Assignment>? Assignments { get; set; }
     }
 }

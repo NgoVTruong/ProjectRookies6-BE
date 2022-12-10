@@ -30,6 +30,7 @@ namespace FinalAssignment.Services.Implements
             try
             {
                 var assignment = await _assignmentRepository.GetOneAsync(x => x.Id == id);
+                var asset = await _assetRepository.GetOneAsync(x => x.Id == assignment.AssetId);
 
                 if (assignment == null)
                 {
@@ -39,6 +40,9 @@ namespace FinalAssignment.Services.Implements
                         Message = "Assignment is not exists!"
                     };
                 }
+                
+                asset.AssetStatus = Common.Enums.AssetStateEnum.Assigned;
+                await _assetRepository.UpdateAsync(asset);
 
                 assignment.AssignmentState = Common.Enums.AssignmentStateEnum.Accepted;
                 await _assignmentRepository.UpdateAsync(assignment);

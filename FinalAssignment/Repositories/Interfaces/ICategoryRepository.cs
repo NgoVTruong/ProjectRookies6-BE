@@ -5,6 +5,6 @@ namespace FinalAssignment.Repositories.Interfaces
 {
     public interface ICategoryRepository : IBaseRepository<Category>
     {
-        
+        IEnumerable<Category> GetAllCategoryInclude();
     }
 }
