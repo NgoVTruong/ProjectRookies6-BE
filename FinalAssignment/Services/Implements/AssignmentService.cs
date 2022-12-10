@@ -3,6 +3,7 @@ using Data.Entities;
 using FinalAssignment.DTOs.Assignment;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
+using Humanizer;
 using Microsoft.AspNetCore.Identity;
 
 
@@ -205,6 +206,7 @@ namespace FinalAssignment.Services.Implements
             {
                 return null;
             }
+           
             editAssignment.Id = id;
             editAssignment.Note = editAssignmentRequest.Note;
             editAssignment.AssignedDate = editAssignmentRequest.AssignedDate;
@@ -230,9 +232,34 @@ namespace FinalAssignment.Services.Implements
             };
         }
 
-        public async Task<Assignment?> GetAssignmentById(Guid id)
+        public async Task<EditAssignmentResponse?> GetAssignmentById(Guid id)
         {
-            return await _assignmentRepository.GetOneAsync(a => a.Id == id);
+           
+            var assignment = await _assignmentRepository.GetOneAsync(x => x.Id == id);
+            if (assignment == null)
+            {
+                return null;
+            }
+            var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
+            var userBy = await _userManager.FindByIdAsync(assignment.AssignedBy);
+            DateTime assignDate = DateTime.Parse(assignment.AssignedDate);
+            return new EditAssignmentResponse()
+            {
+                Id = assignment.Id,
+                AssetName = assignment.AssetName,
+                AssetCode = assignment.AssetCode,
+                AssetId = assignment.AssetId.ToString(),
+                AssignedBy = userBy.UserName,
+                AssignedTo = userTo.UserName,
+                AssignedById = assignment.AssignedBy,
+                AssignedToId = assignment.AssignedTo,
+                Note = assignment.Note,
+                Specification = assignment.Specification,
+                AssignedDate = assignDate.ToString("yyyy-MM-dd"),
+                AssignmentState = assignment.AssignmentState
+            };
         }
+
+
     }
 }
