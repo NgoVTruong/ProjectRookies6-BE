@@ -46,6 +46,7 @@ builder.Services.AddScoped<IRequestReturningRepository, RequestReturningReposito
 builder.Services.AddScoped<IRequestReturningService, RequestReturningService>();
 
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 

@@ -4,6 +4,7 @@ using Data.Entities;
 using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using TestWebAPI.Repositories.Implements;
 
 namespace FinalAssignment.Repositories.Implements
@@ -143,6 +144,12 @@ namespace FinalAssignment.Repositories.Implements
         {
             var getAllAssetCode = _dbSet.Where(x => x.AssetCode == assetCode).Count();
             return getAllAssetCode;
+        }
+
+        public IEnumerable<Asset>  GetAllAssetInclude()
+        {
+            var getAllAsset = _dbSet.Include(a => a.Category);
+            return getAllAsset;
         }
     }
 }

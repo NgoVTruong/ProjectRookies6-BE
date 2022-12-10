@@ -10,5 +10,7 @@ namespace FinalAssignment.Services.Interfaces
         Task<Category?> Create(CategoryRequest createRequest);
 
         Task<IEnumerable<Category>> GetAll();
+
+
     }
 }
