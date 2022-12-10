@@ -5,5 +5,6 @@ namespace FinalAssignment.Repositories.Interfaces
 {
     public interface IReportRepository : IBaseRepository<Report>
     {
+        // IEnumerable<Category> GetAllCategory();
     }
 }
