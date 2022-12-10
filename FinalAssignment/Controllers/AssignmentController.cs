@@ -1,7 +1,6 @@
 ﻿using FinalAssignment.DTOs.Assignment;
 using FinalAssignment.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
 
 namespace FinalAssignment.Controllers
 {
@@ -20,6 +19,26 @@ namespace FinalAssignment.Controllers
         public async Task<IActionResult> Create(CreateAssignmentRequest assignmentRequest)
         {
             var result = await _assignmentService.Create(assignmentRequest);
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
+
+        [HttpPut("assignments")]
+        public async Task<IActionResult> EditAssignment(EditAssignmentRequest editAssignmentRequest, Guid id)
+        {
+            var result = await _assignmentService.EditAssignment(editAssignmentRequest, id);
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
+
+        [HttpGet("assignments-id/{id}")]
+        public async Task<IActionResult> GetAssignmentById(Guid id)
+        {
+            var result = await _assignmentService.GetAssignmentById(id);
 
             if (result == null) return StatusCode(500, "Result null");
 
@@ -45,7 +64,18 @@ namespace FinalAssignment.Controllers
 
             return Ok(result);
         }
-        
+
+        [HttpDelete("assignments/{assetCode}")]
+        public async Task<IActionResult> DeleteAsset(string assetCode)
+        {
+            var data = _assignmentService.DeleteAssignmentByAdmin(assetCode);
+            if ((bool)await data == true)
+            {
+                return StatusCode(200, "delete successfully!");
+            }
+            return StatusCode(400, "delete false");
+        }
+
         [HttpGet("assignments/{userId}")]
         public async Task<IActionResult> GetAllDependUser(string userId)
         {
