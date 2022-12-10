@@ -2,6 +2,7 @@ using Data;
 using Data.Entities;
 using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using TestWebAPI.Repositories.Implements;
 
 namespace FinalAssignment.Repositories.Implements
