@@ -163,32 +163,24 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAllDependUser(string userId)
         {
-            var assignmentList = (await _assignmentRepository.GetAllAsync()).Where(x => x.IsDeleted == false && x.AssignedTo == userId && DateTime.Parse(x.AssignedDate) <= DateTime.Now);
+            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false && x.AssignedTo == userId && DateTime.Parse(x.AssignedDate) <= DateTime.Now)
+            .Select(i => new GetAllAssignmentResponse
+            {
+                Id = i.Id,
+                AssetCode = i.AssetCode,
+                AssignedBy = i.AssignedByUser.UserName,
+                AssetName = i.AssetName,
+                AssignedDate = i.AssignedDate,
+                AssignedTo = i.AssignedToUser.UserName,
+                AssignmentState = i.AssignmentState,
+                Specification = i.Asset.Specification,
+                Note = i.Note
+            });
             if (assignmentList == null)
             {
                 return null;
             }
-            var newAssignments = new List<GetAllAssignmentResponse>();
-            foreach (var assignment in assignmentList)
-            {
-                var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
-                var userBy = await _userManager.FindByIdAsync(assignment.AssignedBy);
-                var asset = await _assetRepository.GetOneAsync(x => x.AssetCode == assignment.AssetCode);
-                var data = new GetAllAssignmentResponse()
-                {
-                    Id = assignment.Id,
-                    AssetCode = assignment.AssetCode,
-                    AssignedBy = userBy.UserName,
-                    AssetName = assignment.AssetName,
-                    AssignedDate = assignment.AssignedDate,
-                    AssignedTo = userTo.UserName,
-                    AssignmentState = assignment.AssignmentState,
-                    Specification = asset.Specification,
-                    Note = assignment.Note
-                };
-                newAssignments.Add(data);
-            }
-            return newAssignments;
+            return assignmentList;
         }
 
         public async Task<GetAssignmentDetailResponse> GetAssignmentDetail(string assetCode)
