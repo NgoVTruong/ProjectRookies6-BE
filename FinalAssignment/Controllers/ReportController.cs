@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FinalAssignment.Controllers
 {
-    [Route("api/reports")]
+    [Route("api/report-management")]
     [ApiController]
     public class ReportController : ControllerBase
     {
@@ -14,7 +14,7 @@ namespace FinalAssignment.Controllers
             _reportService = reportService;
         }
 
-        [HttpGet]
+        [HttpGet("reports")]
         public async Task<IActionResult> Report()
         {
             var result =  _reportService.Report();
