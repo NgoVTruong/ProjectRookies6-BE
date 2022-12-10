@@ -18,5 +18,8 @@ namespace FinalAssignment.Services.Interfaces
         Task<Assignment?> EditAssignment(EditAssignmentRequest editAssignmentRequest, Guid id);
 
         Task<EditAssignmentResponse> GetAssignmentById(Guid id);
+
+        Task<bool> DeleteAssignmentByAdmin(string assetCode);
+
     }
 }

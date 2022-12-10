@@ -1,4 +1,5 @@
-﻿using Data.Auth;
+﻿using Common.Enums;
+using Data.Auth;
 using Data.Entities;
 using FinalAssignment.DTOs.Assignment;
 using FinalAssignment.Repositories.Interfaces;
@@ -260,6 +261,43 @@ namespace FinalAssignment.Services.Implements
             };
         }
 
+        public async Task<bool> DeleteAssignmentByAdmin(string assetCode)
+        {
+            using (var transaction = _assignmentRepository.DatabaseTransaction())
+            {
+                try
+                {
+                    var checkAssignment = await _assignmentRepository.GetOneAsync(s => s.AssetCode == assetCode
+                    && s.IsDeleted == false);
+                    var asset = await _assetRepository.GetOneAsync(a => a.AssetCode == assetCode
+                     && a.IsDeleted == false);
 
+                    if (checkAssignment != null)
+                    {
+                        if (checkAssignment.AssignmentState == AssignmentStateEnum.WaitingForAcceptance
+                        || checkAssignment.AssignmentState == AssignmentStateEnum.Declined)
+                        {
+                            checkAssignment.IsDeleted = true;
+                            asset.AssetStatus = AssetStateEnum.Available;
+                            _assignmentRepository.UpdateAsync(checkAssignment);
+                            _assetRepository.UpdateAsync(asset);
+                            _assignmentRepository.SaveChanges();
+                            _assetRepository.SaveChanges();
+                            transaction.Commit();
+
+                            return true;
+                        }
+
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    transaction.RollBack();
+                    return false;
+                }
+            }
+        }
     }
 }
