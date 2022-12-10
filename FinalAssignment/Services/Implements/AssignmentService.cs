@@ -1,8 +1,10 @@
-﻿using Data.Auth;
+﻿using Common.Enums;
+using Data.Auth;
 using Data.Entities;
 using FinalAssignment.DTOs.Assignment;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
+using Humanizer;
 using Microsoft.AspNetCore.Identity;
 
 
@@ -117,12 +119,26 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAll()
         {
-            var assignmentList = (await _assignmentRepository.GetAllAsync()).Where(x => x.IsDeleted == false);
+            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false).Select(i => new GetAllAssignmentResponse
+            {
+                Id = i.Id,
+                AssetCode = i.AssetCode,
+                AssignedBy = i.AssignedByUser.UserName,
+                AssetName = i.AssetName,
+                AssignedDate = i.AssignedDate,
+                AssignedTo = i.AssignedToUser.UserName,
+                AssignmentState = i.AssignmentState,
+                Specification = i.Asset.Specification,
+                Note = i.Note
+            });
             if (assignmentList == null)
             {
                 return null;
             }
-            var newAssignments = new List<GetAllAssignmentResponse>();
+            return assignmentList;
+
+
+            /*var newAssignments = new List<GetAllAssignmentResponse>();
             foreach (var assignment in assignmentList)
             {
                 var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
@@ -142,37 +158,29 @@ namespace FinalAssignment.Services.Implements
                 };
                 newAssignments.Add(data);
             }
-            return newAssignments;
+            return newAssignments;*/
         }
 
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAllDependUser(string userId)
         {
-            var assignmentList = (await _assignmentRepository.GetAllAsync()).Where(x => x.IsDeleted == false && x.AssignedTo == userId && DateTime.Parse(x.AssignedDate) <= DateTime.Now);
+            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false && x.AssignedTo == userId && DateTime.Parse(x.AssignedDate) <= DateTime.Now)
+            .Select(i => new GetAllAssignmentResponse
+            {
+                Id = i.Id,
+                AssetCode = i.AssetCode,
+                AssignedBy = i.AssignedByUser.UserName,
+                AssetName = i.AssetName,
+                AssignedDate = i.AssignedDate,
+                AssignedTo = i.AssignedToUser.UserName,
+                AssignmentState = i.AssignmentState,
+                Specification = i.Asset.Specification,
+                Note = i.Note
+            });
             if (assignmentList == null)
             {
                 return null;
             }
-            var newAssignments = new List<GetAllAssignmentResponse>();
-            foreach (var assignment in assignmentList)
-            {
-                var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
-                var userBy = await _userManager.FindByIdAsync(assignment.AssignedBy);
-                var asset = await _assetRepository.GetOneAsync(x => x.AssetCode == assignment.AssetCode);
-                var data = new GetAllAssignmentResponse()
-                {
-                    Id = assignment.Id,
-                    AssetCode = assignment.AssetCode,
-                    AssignedBy = userBy.UserName,
-                    AssetName = assignment.AssetName,
-                    AssignedDate = assignment.AssignedDate,
-                    AssignedTo = userTo.UserName,
-                    AssignmentState = assignment.AssignmentState,
-                    Specification = asset.Specification,
-                    Note = assignment.Note
-                };
-                newAssignments.Add(data);
-            }
-            return newAssignments;
+            return assignmentList;
         }
 
         public async Task<GetAssignmentDetailResponse> GetAssignmentDetail(string assetCode)
@@ -196,7 +204,7 @@ namespace FinalAssignment.Services.Implements
                 state = assignment.AssignmentState
             };
         }
-        public async Task<Assignment> EditAssignment(EditAssignmentRequest editAssignmentRequest, Guid id)
+        public async Task<Assignment?> EditAssignment(EditAssignmentRequest editAssignmentRequest, Guid id)
         {
             var editAssignment = await _assignmentRepository.GetOneAsync(x => x.Id == id);
 
@@ -205,6 +213,7 @@ namespace FinalAssignment.Services.Implements
             {
                 return null;
             }
+           
             editAssignment.Id = id;
             editAssignment.Note = editAssignmentRequest.Note;
             editAssignment.AssignedDate = editAssignmentRequest.AssignedDate;
@@ -230,9 +239,71 @@ namespace FinalAssignment.Services.Implements
             };
         }
 
-        public async Task<Assignment> GetAssignmentById(Guid id)
+        public async Task<EditAssignmentResponse?> GetAssignmentById(Guid id)
         {
-            return await _assignmentRepository.GetOneAsync(a => a.Id == id);
+           
+            var assignment = await _assignmentRepository.GetOneAsync(x => x.Id == id);
+            if (assignment == null)
+            {
+                return null;
+            }
+            var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
+            var userBy = await _userManager.FindByIdAsync(assignment.AssignedBy);
+            DateTime assignDate = DateTime.Parse(assignment.AssignedDate);
+            return new EditAssignmentResponse()
+            {
+                Id = assignment.Id,
+                AssetName = assignment.AssetName,
+                AssetCode = assignment.AssetCode,
+                AssetId = assignment.AssetId.ToString(),
+                AssignedBy = userBy.UserName,
+                AssignedTo = userTo.UserName,
+                AssignedById = assignment.AssignedBy,
+                AssignedToId = assignment.AssignedTo,
+                Note = assignment.Note,
+                Specification = assignment.Specification,
+                AssignedDate = assignDate.ToString("yyyy-MM-dd"),
+                AssignmentState = assignment.AssignmentState
+            };
+        }
+
+        public async Task<bool> DeleteAssignmentByAdmin(string assetCode)
+        {
+            using (var transaction = _assignmentRepository.DatabaseTransaction())
+            {
+                try
+                {
+                    var checkAssignment = await _assignmentRepository.GetOneAsync(s => s.AssetCode == assetCode
+                    && s.IsDeleted == false);
+                    var asset = await _assetRepository.GetOneAsync(a => a.AssetCode == assetCode
+                     && a.IsDeleted == false);
+
+                    if (checkAssignment != null)
+                    {
+                        if (checkAssignment.AssignmentState == AssignmentStateEnum.WaitingForAcceptance
+                        || checkAssignment.AssignmentState == AssignmentStateEnum.Declined)
+                        {
+                            checkAssignment.IsDeleted = true;
+                            asset.AssetStatus = AssetStateEnum.Available;
+                            _assignmentRepository.UpdateAsync(checkAssignment);
+                            _assetRepository.UpdateAsync(asset);
+                            _assignmentRepository.SaveChanges();
+                            _assetRepository.SaveChanges();
+                            transaction.Commit();
+
+                            return true;
+                        }
+
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    transaction.RollBack();
+                    return false;
+                }
+            }
         }
     }
 }
