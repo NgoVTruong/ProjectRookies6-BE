@@ -119,12 +119,26 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAll()
         {
-            var assignmentList = (await _assignmentRepository.GetAllAsync()).Where(x => x.IsDeleted == false);
+            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false).Select(i => new GetAllAssignmentResponse
+            {
+                Id = i.Id,
+                AssetCode = i.AssetCode,
+                AssignedBy = i.AssignedByUser.UserName,
+                AssetName = i.AssetName,
+                AssignedDate = i.AssignedDate,
+                AssignedTo = i.AssignedToUser.UserName,
+                AssignmentState = i.AssignmentState,
+                Specification = i.Asset.Specification,
+                Note = i.Note
+            });
             if (assignmentList == null)
             {
                 return null;
             }
-            var newAssignments = new List<GetAllAssignmentResponse>();
+            return assignmentList;
+
+
+            /*var newAssignments = new List<GetAllAssignmentResponse>();
             foreach (var assignment in assignmentList)
             {
                 var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
@@ -144,7 +158,7 @@ namespace FinalAssignment.Services.Implements
                 };
                 newAssignments.Add(data);
             }
-            return newAssignments;
+            return newAssignments;*/
         }
 
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAllDependUser(string userId)
