@@ -2,6 +2,7 @@ using Data;
 using Data.Entities;
 using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using TestWebAPI.Repositories.Implements;
 
 namespace FinalAssignment.Repositories.Implements
@@ -34,6 +35,14 @@ namespace FinalAssignment.Repositories.Implements
                 AssetName = "null",
                 AssignedDate = "0000-00-00",
             }; ;
+        }
+        
+        public IEnumerable<Assignment> GetAllAssignment()
+        {
+            var getData = _dbSet.Include(p => p.AssignedToUser)
+                        .Include(a => a.AssignedByUser)
+                        .Include(a => a.Asset);
+            return getData;
         }
     }
 }

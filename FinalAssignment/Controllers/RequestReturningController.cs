@@ -35,5 +35,27 @@ namespace FinalAssignment.Controllers
         {
             return await _requestReturningService.GetAllReturningRequest();
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> CompleteRequest(Guid id)
+        {
+            var data = _requestReturningService.CompleteRequest(id);
+            if ((bool)await data == true)
+            {
+                return StatusCode(200, "Complete successfully!");
+            }
+            return StatusCode(400, "Complete false");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> CancelRequest(Guid id)
+        {
+            var data = _requestReturningService.CancelRequest(id);
+            if ((bool)await data == true)
+            {
+                return StatusCode(200, "cancel successfully!");
+            }
+            return StatusCode(400, "cancel false");
+        }
     }
 }

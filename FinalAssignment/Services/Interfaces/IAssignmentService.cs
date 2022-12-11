@@ -14,9 +14,14 @@ namespace FinalAssignment.Services.Interfaces
         Task<GetAssignmentDetailResponse> GetAssignmentDetail(string assetCode);
 
         Task<CreateAssignmentResponse> AcceptAssignment(Guid id);
+        
+        Task<CreateAssignmentResponse> DeclineAssignment(Guid id);
 
         Task<Assignment?> EditAssignment(EditAssignmentRequest editAssignmentRequest, Guid id);
 
         Task<EditAssignmentResponse> GetAssignmentById(Guid id);
+
+        Task<bool> DeleteAssignmentByAdmin(Guid id);
+
     }
 }

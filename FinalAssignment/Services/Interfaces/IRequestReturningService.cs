@@ -7,7 +7,8 @@ namespace FinalAssignment.Services.Interfaces
     {
         Task<CreateRequestReturningResponse> CreateRequestForReturning(CreateRequestReturningRequest requestReturning);
         Task<IEnumerable<ReturningRequest>> GetAllReturningRequest();
-
+        Task<bool> CompleteRequest(Guid id);
+        Task<bool> CancelRequest(Guid reqId);
 
     }
 }

@@ -21,6 +21,72 @@ namespace FinalAssignment.Services.Implements
             _assetRepository = asset;
             _user = user;
         }
+
+        public async Task<bool> CancelRequest(Guid reqId)
+        {
+            using (var transaction = _requestReturningRepository.DatabaseTransaction())
+            {
+                try
+                {
+                    var getRequest =  _requestReturningRepository.GetOneRequest(s => s.Id == reqId
+                    && s.RequestStatus == RequestStateEnum.WaitingForReturning);
+                    if (getRequest != null)
+                    {
+                        getRequest.Assignment.Asset.AssetStatus = AssetStateEnum.Available;
+
+                        _requestReturningRepository.UpdateAsync(getRequest);
+                        _requestReturningRepository.DeleteAsync(getRequest);
+                        _requestReturningRepository.SaveChanges();
+                        transaction.Commit();
+
+                        return true;
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    transaction.RollBack();
+                    
+                    return false;
+                }
+            }
+        }
+
+        public async Task<bool> CompleteRequest(Guid id)
+        {
+            using (var transaction = _requestReturningRepository.DatabaseTransaction())
+            {
+                try
+                {
+
+                    var getRequest = _requestReturningRepository.GetOneRequest(i => i.Id == id && i.RequestStatus == RequestStateEnum.WaitingForReturning);
+
+
+                    if (getRequest != null)
+                    {
+                        getRequest.RequestStatus = RequestStateEnum.Completed;
+                        getRequest.ReturnDate = DateTime.Now.ToString("yyyy-MM-dd");
+                        getRequest.Assignment.IsDeleted = true;
+                        getRequest.Assignment.Asset.AssetStatus = AssetStateEnum.Available;
+
+                        _requestReturningRepository.UpdateAsync(getRequest);
+                        _assetRepository.SaveChanges();
+                        transaction.Commit();
+
+                        return true;
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    transaction.RollBack();
+                    return false;
+                }
+            }
+        }
+
         public async Task<CreateRequestReturningResponse> CreateRequestForReturning(CreateRequestReturningRequest model)
         {
             using var transaction = _requestReturningRepository.DatabaseTransaction();
@@ -69,51 +135,24 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<ReturningRequest>> GetAllReturningRequest()
         {
-            var getRequest = _requestReturningRepository.GetAllRequest();
-            var requestList = new List<ReturningRequest>();
-
-            foreach (var request in getRequest)
-            {
-                var userTo = await _user.GetOneAsync(s => s.Id == request.AcceptedBy);
-                var userBy = await _user.GetOneAsync(s => s.Id == request.RequestBy);
-                var data = new ReturningRequest()
+            var getRequest = _requestReturningRepository.GetAllRequest().OrderBy(a => a.Assignment.AssetCode).Select(i => new ReturningRequest()
                 {
-                    Id = request.Id,
-                    AssetCode = request.AssetCode,
-                    AssetName = request.AssetName,
-                    AcceptedBy = userTo.UserName,
-                    AssignedDate = request.AssignedDate,
-                    RequestBy = userBy.UserName,
-                    ReturnDate = request.ReturnDate,
-                    RequestStatus = request.RequestStatus,
-                    Time = request.Time,
-                };
-                requestList.Add(data);
+                    Id = i.Id,
+                    AssetCode = i.Assignment.AssetCode,
+                    AssetName = i.Assignment.AssetName,
+                    AcceptedBy = i.Assignment.AssignedToUser.UserName,
+                    AssignedDate = i.Assignment.AssignedDate,
+                    RequestBy = i.ApplicationUser.UserName,
+                    ReturnDate = i.ReturnDate,
+                    RequestStatus = i.RequestStatus,
+                    Time = i.Time,
+                });
+            if (getRequest == null)
+            {
+                return null;
             }
-            //var requestListOrderBy = getRequest.OrderBy(a => a.AssetCode);
 
-            //foreach (var item in requestListOrderBy)
-            //{
-            //    TimeSpan checkTime = DateTime.Now - item.Time;
-            //    if (checkTime.TotalSeconds <= 10)
-            //    {
-            //        var getListRequestOrderByTime = getRequest.OrderByDescending(a => a.Time);
-            //        return getListRequestOrderByTime.Select(i => new ReturningRequest
-            //        {
-            //            Id = i.Id,
-            //            AssetCode = i.AssetCode,
-            //            AssetName = i.AssetName,
-            //            AcceptedBy = i.AcceptedBy,
-            //            AssignedDate = i.AssignedDate,
-            //            RequestBy = i.RequestBy,
-            //            ReturnDate = i.ReturnDate,
-            //            RequestStatus = i.RequestStatus,
-            //            Time = i.Time,
-            //        });
-            //    }
-            //}
-
-            return requestList;
+            return getRequest;
 
         }
     }

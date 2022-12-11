@@ -32,6 +32,18 @@ namespace TestWebAPI.Repositories.Implements
             return Task.FromResult(true);
         }
 
+        public T? GetOne(Expression<Func<T, bool>>? predicate = null,
+        Expression<Func<T, object>>? includePredicate = null)
+        {
+            return predicate == null ?
+                includePredicate == null ?
+                _dbSet.FirstOrDefault()
+                : _dbSet.Include(includePredicate).FirstOrDefault()
+                : includePredicate == null ? _dbSet.FirstOrDefault(predicate)
+                : _dbSet.Include(includePredicate).FirstOrDefault(predicate);
+        }
+
+
         public virtual async Task<T?> GetOneAsync(Expression<Func<T, bool>>? predicate = null)
         {
             var dbSet = predicate == null ? _dbSet.FirstOrDefaultAsync() : _dbSet.FirstOrDefaultAsync(predicate);
