@@ -10,6 +10,6 @@ namespace FinalAssignment.Repositories.Interfaces
 {
     public interface IRequestReturningRepository : IBaseRepository<RequestReturning>
     {
-        IEnumerable<ReturningRequest> GetAllRequest();
+        IEnumerable<RequestReturning> GetAllRequest();
     }
 }

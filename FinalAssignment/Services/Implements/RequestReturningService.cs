@@ -69,51 +69,24 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<ReturningRequest>> GetAllReturningRequest()
         {
-            var getRequest = _requestReturningRepository.GetAllRequest();
-            var requestList = new List<ReturningRequest>();
-
-            foreach (var request in getRequest)
-            {
-                var userTo = await _user.GetOneAsync(s => s.Id == request.AcceptedBy);
-                var userBy = await _user.GetOneAsync(s => s.Id == request.RequestBy);
-                var data = new ReturningRequest()
+            var getRequest = _requestReturningRepository.GetAllRequest().OrderBy(a => a.Assignment.AssetCode).Select(i => new ReturningRequest()
                 {
-                    Id = request.Id,
-                    AssetCode = request.AssetCode,
-                    AssetName = request.AssetName,
-                    AcceptedBy = userTo.UserName,
-                    AssignedDate = request.AssignedDate,
-                    RequestBy = userBy.UserName,
-                    ReturnDate = request.ReturnDate,
-                    RequestStatus = request.RequestStatus,
-                    Time = request.Time,
-                };
-                requestList.Add(data);
+                    Id = i.Id,
+                    AssetCode = i.Assignment.AssetCode,
+                    AssetName = i.Assignment.AssetName,
+                    AcceptedBy = i.ApplicationUser.UserName,
+                    AssignedDate = i.Assignment.AssignedDate,
+                    RequestBy = i.ApplicationUser.UserName,
+                    ReturnDate = i.ReturnDate,
+                    RequestStatus = i.RequestStatus,
+                    Time = i.Time,
+                });
+            if (getRequest == null)
+            {
+                return null;
             }
-            //var requestListOrderBy = getRequest.OrderBy(a => a.AssetCode);
 
-            //foreach (var item in requestListOrderBy)
-            //{
-            //    TimeSpan checkTime = DateTime.Now - item.Time;
-            //    if (checkTime.TotalSeconds <= 10)
-            //    {
-            //        var getListRequestOrderByTime = getRequest.OrderByDescending(a => a.Time);
-            //        return getListRequestOrderByTime.Select(i => new ReturningRequest
-            //        {
-            //            Id = i.Id,
-            //            AssetCode = i.AssetCode,
-            //            AssetName = i.AssetName,
-            //            AcceptedBy = i.AcceptedBy,
-            //            AssignedDate = i.AssignedDate,
-            //            RequestBy = i.RequestBy,
-            //            ReturnDate = i.ReturnDate,
-            //            RequestStatus = i.RequestStatus,
-            //            Time = i.Time,
-            //        });
-            //    }
-            //}
-
-            return requestList;
+            return getRequest;
 
         }
     }

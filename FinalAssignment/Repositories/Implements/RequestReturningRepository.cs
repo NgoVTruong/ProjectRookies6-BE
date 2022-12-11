@@ -11,21 +11,10 @@ namespace FinalAssignment.Repositories.Implements
     {
         public RequestReturningRepository(FinalAssignmentContext context) : base(context)
         { }
-        public IEnumerable<ReturningRequest> GetAllRequest()
+        public IEnumerable<RequestReturning> GetAllRequest()
         {
             var getData = _dbSet.Include(p => p.ApplicationUser)
-                        .Include(a => a.Assignment).Select(i => new ReturningRequest
-                        {
-                            Id = i.Id,
-                            AssetCode = i.Assignment.AssetCode,
-                            AssetName = i.Assignment.AssetName,
-                            AcceptedBy = i.Assignment.AcceptedBy,
-                            AssignedDate = i.Assignment.AssignedDate,
-                            RequestBy = i.Assignment.RequestBy,
-                            ReturnDate = i.ReturnDate,
-                            RequestStatus = i.RequestStatus,
-                            Time = i.Time,
-                        }).ToList();
+                        .Include(a => a.Assignment);
             return getData;
         }
     }
