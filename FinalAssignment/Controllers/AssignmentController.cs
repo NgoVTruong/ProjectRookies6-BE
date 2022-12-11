@@ -76,9 +76,9 @@ namespace FinalAssignment.Controllers
         }
 
         [HttpDelete("assignments/{assetCode}")]
-        public async Task<IActionResult> DeleteAsset(string assetCode)
+        public async Task<IActionResult> DeleteAsset(Guid id)
         {
-            var data = _assignmentService.DeleteAssignmentByAdmin(assetCode);
+            var data = _assignmentService.DeleteAssignmentByAdmin(id);
             if ((bool)await data == true)
             {
                 return StatusCode(200, "delete successfully!");

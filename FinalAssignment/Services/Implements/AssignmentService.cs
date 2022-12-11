@@ -293,15 +293,15 @@ namespace FinalAssignment.Services.Implements
             };
         }
 
-        public async Task<bool> DeleteAssignmentByAdmin(string assetCode)
+        public async Task<bool> DeleteAssignmentByAdmin(Guid id)
         {
             using (var transaction = _assignmentRepository.DatabaseTransaction())
             {
                 try
                 {
-                    var checkAssignment = await _assignmentRepository.GetOneAsync(s => s.AssetCode == assetCode
+                    var checkAssignment = await _assignmentRepository.GetOneAsync(s => s.Id == id
                     && s.IsDeleted == false);
-                    var asset = await _assetRepository.GetOneAsync(a => a.AssetCode == assetCode
+                    var asset = await _assetRepository.GetOneAsync(a => a.AssetCode == checkAssignment.AssetCode
                      && a.IsDeleted == false);
 
                     if (checkAssignment != null)
