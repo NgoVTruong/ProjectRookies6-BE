@@ -21,6 +21,70 @@ namespace FinalAssignment.Services.Implements
             _assetRepository = asset;
             _user = user;
         }
+
+        public async Task<bool> CancelRequest(Guid reqId)
+        {
+            using (var transaction = _requestReturningRepository.DatabaseTransaction())
+            {
+                try
+                {
+                    var getRequest = await _requestReturningRepository.GetOneAsync(s => s.Id == reqId
+                    && s.RequestStatus == RequestStateEnum.WaitingForReturning);
+                    if (getRequest != null)
+                    {
+                        _requestReturningRepository.DeleteAsync(getRequest);
+                        _requestReturningRepository.SaveChanges();
+                        transaction.Commit();
+                        return true;
+                    }
+                    return false;
+
+                }
+                catch
+                {
+                    transaction.RollBack();
+                    return false;
+                }
+            }
+        }
+
+        public async Task<bool> CompleteRequest(string assetCode)
+        {
+            using (var transaction = _requestReturningRepository.DatabaseTransaction())
+            {
+                try
+                {
+                    var getRequest = await _requestReturningRepository.GetOneAsync(i => i.Assignment.AssetCode == assetCode
+                                     && i.RequestStatus == RequestStateEnum.WaitingForReturning);
+                    var getAssignment = await _assignmentRepository.GetOneAsync(i => i.AssetCode == assetCode && i.IsDeleted == false);
+                    var getAsset = await _assetRepository.GetOneAsync(i => i.AssetCode == assetCode && i.IsDeleted == false);
+                    if (getRequest != null)
+                    {
+                        getRequest.RequestStatus = RequestStateEnum.Completed;
+                        getRequest.ReturnDate = DateTime.Now.ToString("yyyy-MM-dd");
+                        getAssignment.IsDeleted = true;
+                        getAsset.AssetStatus = AssetStateEnum.Available;
+                        _assignmentRepository.UpdateAsync(getAssignment);
+                        _requestReturningRepository.UpdateAsync(getRequest);
+                        _assetRepository.UpdateAsync(getAsset);
+                        _assignmentRepository.SaveChanges();
+                        _assetRepository.SaveChanges();
+                        _requestReturningRepository.SaveChanges();
+                        transaction.Commit();
+
+                        return true;
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    transaction.RollBack();
+                    return false;
+                }
+            }
+        }
+
         public async Task<CreateRequestReturningResponse> CreateRequestForReturning(CreateRequestReturningRequest model)
         {
             using var transaction = _requestReturningRepository.DatabaseTransaction();
