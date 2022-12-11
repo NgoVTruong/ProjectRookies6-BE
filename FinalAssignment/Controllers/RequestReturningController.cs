@@ -36,10 +36,10 @@ namespace FinalAssignment.Controllers
             return await _requestReturningService.GetAllReturningRequest();
         }
 
-        [HttpPut("{assetCode}")]
-        public async Task<IActionResult> CompleteRequest(string assetCode)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> CompleteRequest(Guid id)
         {
-            var data = _requestReturningService.CompleteRequest(assetCode);
+            var data = _requestReturningService.CompleteRequest(id);
             if ((bool)await data == true)
             {
                 return StatusCode(200, "Complete successfully!");

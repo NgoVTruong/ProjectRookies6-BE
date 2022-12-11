@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Data;
 using Data.Entities;
 using FinalAssignment.DTOs.Request;
@@ -14,7 +15,13 @@ namespace FinalAssignment.Repositories.Implements
         public IEnumerable<RequestReturning> GetAllRequest()
         {
             var getData = _dbSet.Include(p => p.ApplicationUser)
-                        .Include(a => a.Assignment).ThenInclude(a =>a.AssignedToUser);
+                        .Include(a => a.Assignment).ThenInclude(a => a.AssignedToUser);
+            return getData;
+        }
+        public RequestReturning GetOneRequest(Expression<Func<RequestReturning, bool>>? predicate = null)
+        {
+            var getData = _dbSet.Include(p => p.ApplicationUser)
+                        .Include(a => a.Assignment).ThenInclude(a => a.Asset).FirstOrDefault(predicate);
             return getData;
         }
     }
