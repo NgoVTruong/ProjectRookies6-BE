@@ -65,6 +65,16 @@ namespace FinalAssignment.Controllers
             return Ok(result);
         }
 
+        [HttpPut("assignments/decline-assignment/{id}")]
+        public async Task<IActionResult> DeclineAssignment(Guid id)
+        {
+            var result = await _assignmentService.DeclineAssignment(id);
+
+            if (result == null) return StatusCode(500, "Result null");
+
+            return Ok(result);
+        }
+
         [HttpDelete("assignments/{assetCode}")]
         public async Task<IActionResult> DeleteAsset(string assetCode)
         {

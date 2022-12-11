@@ -68,6 +68,50 @@ namespace FinalAssignment.Services.Implements
             }
         }
 
+        public async Task<CreateAssignmentResponse> DeclineAssignment(Guid id)
+        {
+            using var transaction = _assignmentRepository.DatabaseTransaction();
+            try
+            {
+                var assignment = await _assignmentRepository.GetOneAsync(x => x.Id == id);
+                var asset = await _assetRepository.GetOneAsync(x => x.Id == assignment.AssetId);
+
+                if (assignment == null)
+                {
+                    return new CreateAssignmentResponse
+                    {
+                        IsSucced = false,
+                        Message = "Assignment is not exists!"
+                    };
+                }
+                
+                asset.AssetStatus = Common.Enums.AssetStateEnum.Available;
+                await _assetRepository.UpdateAsync(asset);
+
+                assignment.AssignmentState = Common.Enums.AssignmentStateEnum.Declined;
+                await _assignmentRepository.UpdateAsync(assignment);
+
+                _assignmentRepository.SaveChanges();
+                transaction.Commit();
+
+                return new CreateAssignmentResponse
+                {
+                    IsSucced = true,
+                    Message = "Accept Assignment Succeed"
+                };
+            }
+            catch (Exception)
+            {
+                transaction.RollBack();
+
+                return new CreateAssignmentResponse
+                {
+                    IsSucced = false,
+                    Message = "Accept Assignment Fail"
+                };
+            }
+        }
+
         public async Task<CreateAssignmentResponse> Create(CreateAssignmentRequest assignmentRequest)
         {
             using var transaction = _assignmentRepository.DatabaseTransaction();
@@ -141,33 +185,11 @@ namespace FinalAssignment.Services.Implements
             }
             return assignmentList;
 
-
-            /*var newAssignments = new List<GetAllAssignmentResponse>();
-            foreach (var assignment in assignmentList)
-            {
-                var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
-                var userBy = await _userManager.FindByIdAsync(assignment.AssignedBy);
-                var asset = await _assetRepository.GetOneAsync(x => x.AssetCode == assignment.AssetCode);
-                var data = new GetAllAssignmentResponse()
-                {
-                    Id = assignment.Id,
-                    AssetCode = assignment.AssetCode,
-                    AssignedBy = userBy.UserName,
-                    AssetName = assignment.AssetName,
-                    AssignedDate = assignment.AssignedDate,
-                    AssignedTo = userTo.UserName,
-                    AssignmentState = assignment.AssignmentState,
-                    Specification = asset.Specification,
-                    Note = assignment.Note
-                };
-                newAssignments.Add(data);
-            }
-            return newAssignments;*/
         }
 
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAllDependUser(string userId)
         {
-            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false && x.AssignedTo == userId && DateTime.Parse(x.AssignedDate) <= DateTime.Now)
+            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false && x.AssignmentState != AssignmentStateEnum.Declined && x.AssignedTo == userId && DateTime.Parse(x.AssignedDate) <= DateTime.Now)
             .Select(i => new GetAllAssignmentResponse
             {
                 Id = i.Id,
