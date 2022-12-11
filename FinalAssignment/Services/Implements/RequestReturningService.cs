@@ -138,7 +138,7 @@ namespace FinalAssignment.Services.Implements
                     Id = i.Id,
                     AssetCode = i.Assignment.AssetCode,
                     AssetName = i.Assignment.AssetName,
-                    AcceptedBy = i.ApplicationUser.UserName,
+                    AcceptedBy = i.Assignment.AssignedToUser.UserName,
                     AssignedDate = i.Assignment.AssignedDate,
                     RequestBy = i.ApplicationUser.UserName,
                     ReturnDate = i.ReturnDate,

@@ -14,7 +14,7 @@ namespace FinalAssignment.Repositories.Implements
         public IEnumerable<RequestReturning> GetAllRequest()
         {
             var getData = _dbSet.Include(p => p.ApplicationUser)
-                        .Include(a => a.Assignment);
+                        .Include(a => a.Assignment).ThenInclude(a =>a.AssignedToUser);
             return getData;
         }
     }
