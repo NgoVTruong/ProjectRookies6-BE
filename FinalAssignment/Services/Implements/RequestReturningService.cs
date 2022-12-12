@@ -33,7 +33,7 @@ namespace FinalAssignment.Services.Implements
                     if (getRequest != null)
                     {
                         getRequest.Assignment.Asset.AssetStatus = AssetStateEnum.Available;
-
+                        getRequest.Assignment.AssignmentState = AssignmentStateEnum.Accepted;
                         _requestReturningRepository.UpdateAsync(getRequest);
                         _requestReturningRepository.DeleteAsync(getRequest);
                         _requestReturningRepository.SaveChanges();
