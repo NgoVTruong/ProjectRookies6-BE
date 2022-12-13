@@ -6,6 +6,7 @@ using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
 using Humanizer;
 using Microsoft.AspNetCore.Identity;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace FinalAssignment.Services.Implements
@@ -118,7 +119,9 @@ namespace FinalAssignment.Services.Implements
             try
             {
                 var assetDetail = await _assetRepository.GetOneAsync(a => a.Id == assignmentRequest.AssetId);
-
+                var localdatetime = assignmentRequest.AsssignedDate;
+                var haNoiTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                var singaporetime = TimeZoneInfo.ConvertTimeFromUtc(localdatetime, haNoiTimeZone);
                 var newAssignment = new Assignment
                 {
                     Id = Guid.NewGuid(),
@@ -126,7 +129,7 @@ namespace FinalAssignment.Services.Implements
                     AssignedTo = assignmentRequest.AssignedTo,
                     AssetCode = assignmentRequest.AssetCode,
                     AssetName = assignmentRequest.AssetName,
-                    AssignedDate = assignmentRequest.AsssignedDate,
+                    AssignedDate = singaporetime,
                     AssignmentState = 0,
                     IsDeleted = false,
                     Specification = assetDetail.Specification,
@@ -193,7 +196,7 @@ namespace FinalAssignment.Services.Implements
             var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false &&
                                                                                     x.AssignmentState != AssignmentStateEnum.Declined &&
                                                                                     x.AssignedTo == userId &&
-                                                                                    DateTime.Parse(x.AssignedDate) <= DateTime.Now)
+                                                                                    x.AssignedDate <= DateTime.Now)
                                                                         .OrderByDescending(a => a.Time)
             .Select(i => new GetAllAssignmentResponse
             {
@@ -273,7 +276,6 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<EditAssignmentResponse?> GetAssignmentById(Guid id)
         {
-
             var assignment = await _assignmentRepository.GetOneAsync(x => x.Id == id);
             if (assignment == null)
             {
@@ -281,7 +283,7 @@ namespace FinalAssignment.Services.Implements
             }
             var userTo = await _userManager.FindByIdAsync(assignment.AssignedTo);
             var userBy = await _userManager.FindByIdAsync(assignment.AssignedBy);
-            DateTime assignDate = DateTime.Parse(assignment.AssignedDate);
+            DateTimeOffset assignDate = assignment.AssignedDate;
             return new EditAssignmentResponse()
             {
                 Id = assignment.Id,

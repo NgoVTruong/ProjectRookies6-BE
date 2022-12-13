@@ -33,7 +33,7 @@ namespace FinalAssignment.Repositories.Implements
                 AssignedTo = "null",
                 AssignedBy = "null",
                 AssetName = "null",
-                AssignedDate = "0000-00-00",
+                AssignedDate = DateTime.Parse("0000-00-00"),
             }; ;
         }
         
