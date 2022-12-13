@@ -135,7 +135,7 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<ReturningRequest>> GetAllReturningRequest()
         {
-            var getRequest = _requestReturningRepository.GetAllRequest().OrderBy(a => a.Assignment.AssetCode).Select(i => new ReturningRequest()
+            var getRequest = _requestReturningRepository.GetAllRequest().OrderBy(a => a.Assignment.AssetCode).OrderByDescending(a=> a.Time).Select(i => new ReturningRequest()
                 {
                     Id = i.Id,
                     AssetCode = i.Assignment.AssetCode,
