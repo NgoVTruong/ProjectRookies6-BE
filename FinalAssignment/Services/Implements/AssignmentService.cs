@@ -40,7 +40,7 @@ namespace FinalAssignment.Services.Implements
                         Message = "Assignment is not exists!"
                     };
                 }
-                
+
                 asset.AssetStatus = Common.Enums.AssetStateEnum.Assigned;
                 await _assetRepository.UpdateAsync(asset);
 
@@ -84,7 +84,7 @@ namespace FinalAssignment.Services.Implements
                         Message = "Assignment is not exists!"
                     };
                 }
-                
+
                 asset.AssetStatus = Common.Enums.AssetStateEnum.Available;
                 await _assetRepository.UpdateAsync(asset);
 
@@ -167,7 +167,7 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAll()
         {
-            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false).Select(i => new GetAllAssignmentResponse
+            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false).OrderByDescending(a => a.Time).Select(i => new GetAllAssignmentResponse
             {
                 Id = i.Id,
                 AssetCode = i.AssetCode,
@@ -189,7 +189,11 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<IEnumerable<GetAllAssignmentResponse>> GetAllDependUser(string userId)
         {
-            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false && x.AssignmentState != AssignmentStateEnum.Declined && x.AssignedTo == userId && DateTime.Parse(x.AssignedDate) <= DateTime.Now)
+            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false &&
+                                                                                    x.AssignmentState != AssignmentStateEnum.Declined &&
+                                                                                    x.AssignedTo == userId &&
+                                                                                    DateTime.Parse(x.AssignedDate) <= DateTime.Now)
+                                                                        .OrderByDescending(a => a.Time)
             .Select(i => new GetAllAssignmentResponse
             {
                 Id = i.Id,
@@ -239,7 +243,7 @@ namespace FinalAssignment.Services.Implements
             {
                 return null;
             }
-           
+
             editAssignment.Id = id;
             editAssignment.Note = editAssignmentRequest.Note;
             editAssignment.AssignedDate = editAssignmentRequest.AssignedDate;
@@ -267,7 +271,7 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<EditAssignmentResponse?> GetAssignmentById(Guid id)
         {
-           
+
             var assignment = await _assignmentRepository.GetOneAsync(x => x.Id == id);
             if (assignment == null)
             {

@@ -629,7 +629,7 @@ namespace FinalAssignment.Services.Implements
                 return Enumerable.Empty<UserResponse>();
             }
             var location = user.Location;
-            var users = _userManager.Users.Where(i => i.Location == location && i.IsDeleted == false).Select(user => new UserResponse()
+            var users = _userManager.Users.Where(i => i.Location == location && i.IsDeleted == false).OrderByDescending(a=>a.Time).Select(user => new UserResponse()
             {
                 UserId = user.Id,
                 FirstName = user.FirstName,
