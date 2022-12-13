@@ -34,6 +34,10 @@ namespace FinalAssignment.Services.Implements
         {
             int check = number;
             int count = 0;
+            if (check == 0)
+            {
+                count = 1;
+            }
             while (check > 0) //35  //3
             {
                 check = check / 10; //3 //0

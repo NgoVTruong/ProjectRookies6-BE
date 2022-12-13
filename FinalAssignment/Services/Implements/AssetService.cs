@@ -107,18 +107,25 @@ namespace FinalAssignment.Services.Implements
             {
                 try
                 {
-                   
+
                     var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
-                    var assetCodeCheck = (await _asset.GetAllAsync()).Count();
+                    var getCategory = _categoryRepository.GetOne(a => a.Id == assetRequest.CategoryId, a => a.Assets);
+                    int assetCodeCheck = getCategory.Assets.Count();
 
                     string getAssetCode = category.CategoryName;
-   
+
                     var assetcheck = _asset.GetAll(assetRequest.CategoryId);
 
                     string AssetCodeGen(int number) //35
                     {
                         int check = number;
+
                         int count = 0;
+
+                        if (check == 0)
+                        {
+                            count = 1;
+                        }
                         while (check > 0) //35  //3
                         {
                             check = check / 10; //3 //0
@@ -135,7 +142,7 @@ namespace FinalAssignment.Services.Implements
                         {
                             assetCode = assetCode + "0"; // SD00
                         }
-                        string num = (++number).ToString();                      
+                        string num = (++number).ToString();
 
                         assetCode = assetCode.ToUpper() + num;
                         return assetCode;
@@ -162,7 +169,7 @@ namespace FinalAssignment.Services.Implements
                         AssetStatus = assetRequest.AssetStatus,
                         InstalledDate = assetRequest.InstalledDate,
                         Specification = assetRequest.Specification,
-                        Time=DateTime.Now,
+                        Time = DateTime.Now,
                         Location = assetRequest.Location
                     };
 
