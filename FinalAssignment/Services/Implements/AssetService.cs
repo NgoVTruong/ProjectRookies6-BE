@@ -62,7 +62,7 @@ namespace FinalAssignment.Services.Implements
             var getListAsset = await _asset.GetAllAsync(s => s.IsDeleted == false
                                             && s.Location.ToLower().Contains(location.ToLower()));
 
-            var getListAssetOrderBy = getListAsset.OrderBy(a => a.AssetCode);
+            var getListAssetOrderBy = getListAsset.OrderByDescending(a => a.Time);
             foreach (var item in getListAssetOrderBy)
             {
                 TimeSpan checkTime = DateTime.Now - item.Time;
@@ -154,6 +154,7 @@ namespace FinalAssignment.Services.Implements
 
                     var newAsset = new Asset
                     {
+                        Id = Guid.NewGuid(),
                         CategoryId = assetRequest.CategoryId,
                         AssetCode = AssetCodeGen(assetCodeCheck),
                         AssetName = assetRequest.AssetName,
@@ -175,7 +176,7 @@ namespace FinalAssignment.Services.Implements
                         return null;
                     }
 
-                    return createdAsset;
+                    return newAsset;
                 }
                 catch
                 {

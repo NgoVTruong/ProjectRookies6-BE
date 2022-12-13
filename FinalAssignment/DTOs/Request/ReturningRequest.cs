@@ -14,7 +14,7 @@ namespace FinalAssignment.DTOs.Request
         public string AssetCode { get; set; }
         public string AssetName { get; set; }
         public string RequestBy { get; set; }
-        public string AssignedDate { get; set; }
+        public DateTimeOffset AssignedDate { get; set; }
         public string AcceptedBy { get; set; }
         public string ReturnDate { get; set; }
         public RequestStateEnum RequestStatus { get; set; }

@@ -19,6 +19,7 @@ namespace Data.Auth
         public string? Location { get; set; }
         public bool IsFirstTime { get; set; } //true
         public bool IsDeleted { get; set; } //false
+        public DateTime Time {get; set;}
 
         public virtual List<RequestReturning> RequestReturnings { get; set; }
         public virtual ICollection<Assignment> AssignedToMe { get; set; }
