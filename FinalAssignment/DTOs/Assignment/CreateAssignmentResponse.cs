@@ -9,7 +9,7 @@ namespace FinalAssignment.DTOs.Assignment
         public string AssetName { get; set; }
         public string AssignedTo { get; set; }
         public string AssignedBy { get; set; }
-        public string AsssignedDate { get; set; }
+        public DateTime AsssignedDate { get; set; }
         public string Note { get; set; }
     }
 }

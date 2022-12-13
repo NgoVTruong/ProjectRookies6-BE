@@ -8,6 +8,6 @@ namespace FinalAssignment.DTOs.Asset
         public string AssignedBy { get; set; }
         public string AssetName { get; set; }
         public string CategoryName { get; set; }
-        public string AssignedDate { get; set; }
+        public DateTimeOffset AssignedDate { get; set; }
     }
 }

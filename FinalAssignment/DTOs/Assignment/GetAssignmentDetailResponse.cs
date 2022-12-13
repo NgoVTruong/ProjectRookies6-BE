@@ -9,7 +9,7 @@ namespace FinalAssignment.DTOs.Assignment
         public string Specification { get; set; }
         public string AssignedTo { get; set; }
         public string AssignedBy { get; set; }
-        public string AssignedDate { get; set; }
+        public DateTimeOffset AssignedDate { get; set; }
         public AssignmentStateEnum state { get; set; }
         public string Note { get; set; }
     }
