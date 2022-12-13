@@ -154,6 +154,7 @@ namespace FinalAssignment.Services.Implements
 
                     var newAsset = new Asset
                     {
+                        Id = Guid.NewGuid(),
                         CategoryId = assetRequest.CategoryId,
                         AssetCode = AssetCodeGen(assetCodeCheck),
                         AssetName = assetRequest.AssetName,
@@ -175,7 +176,7 @@ namespace FinalAssignment.Services.Implements
                         return null;
                     }
 
-                    return createdAsset;
+                    return newAsset;
                 }
                 catch
                 {
