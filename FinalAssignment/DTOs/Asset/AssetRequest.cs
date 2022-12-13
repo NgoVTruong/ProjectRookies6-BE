@@ -5,8 +5,6 @@ namespace FinalAssignment.DTOs.Asset
 {
     public class AssetRequest
     {
-        public Guid Id { get; set; }
-
         public Guid CategoryId { get; set; }       
 
         public string? AssetName { get; set; }

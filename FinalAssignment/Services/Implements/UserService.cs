@@ -30,28 +30,27 @@ namespace FinalAssignment.Services.Implements
             _userManager = userManager;
             _assignmentRepository = assignmentRepository;
         }
+        public string StaffCodeGen(int number)
+        {
+            int check = number;
+            int count = 0;
+            while (check > 0) //35  //3
+            {
+                check = check / 10; //3 //0
+                count++; //1 //2
+            }
+            string staffCode = "SD";
+            for (int i = 0; i < 4 - count; i++)  //(int i = 0; i < 2; i++)
+            {
+                staffCode = staffCode + "0"; // SD00
+            }
+            string num = (++number).ToString();
+            staffCode = staffCode + num;
+            return staffCode;
+        }
 
         public async Task<Response> Register(RegisterModelRequest model)
         {
-            string StaffCodeGen(int number) //35
-            {
-                int check = number;
-                int count = 0;
-                while (check > 0) //35  //3
-                {
-                    check = check / 10; //3 //0
-                    count++; //1 //2
-                }
-                string staffCode = "SD";
-                for (int i = 0; i < 4 - count; i++)  //(int i = 0; i < 2; i++)
-                {
-                    staffCode = staffCode + "0"; // SD00
-                }
-                string num = (++number).ToString();
-                staffCode = staffCode + num;
-                return staffCode;
-            }
-
             var getUserName = model.LastName;
 
             string[] array = getUserName.Split(" ");
@@ -586,7 +585,7 @@ namespace FinalAssignment.Services.Implements
             };
 
         }
-        
+
         public async Task<Response> CheckValidUser(string userName)
         {
 
@@ -632,7 +631,7 @@ namespace FinalAssignment.Services.Implements
                 return Enumerable.Empty<UserResponse>();
             }
             var location = user.Location;
-            var users = _userManager.Users.Where(i => i.Location == location && i.IsDeleted == false).OrderByDescending(a=>a.Time).Select(user => new UserResponse()
+            var users = _userManager.Users.Where(i => i.Location == location && i.IsDeleted == false).OrderByDescending(a => a.Time).Select(user => new UserResponse()
             {
                 UserId = user.Id,
                 FirstName = user.FirstName,
