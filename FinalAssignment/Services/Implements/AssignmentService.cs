@@ -134,6 +134,7 @@ namespace FinalAssignment.Services.Implements
                     AssetId = assignmentRequest.AssetId,
                     RequestBy = assignmentRequest.AssignedBy,
                     AssignedBy = assignmentRequest.AssignedBy,
+                    Time = DateTime.Now,
                 };
 
                 var createAssignment = await _assignmentRepository.CreateAsync(newAssignment);
@@ -252,6 +253,7 @@ namespace FinalAssignment.Services.Implements
             editAssignment.AssetName = editAssignmentRequest.AssetName;
             editAssignment.AssignedTo = editAssignmentRequest.AssignedTo;
             editAssignment.AssignedBy = editAssignmentRequest.AssignedBy;
+            editAssignment.Time = DateTime.Now;
 
             await _assignmentRepository.UpdateAsync(editAssignment);
 

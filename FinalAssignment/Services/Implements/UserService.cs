@@ -130,6 +130,7 @@ namespace FinalAssignment.Services.Implements
                     Location = model.Location,
                     IsFirstTime = true, // First time = 0
                     IsDeleted = false,
+                    Time = DateTime.Now,
                 };
 
 
@@ -218,6 +219,7 @@ namespace FinalAssignment.Services.Implements
                     Location = model.Location,
                     IsFirstTime = true, // First time = 0
                     IsDeleted = false,
+                    Time = DateTime.Now,
                 };
 
 
@@ -510,6 +512,7 @@ namespace FinalAssignment.Services.Implements
             user.Gender = model.Gender;
             user.JoinedDate = model.JoinedDate;
             user.Type = model.UserRole;
+            user.Time = DateTime.Now;
 
             var currentRoles = await _userManager.GetRolesAsync(user);
 
