@@ -5,6 +5,6 @@ namespace FinalAssignment.DTOs.Assignment
 {
     public class CreateAssignmentResponse : BaseRepsonse
     {
-     
+     public Guid Id {get; set;}
     }
 }

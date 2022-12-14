@@ -151,6 +151,7 @@ namespace FinalAssignment.Services.Implements
 
                 return new CreateAssignmentResponse
                 {
+                    Id = newAssignment.Id,
                     IsSucced = true,
                     Message = "Create succeed"
                 };
