@@ -110,7 +110,8 @@ namespace FinalAssignment.Services.Implements
 
                     var category = await _categoryRepository.GetOneAsync(x => x.Id == assetRequest.CategoryId);
                     var getCategory = _categoryRepository.GetOne(a => a.Id == assetRequest.CategoryId, a => a.Assets);
-                    int assetCodeCheck = getCategory.Assets.Count();
+                    // int assetCodeCheck = getCategory.Assets.Count();
+                    var assetCodeCheck = (await _asset.GetAllAsync()).Count();
 
                     string getAssetCode = category.CategoryName;
 
