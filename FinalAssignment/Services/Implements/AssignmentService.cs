@@ -196,7 +196,7 @@ namespace FinalAssignment.Services.Implements
             var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false &&
                                                                                     x.AssignmentState != AssignmentStateEnum.Declined &&
                                                                                     x.AssignedTo == userId &&
-                                                                                    x.AssignedDate <= DateTime.Now)
+                                                                                    x.AssignedDate <= DateTime.UtcNow)
                                                                         .OrderByDescending(a => a.Time)
             .Select(i => new GetAllAssignmentResponse
             {
