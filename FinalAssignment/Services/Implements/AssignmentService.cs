@@ -4,9 +4,7 @@ using Data.Entities;
 using FinalAssignment.DTOs.Assignment;
 using FinalAssignment.Repositories.Interfaces;
 using FinalAssignment.Services.Interfaces;
-using Humanizer;
 using Microsoft.AspNetCore.Identity;
-using static System.Net.Mime.MediaTypeNames;
 
 
 namespace FinalAssignment.Services.Implements
@@ -238,10 +236,14 @@ namespace FinalAssignment.Services.Implements
                 state = assignment.AssignmentState
             };
         }
+
         public async Task<Assignment?> EditAssignment(EditAssignmentRequest editAssignmentRequest, Guid id)
         {
             var editAssignment = await _assignmentRepository.GetOneAsync(x => x.Id == id);
 
+            var updateasset = await _assetRepository.GetOneAsync(x => x.Id == editAssignmentRequest.AssetId);
+
+            var editasset1 = await _assetRepository.GetOneAsync(x => x.Id == editAssignment.AssetId);
 
             if (editAssignment == null)
             {
@@ -260,6 +262,14 @@ namespace FinalAssignment.Services.Implements
 
             await _assignmentRepository.UpdateAsync(editAssignment);
 
+            editasset1.AssetStatus = (AssetStateEnum)0;
+
+            updateasset.AssetStatus = (AssetStateEnum)1;
+
+           
+
+            await _assetRepository.UpdateAsync(editasset1);
+            await _assetRepository.UpdateAsync(updateasset);
             _assignmentRepository.SaveChanges();
 
 
