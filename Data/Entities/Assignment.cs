@@ -19,6 +19,7 @@ namespace Data.Entities
         public string Specification { get; set; }
         public bool IsDeleted { get; set; } //false
         public DateTime Time { get; set; }
+        public string? location {get; set;}
 
 
         public virtual Asset Asset { get; set; }

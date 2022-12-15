@@ -45,10 +45,10 @@ namespace FinalAssignment.Controllers
             return Ok(result);
         }
 
-        [HttpGet("assignments")]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("assignments/{location}")]
+        public async Task<IActionResult> GetAll(string location)
         {
-            var result = await _assignmentService.GetAll();
+            var result = await _assignmentService.GetAll(location);
 
             if (result == null) return StatusCode(500, "Result null");
 

@@ -136,6 +136,7 @@ namespace FinalAssignment.Services.Implements
                     RequestBy = assignmentRequest.AssignedBy,
                     AssignedBy = assignmentRequest.AssignedBy,
                     Time = DateTime.Now,
+                    location = assignmentRequest.Location
                 };
 
                 var createAssignment = await _assignmentRepository.CreateAsync(newAssignment);
@@ -168,9 +169,9 @@ namespace FinalAssignment.Services.Implements
             }
         }
 
-        public async Task<IEnumerable<GetAllAssignmentResponse>> GetAll()
+        public async Task<IEnumerable<GetAllAssignmentResponse>> GetAll(string location)
         {
-            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false).OrderByDescending(a => a.Time).Select(i => new GetAllAssignmentResponse
+            var assignmentList = _assignmentRepository.GetAllAssignment().Where(x => x.IsDeleted == false && x.location == location).OrderByDescending(a => a.Time).Select(i => new GetAllAssignmentResponse
             {
                 Id = i.Id,
                 AssetCode = i.AssetCode,
