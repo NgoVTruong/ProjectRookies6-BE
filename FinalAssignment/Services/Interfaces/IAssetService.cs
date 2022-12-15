@@ -16,5 +16,6 @@ namespace FinalAssignment.Services.Interfaces
         Task<AssetDetail> GetDetailAsset(string assetCode);
         Task<DetailAsset> GetAssignedAsset(string assetCode);
         Task<EditAssetResponse> GetEditAsset(string assetCode);
+        Task<DetailAsset> GetOneAssetInclude(string assetCode);
     }
 }

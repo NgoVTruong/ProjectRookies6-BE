@@ -102,7 +102,7 @@ namespace FinalAssignment.Controllers
         [HttpGet("assets-detail/{assetCode}")]
         public async Task<DetailAsset> GetAssignedAsset(string assetCode)
         {
-            var getAssignedAsset = await _assetService.GetAssignedAsset(assetCode);
+            var getAssignedAsset = await _assetService.GetOneAssetInclude(assetCode);
             return getAssignedAsset;
         }
     }

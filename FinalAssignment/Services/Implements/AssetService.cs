@@ -233,5 +233,18 @@ namespace FinalAssignment.Services.Implements
             }
             return false;
         }
+
+        public async Task<DetailAsset> GetOneAssetInclude(string assetCode)
+        {
+            var asset =  _asset.GetOneAssetInclude(i => i.AssetCode == assetCode);
+            return new DetailAsset
+            {
+                AssetName = asset.AssetName,
+                CategoryName = asset.Category.CategoryName,
+                AssignedTo = asset.Assignments.OrderByDescending(i => i.Time).Take(1).FirstOrDefault().AssignedToUser.UserName,
+                AssignedBy = asset.Assignments.OrderByDescending(i => i.Time).Take(1).FirstOrDefault().AssignedByUser.UserName,
+                AssignedDate = asset.Assignments.OrderByDescending(i => i.Time).Take(1).FirstOrDefault().AssignedDate
+            };
+        }
     }
 }

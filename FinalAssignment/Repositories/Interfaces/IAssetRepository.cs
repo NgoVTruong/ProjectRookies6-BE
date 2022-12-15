@@ -1,5 +1,6 @@
 using Data.Entities;
 using FinalAssignment.DTOs.Asset;
+using System.Linq.Expressions;
 using TestWebAPI.Repositories.Interfaces;
 
 namespace FinalAssignment.Repositories.Interfaces
@@ -14,5 +15,8 @@ namespace FinalAssignment.Repositories.Interfaces
         int GetAll(Guid id);
         int GetAllAssetCode(string assetCode);
         IEnumerable<Asset> GetAllAssetInclude();
+        Asset GetOneAssetInclude(Expression<Func<Asset, bool>>? predicate = null);
+
+
     }
 }

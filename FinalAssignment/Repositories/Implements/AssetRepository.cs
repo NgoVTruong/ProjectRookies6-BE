@@ -5,6 +5,7 @@ using FinalAssignment.DTOs.Asset;
 using FinalAssignment.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using TestWebAPI.Repositories.Implements;
 
 namespace FinalAssignment.Repositories.Implements
@@ -150,6 +151,15 @@ namespace FinalAssignment.Repositories.Implements
         {
             var getAllAsset = _dbSet.Include(a => a.Category);
             return getAllAsset;
+        }
+
+        public Asset GetOneAssetInclude(Expression<Func<Asset, bool>>? predicate = null)
+        {
+            var asset = _dbSet.Include(s => s.Assignments).ThenInclude(i => i.AssignedToUser)
+                              .Include(a => a.Assignments).ThenInclude(b => b.AssignedByUser)
+                .Include(s => s.Category).FirstOrDefault(predicate);
+
+            return asset;
         }
     }
 }
