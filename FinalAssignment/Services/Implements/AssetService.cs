@@ -236,7 +236,18 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<DetailAsset> GetOneAssetInclude(string assetCode)
         {
-            var asset =  _asset.GetOneAssetInclude(i => i.AssetCode == assetCode);
+            var asset =  _asset.GetOneAssetInclude(i => i.AssetCode == assetCode && i.IsDeleted == false);
+            if(asset.Assignments.Count == 0)
+            {
+                return new DetailAsset
+                {
+                    AssetName = asset.AssetName,
+                    CategoryName = asset.Category.CategoryName,
+                    AssignedTo = null,
+                    AssignedBy = null,
+                    AssignedDate = null
+                };
+            }    
             return new DetailAsset
             {
                 AssetName = asset.AssetName,
