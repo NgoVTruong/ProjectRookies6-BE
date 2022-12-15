@@ -45,7 +45,7 @@ namespace FinalAssignment.Controllers
             return Ok(result);
         }
 
-        [HttpGet("assignments/{location}")]
+        [HttpGet("assignments/location/{location}")]
         public async Task<IActionResult> GetAll(string location)
         {
             var result = await _assignmentService.GetAll(location);
