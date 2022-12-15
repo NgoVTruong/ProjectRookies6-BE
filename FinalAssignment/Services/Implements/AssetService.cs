@@ -226,7 +226,7 @@ namespace FinalAssignment.Services.Implements
 
         public async Task<bool> CheckAsset(string assetCode)
         {
-            var assignment = await _assignnment.GetOneAsync(a => a.AssetCode == assetCode && a.IsDeleted == false);
+            var assignment = await _assignnment.GetOneAsync(a => a.AssetCode == assetCode);
             if (assignment == null)
             {
                 return true;
